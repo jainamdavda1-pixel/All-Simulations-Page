@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python File Handling — Reading, Writing &amp; Appending Text Files</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --primary: #E63946;
+      --primary-hover: #D62828;
+      --primary-light: #FFF0F1;
+      --bg-page: #F8F9FA;
+      --bg-card: #FFFFFF;
+      --text-main: #1D1D1F;
+      --text-muted: #6E6E73;
+      --border-light: #EBEBEB;
+      --code-bg: #1E1E1E;
+      --code-text: #E6E6E6;
+      --code-ok: #34C759;
+      --code-err: #FF3B30;
+      --code-warn: #FFCC00;
+      --code-com: #8E8E93;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --display: 'Archivo Black', sans-serif;
+      --body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
+      --shadow-float: 0 14px 40px rgba(230,57,70,0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--body);
+      background: var(--bg-page);
+      color: var(--text-main);
+      scroll-behavior: smooth;
+      line-height: 1.5;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #fff;
+      padding: 60px 24px;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      letter-spacing: 3px;
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+    .hero p.sub {
+      margin-top: 16px;
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-inline: auto;
+      opacity: 0.9;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ===== SECTION HEADER ===== */
+    .sec-head { margin-bottom: 32px; text-align: center; }
+    .sec-num { font-family: var(--mono); color: var(--primary); font-weight: 700; letter-spacing: 2px; font-size: 0.85rem; }
+    .sec-head h2 { font-family: var(--display); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-top: 8px; }
+    .sec-head p { margin-top: 12px; color: var(--text-muted); max-width: 600px; margin-inline: auto; }
+
+    /* ===== LEVEL STRIP ===== */
+    .level-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; justify-content: center; }
+    .lvl-pill {
+      font-family: var(--body); font-size: 0.8rem; font-weight: 600;
+      padding: 8px 18px; border-radius: 30px; cursor: pointer;
+      background: var(--bg-card); color: var(--text-muted);
+      border: 1px solid var(--border-light); transition: all .2s;
+    }
+    .lvl-pill:hover { border-color: var(--primary); color: var(--primary); }
+    .lvl-pill.active {
+      background: var(--primary-light); color: var(--primary);
+      border-color: var(--primary); font-weight: 700;
+    }
+    .level-panel { display: none; }
+    .level-panel.active { display: block; animation: fadeIn .35s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      border-radius: 16px; padding: 32px; margin-bottom: 24px;
+      box-shadow: var(--shadow-md); transition: transform 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card h3 {
+      font-family: var(--body); font-size: 1.1rem; color: var(--text-main);
+      margin-bottom: 16px; font-weight: 700; display: flex; align-items: center;
+    }
+    .card h3 .tag, .card h3 .lvl-tag {
+      font-family: var(--mono); background: var(--primary); color: #fff;
+      font-size: 0.7rem; padding: 4px 10px; border-radius: 6px;
+      margin-right: 12px; font-weight: 700;
+    }
+    .level-desc {
+      background: var(--primary-light); border-radius: 8px;
+      padding: 16px 20px; margin-bottom: 24px;
+      color: var(--text-main); font-size: 0.95rem;
+    }
+    .level-desc strong { color: var(--primary); }
+
+    /* ===== INPUTS ===== */
+    label {
+      font-family: var(--body); font-size: 0.85rem; font-weight: 600;
+      color: var(--text-muted); display: block; margin-bottom: 8px;
+    }
+    input[type=text], input[type=number], select, textarea {
+      font-family: var(--mono); width: 100%; padding: 12px 16px;
+      border: 1px solid var(--border-light); border-radius: 10px;
+      font-size: 0.95rem; background: var(--bg-page);
+      color: var(--text-main); outline: none; transition: all .2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary); background: #fff;
+      box-shadow: 0 0 0 3px rgba(230,57,70,0.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .row > div { flex: 1; min-width: 150px; }
+
+    /* ===== BUTTONS ===== */
+    button.action {
+      font-family: var(--body); font-weight: 600;
+      background: var(--primary); color: #fff; border: none;
+      padding: 12px 24px; border-radius: 10px; cursor: pointer;
+      font-size: 0.9rem; transition: all .2s;
+      margin-right: 10px; margin-bottom: 10px;
+    }
+    button.action:hover {
+      background: var(--primary-hover); transform: translateY(-1px);
+      box-shadow: var(--shadow-float);
+    }
+    button.action:active { transform: translateY(1px); box-shadow: none; }
+    button.action.ghost {
+      background: var(--bg-card); color: var(--text-main);
+      border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
+    }
+    button.action.ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== OUTPUT TERMINAL ===== */
+    .output {
+      margin-top: 20px; background: var(--code-bg); color: var(--code-text);
+      font-family: var(--mono); font-size: 0.9rem; border-radius: 12px;
+      padding: 20px; min-height: 60px; white-space: pre-wrap;
+      word-break: break-word; border-left: 4px solid var(--primary);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .output .err { color: var(--code-err); }
+    .output .com { color: var(--code-com); }
+    .output .ok { color: var(--code-ok); }
+    .output .warn { color: var(--code-warn); }
+    .output .lbl { color: #A2A2A2; }
+
+    /* ===== TABLE ===== */
+    table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      font-family: var(--mono); font-size: 0.85rem;
+      border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden;
+    }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
+    th { background: var(--bg-page); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar-wrap {
+      background: var(--border-light); border-radius: 20px;
+      height: 6px; margin-bottom: 32px; overflow: hidden;
+    }
+    .progress-bar { height: 100%; border-radius: 20px; background: var(--primary); transition: width .4s ease; }
+
+    /* ===== CHALLENGE BOX ===== */
+    .challenge-box {
+      background: #FAFAFA; border: 1px solid var(--border-light);
+      border-left: 4px solid var(--text-main);
+      border-radius: 8px; padding: 20px; margin-top: 24px;
+    }
+    .challenge-box .ch-label {
+      font-family: var(--body); font-size: 0.75rem; font-weight: 700;
+      color: var(--text-main); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .challenge-box p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .footer-note {
+      text-align: center; font-family: var(--mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-top: 60px; padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ===== FILE MODE VISUALIZER ===== */
+    .file-vis {
+      background: var(--bg-page); border: 1px solid var(--border-light);
+      border-radius: 12px; padding: 20px; margin-top: 16px;
+      font-family: var(--mono); font-size: 0.9rem;
+    }
+    .file-mode-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; margin: 4px;
+    }
+    .file-mode-badge.r  { background: #E3F2FF; color: #1565C0; }
+    .file-mode-badge.w  { background: #FFF3E0; color: #E65100; }
+    .file-mode-badge.a  { background: #F3E5F5; color: #6A1B9A; }
+    .file-mode-badge.rb { background: #E8F5E9; color: #1B5E20; }
+    .file-mode-badge.wb { background: #FCE4EC; color: #880E4F; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Python Course · Subtopic 3.2</div>
+  <h1>Text File Handling</h1>
+  <p class="sub">Files are how programs persist data. Master every mode Python offers for opening, reading, writing, and safely closing text files.</p>
+</div>
+
+<main>
+  <div class="sec-head">
+    <div class="sec-num">SUBTOPIC 3.2</div>
+    <h2>File Types · Opening · Modes · Reading · Writing · Appending</h2>
+    <p>Work through the 5 progression levels to master text file modes, read methods (read/readline/readlines), write closures, file appending patterns, and pointer position trackers.</p>
+  </div>
+  <div class="level-strip" id="s2-levels"></div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="s2-bar" style="width:20%"></div></div>
+
+  <!-- S2 L1 -->
+  <div class="level-panel active" id="s2-l1">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 1</span>Absolute Basics — File Opening Modes</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Before reading or writing, you must <code>open()</code> a file with the right mode. The mode controls what you can do and what happens to existing data. Getting the mode wrong can overwrite files instantly!</div>
+      <label>Select a file mode to explore</label>
+      <select id="s2l1-mode" onchange="s2l1Show()">
+        <option value="r">r  — read (default)</option>
+        <option value="w">w  — write (overwrites!)</option>
+        <option value="a">a  — append</option>
+        <option value="x">x  — exclusive create</option>
+        <option value="r+">r+ — read and write</option>
+        <option value="w+">w+ — write and read</option>
+      </select>
+      <div class="file-vis" id="s2l1-vis" style="margin-top:16px;"></div>
+      <div class="output" id="s2l1-out" style="margin-top:12px;"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>Which mode would you use to add new log entries without erasing old ones? Which mode raises an error if the file already exists? What happens if you open a non-existent file with mode "r"?</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="tag">REFERENCE</span>File Modes Summary</h3>
+      <table>
+        <tr><th>Mode</th><th>Read</th><th>Write</th><th>File must exist</th><th>Erases content</th></tr>
+        <tr><td><code>r</code></td><td>✅</td><td>❌</td><td>✅ Yes</td><td>❌ No</td></tr>
+        <tr><td><code>w</code></td><td>❌</td><td>✅</td><td>❌ Creates</td><td>✅ YES</td></tr>
+        <tr><td><code>a</code></td><td>❌</td><td>✅</td><td>❌ Creates</td><td>❌ No</td></tr>
+        <tr><td><code>x</code></td><td>❌</td><td>✅</td><td>❌ Must NOT</td><td>❌ No</td></tr>
+        <tr><td><code>r+</code></td><td>✅</td><td>✅</td><td>✅ Yes</td><td>❌ No</td></tr>
+        <tr><td><code>w+</code></td><td>✅</td><td>✅</td><td>❌ Creates</td><td>✅ YES</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- S2 L2 -->
+  <div class="level-panel" id="s2-l2">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 2</span>Core Application — Reading Text Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Three ways to read: <code>read()</code> gets everything at once, <code>readline()</code> reads one line, <code>readlines()</code> returns a list of all lines. Always close files — or better, use <code>with open()</code>.</div>
+      <label>File content (simulates a .txt file on disk)</label>
+      <textarea id="s2l2-content" rows="5">Alice, 92
+Bob, 78
+Charlie, 85
+Diana, 91
+Eve, 67</textarea>
+      <br>
+      <button class="action" onclick="s2l2Read('read')">▶ read()</button>
+      <button class="action ghost" onclick="s2l2Read('readline')">▶ readline()</button>
+      <button class="action ghost" onclick="s2l2Read('readlines')">▶ readlines()</button>
+      <button class="action ghost" onclick="s2l2Read('with')">▶ with open() loop</button>
+      <div class="output" id="s2l2-out">Choose a read method above</div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>After <code>readline()</code>, what does a second <code>readline()</code> call return? Try <code>readlines()</code> — each item in the list ends with what character? Why does <code>with open()</code> not need an explicit <code>close()</code>?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 L3 -->
+  <div class="level-panel" id="s2-l3">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 3</span>Intermediate — Writing &amp; Closing Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> <code>write()</code> writes a string (you must add <code>\n</code> yourself). <code>writelines()</code> writes a list. <code>close()</code> flushes the buffer to disk — without it, data may be lost. <code>with</code> handles this automatically.</div>
+      <label>Lines to write (one per line)</label>
+      <textarea id="s2l3-text" rows="5">Python is great
+File handling is important
+Always close your files
+Use with open() for safety</textarea>
+      <br>
+      <label>Write method</label>
+      <select id="s2l3-method">
+        <option value="write">write() — one string</option>
+        <option value="writelines">writelines() — list of strings</option>
+        <option value="with">with open() — auto-close</option>
+      </select>
+      <br><br>
+      <button class="action" onclick="s2l3Run()">▶ Write to File</button>
+      <div class="output" id="s2l3-out">Enter content and choose a write method</div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>What happens if you use <code>write()</code> but forget the <code>\n</code>? Try <code>writelines()</code> — does it add newlines automatically? Why might data be missing from a file if you forget <code>close()</code>?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 L4 -->
+  <div class="level-panel" id="s2-l4">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 4</span>Advanced — Appending Text Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Mode <code>"a"</code> opens a file and positions the cursor at the end. New writes are added after existing content — nothing is overwritten. Mode <code>"w"</code> starts fresh every time. Understanding this difference is critical for log files.</div>
+      <label>Existing file content</label>
+      <textarea id="s2l4-existing" rows="3">2024-01-01: System started
+2024-01-02: User logged in</textarea>
+      <br>
+      <label>New line to append</label>
+      <input type="text" id="s2l4-new" value="2024-01-03: New entry added">
+      <br><br>
+      <button class="action" onclick="s2l4Run('append')">▶ Append (mode a)</button>
+      <button class="action ghost" onclick="s2l4Run('write')">▶ Overwrite (mode w)</button>
+      <button class="action ghost" onclick="s2l4Run('append3')">▶ Append 3× to see growth</button>
+      <div class="output" id="s2l4-out">Choose an operation above</div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>Click "Append 3×" then click "Overwrite". What does the file contain after each? Why is "append" the only safe mode for log files? What mode would you use to add a header to an existing CSV?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 L5 -->
+  <div class="level-panel" id="s2-l5">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 5</span>Expert — File Pointer · seek() · tell()</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Every open file has a position pointer. <code>tell()</code> returns the current position in bytes. <code>seek(offset, whence)</code> jumps to any position. This gives you random access to file content — essential for large files.</div>
+      <label>Sample file content</label>
+      <textarea id="s2l5-content" rows="3">Hello, Python World!
+Line two here.
+Final line.</textarea>
+      <br>
+      <div class="row">
+        <div>
+          <label>seek() offset (bytes)</label>
+          <input type="number" id="s2l5-offset" value="0" min="0">
+        </div>
+        <div>
+          <label>Read N chars after seek</label>
+          <input type="number" id="s2l5-n" value="5" min="1">
+        </div>
+      </div>
+      <button class="action" onclick="s2l5Run()">▶ seek() + read()</button>
+      <button class="action ghost" onclick="s2l5Tell()">▶ Show tell() positions</button>
+      <div class="output" id="s2l5-out">Enter content and explore seek/tell</div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>Use seek(0) to "rewind" after reading. What does seek(0,2) do? If a file has 50 bytes and you seek(45), how many characters can you read? Why is random access important for large data files?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Module 3 · Python Exception &amp; File Handling · 3.2</div>
+</main>
+
+<script>
+  /* ===================== LEVEL PILLS ===================== */
+  const count = 5;
+  const strip = document.getElementById('s2-levels');
+  const labels = ['L1 · Basics', 'L2 · Core', 'L3 · Intermediate', 'L4 · Advanced', 'L5 · Expert'];
+  for (let i = 1; i <= count; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'lvl-pill' + (i === 1 ? ' active' : '');
+    btn.textContent = labels[i - 1];
+    btn.onclick = () => switchLevel('s2', i);
+    strip.appendChild(btn);
+  }
+
+  function switchLevel(sec, lvl) {
+    document.querySelectorAll(`#${sec}-levels .lvl-pill`).forEach((p, i) => {
+      p.classList.toggle('active', i === lvl - 1);
+    });
+    for (let i = 1; i <= count; i++) {
+      const panel = document.getElementById(`${sec}-l${i}`);
+      if (panel) panel.classList.toggle('active', i === lvl);
+    }
+    const bar = document.getElementById(`${sec}-bar`);
+    if (bar) bar.style.width = (lvl / count * 100) + '%';
+  }
+
+  /* ===================== S2 L1 — FILE MODES ===================== */
+  function s2l1Show() {
+    const mode = document.getElementById('s2l1-mode').value;
+    const vis = document.getElementById('s2l1-vis');
+    const out = document.getElementById('s2l1-out');
+
+    const modes = {
+      r: {
+        badge: 'r', label: 'Read Only',
+        desc: 'Opens file for reading. File pointer at beginning. File MUST exist or FileNotFoundError is raised.',
+        code: `f = open("data.txt", "r")\\ncontent = f.read()\\nf.close()\\nprint(content)`,
+        out: `<span class="ok">→ File content read successfully</span>\\n<span class="com"># File unchanged. Cursor started at position 0.</span>`
+      },
+      w: {
+        badge: 'w', label: 'Write (Overwrite!)',
+        desc: '⚠ Opens for writing. DESTROYS all existing content first. Creates file if it doesn\'t exist.',
+        code: `f = open("data.txt", "w")  # ⚠ ERASES existing!\\nf.write("New content")\\nf.close()`,
+        out: `<span class="warn">⚠ All previous content was ERASED before writing.</span>\\n<span class="ok">→ "New content" written to empty file.</span>`
+      },
+      a: {
+        badge: 'a', label: 'Append',
+        desc: 'Opens for writing, cursor at END. Existing content is preserved. Creates file if needed. Safe for logs.',
+        code: `f = open("log.txt", "a")\\nf.write("New log entry\\\\n")\\nf.close()`,
+        out: `<span class="ok">→ New entry added AFTER existing content. ✅</span>\\n<span class="com"># Existing data untouched. Perfect for log files.</span>`
+      },
+      x: {
+        badge: 'r', label: 'Exclusive Create',
+        desc: 'Creates a NEW file. If the file already exists → FileExistsError. Prevents accidental overwrites.',
+        code: `f = open("newfile.txt", "x")  # Must NOT exist!\\nf.write("Fresh start")\\nf.close()`,
+        out: `<span class="ok">→ New file created successfully (file didn't exist).</span>\\n<span class="err">FileExistsError if file already present!</span>`
+      },
+      'r+': {
+        badge: 'r', label: 'Read + Write',
+        desc: 'Opens for both reading and writing. File MUST exist. Does NOT erase content. Cursor starts at 0.',
+        code: `f = open("data.txt", "r+")\\ncontent = f.read()\\nf.seek(0)\\nf.write("Updated!")`,
+        out: `<span class="ok">→ Can both read and write to same file.</span>\\n<span class="com"># Cursor position matters — seek() to navigate.</span>`
+      },
+      'w+': {
+        badge: 'w', label: 'Write + Read (Overwrites!)',
+        desc: '⚠ Like "w" but also allows reading. ERASES content first. Creates file if needed.',
+        code: `f = open("data.txt", "w+")\\nf.write("New data")\\nf.seek(0)\\ncontent = f.read()`,
+        out: `<span class="warn">⚠ Content erased first, then written and readable.</span>\\n<span class="com"># Use when you need fresh file + read-back verification.</span>`
+      }
+    };
+
+    const m = modes[mode];
+    vis.innerHTML = `
+      <div><span class="file-mode-badge ${m.badge}" style="font-size:1rem;padding:8px 20px;">"${mode}"</span> — <strong>${m.label}</strong></div>
+      <p style="margin-top:12px;color:var(--text-muted);font-family:var(--body);">${m.desc}</p>
+      <div style="margin-top:12px;background:var(--code-bg);color:var(--code-text);padding:14px;border-radius:8px;font-size:0.85rem;white-space:pre;">${m.code}</div>
+    `;
+    out.innerHTML = m.out;
+  }
+
+  /* ===================== S2 L2 — READING ===================== */
+  function s2l2Read(method) {
+    const content = document.getElementById('s2l2-content').value;
+    const lines = content.split('\n');
+    const out = document.getElementById('s2l2-out');
+
+    if (method === 'read') {
+      out.innerHTML =
+        `<span class="com">>>> with open("students.txt", "r") as f:</span>
+    content = f.read()
+print(content)
+
+<span class="ok">→ "${content.replace(/\n/g, '\\n')}"</span>
+
+<span class="com"># read() returns ONE big string with \\n between lines</span>
+<span class="com"># File cursor is now at END — read() again returns ""</span>`;
+    } else if (method === 'readline') {
+      out.innerHTML =
+        `<span class="com">>>> with open("students.txt", "r") as f:</span>
+    line1 = f.readline()
+    line2 = f.readline()
+
+line1 → <span class="ok">"${lines[0]}\\n"</span>
+line2 → <span class="ok">"${lines[1] || ''}\\n"</span>
+
+<span class="com"># readline() reads ONE line and moves cursor forward</span>
+<span class="com"># Call it again to get the next line</span>
+<span class="com"># Returns "" (empty string) at end of file</span>`;
+    } else if (method === 'readlines') {
+      out.innerHTML =
+        `<span class="com">>>> with open("students.txt", "r") as f:</span>
+    lines = f.readlines()
+
+lines → [
+${lines.map((l, i) => `    "${l}\\n"${i < lines.length-1 ? ',' : ''}`).join('\n')}
+]
+
+<span class="com"># readlines() returns a LIST — one string per line</span>
+<span class="com"># Each string includes the \\n at the end</span>
+<span class="com"># Use .strip() to remove it: lines[0].strip()</span>`;
+    } else {
+      out.innerHTML =
+        `<span class="com">>>> with open("students.txt", "r") as f:</span>
+    for line in f:           <span class="com"># iterate line by line</span>
+        print(line.strip())  <span class="com"># .strip() removes \\n</span>
+
+<span class="ok">Output:</span>
+${lines.map(l => `→ ${l}`).join('\n')}
+
+<span class="com"># with open() → file auto-closes when block exits</span>
+<span class="com"># Even if an exception occurs inside! ✅</span>
+<span class="ok"># This is the RECOMMENDED pattern for reading files.</span>`;
+    }
+  }
+
+  /* ===================== S2 L3 — WRITING ===================== */
+  function s2l3Run() {
+    const text = document.getElementById('s2l3-text').value;
+    const method = document.getElementById('s2l3-method').value;
+    const lines = text.split('\n');
+    const out = document.getElementById('s2l3-out');
+
+    if (method === 'write') {
+      out.innerHTML =
+        `<span class="com">>>> with open("output.txt", "w") as f:</span>
+    content = """${text.replace(/\n/g, '\\n')}"""
+    f.write(content)
+
+<span class="ok">→ ${text.length} characters written to output.txt</span>
+<span class="com"># write() takes ONE string — include \\n yourself!</span>
+<span class="com"># Use "w" mode → file is CLEARED first</span>
+<span class="warn">⚠ Mode "w" erased any previous content before writing.</span>`;
+    } else if (method === 'writelines') {
+      out.innerHTML =
+        `<span class="com">>>> with open("output.txt", "w") as f:</span>
+    lines = [
+${lines.map(l => `        "${l}\\n",`).join('\n')}
+    ]
+    f.writelines(lines)
+
+<span class="ok">→ ${lines.length} lines written via writelines()</span>
+<span class="warn">⚠ writelines() does NOT add \\n automatically!</span>
+<span class="com"># You must include \\n in each string yourself.</span>`;
+    } else {
+      out.innerHTML =
+        `<span class="com">>>> with open("output.txt", "w") as f:</span>
+    for line in lines:
+        f.write(line + "\\n")
+<span class="com"># with block exits → __exit__() called automatically</span>
+<span class="ok">→ File flushed and closed. Data is safe on disk. ✅</span>
+
+<span class="com"># Why with open() is best:</span>
+<span class="ok">✅ Auto-closes even if exception occurs inside block</span>
+<span class="ok">✅ No risk of buffer not flushing</span>
+<span class="ok">✅ Cleaner, more Pythonic code</span>
+<span class="com"># Equivalent to: try: ... finally: f.close()</span>`;
+    }
+  }
+
+  /* ===================== S2 L4 — APPENDING ===================== */
+  function s2l4Run(op) {
+    const existing = document.getElementById('s2l4-existing').value;
+    const newLine = document.getElementById('s2l4-new').value;
+    const out = document.getElementById('s2l4-out');
+
+    if (op === 'write') {
+      out.innerHTML =
+        `<span class="com">>>> # Mode "w" — OVERWRITES existing content!</span>
+with open("log.txt", "w") as f:
+    f.write("${newLine}\\n")
+
+<span class="warn">⚠ Mode "w" ERASED the file first. Previous content is GONE:</span>
+<span class="err">× ${existing.split('\n').join('\n× ')}</span>
+
+<span class="ok">File now contains ONLY:</span>
+<span class="ok">→ ${newLine}</span>`;
+    } else if (op === 'append') {
+      out.innerHTML =
+        `<span class="com">>>> # Mode "a" — cursor jumps to END, nothing erased</span>
+with open("log.txt", "a") as f:
+    f.write("${newLine}\\n")
+
+<span class="ok">File content after append:</span>
+${existing.split('\n').map(l => `<span class="ok">  ${l}</span>`).join('\n')}
+<span class="ok">  ${newLine}   ← ✅ NEW LINE ADDED</span>
+
+<span class="com"># Original content fully preserved</span>`;
+    } else {
+      let content = existing;
+      const lines = [];
+      for (let i = 1; i <= 3; i++) {
+        const entry = `Entry #${i}: appended at step ${i}`;
+        lines.push(entry);
+        content += '\n' + entry;
+      }
+      out.innerHTML =
+        `<span class="com">>>> # Appending 3 times to see log growth</span>
+for i in range(1, 4):
+    with open("log.txt", "a") as f:
+        f.write(f"Entry #{"{i}"}: appended at step {"{i}"}\\n")
+
+<span class="ok">Final file content:</span>
+${existing.split('\n').map(l => `  ${l}`).join('\n')}
+${lines.map(l => `<span class="ok">  ${l}   ← new</span>`).join('\n')}
+
+<span class="ok">✅ Each "with open(a)" call added to the end.</span>
+<span class="com"># This is how real log files grow over time.</span>`;
+    }
+  }
+
+  /* ===================== S2 L5 — seek/tell ===================== */
+  function s2l5Run() {
+    const content = document.getElementById('s2l5-content').value;
+    const offset = parseInt(document.getElementById('s2l5-offset').value) || 0;
+    const n = parseInt(document.getElementById('s2l5-n').value) || 5;
+    const out = document.getElementById('s2l5-out');
+
+    const totalBytes = content.length;
+    const safeOffset = Math.min(offset, totalBytes);
+    const readChars = content.substring(safeOffset, safeOffset + n);
+    const endPos = safeOffset + readChars.length;
+
+    out.innerHTML =
+      `<span class="com">>>> with open("data.txt", "r") as f:</span>
+    f.seek(${safeOffset})          <span class="com"># jump to byte ${safeOffset}</span>
+    print(f.tell())          <span class="ok">→ ${safeOffset}  (current position)</span>
+    chunk = f.read(${n})      <span class="com"># read ${n} characters</span>
+    print(repr(chunk))       <span class="ok">→ "${readChars}"</span>
+    print(f.tell())          <span class="ok">→ ${endPos}  (position after read)</span>
+
+<span class="com"># File total: ${totalBytes} bytes</span>
+<span class="com"># seek(0) → rewind to start</span>
+<span class="com"># seek(0, 2) → jump to END of file (position ${totalBytes})</span>
+<span class="com"># seek(0, 1) → stay at current position</span>`;
+  }
+
+  function s2l5Tell() {
+    const content = document.getElementById('s2l5-content').value;
+    const lines = content.split('\n');
+    const out = document.getElementById('s2l5-out');
+    let pos = 0;
+    const positions = lines.map((line, i) => {
+      const start = pos;
+      pos += line.length + 1; // +1 for \n
+      return { line: i + 1, text: line, start, end: pos };
+    });
+
+    out.innerHTML =
+      `<span class="com">>>> # tell() shows cursor position after reading each line</span>
+f = open("data.txt", "r")
+${positions.map(p =>
+  `line = f.readline()  <span class="ok">→ "${p.text}"</span>  f.tell() → ${p.end}`
+).join('\n')}
+
+<span class="com"># Byte positions in file (${content.length} total bytes):</span>
+${positions.map(p => `  Line ${p.line}: bytes ${p.start}–${p.end - 1}`).join('\n')}
+
+<span class="com"># Use seek(${positions[0].start}) to go back to line 1 start</span>`;
+  }
+
+  /* ===================== INIT ===================== */
+  s2l1Show();
+</script>
+</body>
+</html>

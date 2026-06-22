@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Loops — while, for &amp; range()</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+            margin-top: 10px;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl3 {
+            color: #6a1b9a;
+            padding-left: 60px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl4 {
+            color: #b71c1c;
+            padding-left: 80px;
+            display: block;
+            font-weight: bold;
+        }
+
+
+        /* ================= VISUALIZERS ================= */
+        .loop-track {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            min-height: 40px;
+        }
+
+        .loop-item {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            background: var(--red);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            animation: pop .2s ease;
+            box-shadow: 2px 2px 0 var(--red-dark);
+        }
+
+        .loop-item.skip {
+            background: var(--bg-main);
+            color: #5a4b4b;
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        .loop-item.brk {
+            background: var(--ink);
+            color: #FFF;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ================= DRAG AND DROP CUSTOM STYLES ================= */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 40px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Loops &amp; <span>Range Sequences</span></h1>
+        <p class="sub">Repetition is programming power. Master Python's two loop structures, sequence generation via
+            range(), and execution modifiers like break and continue.</p>
+    </header>
+
+    <main>
+        <div class="sec-head">
+            <div class="sec-num">// SUBTOPIC 2.2</div>
+            <h2>Loops · while · for · range · break · continue</h2>
+            <p>Master Python's iteration patterns. Work through the 5 progression levels from simple while logic
+                counters to zip mappings and for-else fallback loops.</p>
+        </div>
+
+        <div class="level-strip" id="s2-levels"></div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="s2-bar" style="width:20%"></div>
+        </div>
+
+        <!-- S2 L1 -->
+        <div class="level-panel active" id="s2-l1">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>The while Loop Counter</h3>
+                <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                    <strong>Core Concepts:</strong>
+                    <p>A <code>while</code> loop repeatedly executes a block as long as its target condition remains
+                        <code>True</code>:</p>
+                    <ul>
+                        <li><strong>Pre-Evaluation:</strong> The condition is evaluated *before* entering the loop
+                            block. If it is initially <code>False</code>, the block never executes.</li>
+                        <li><strong>Infinite Loop Risk:</strong> If the condition variables are not updated within the
+                            loop body to eventually yield <code>False</code>, the loop will run forever, locking up
+                            interpreter memory.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l1">LEVEL 1</span>while Loop Controller</h3>
+                <div class="row">
+                    <div><label>Start value</label><input type="number" id="s2l1-start" value="1"></div>
+                    <div><label>Count up to ≤</label><input type="number" id="s2l1-end" value="8"></div>
+                    <div><label>Step by</label><input type="number" id="s2l1-step" value="1" min="1"></div>
+                </div>
+                <button class="action" onclick="s2l1Run()">▶ Run while Loop</button>
+                <div class="output" id="s2l1-out">com: set parameters and run</div>
+                <div class="loop-track" id="s2l1-track"></div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Collatz Conjecture Loop</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct statements to construct a while loop executing the
+                    Collatz Conjecture step logic until n reaches 1!
+                </div>
+                <div class="game-container" id="l1-game">
+                    <div class="game-header">
+                        <span>🎯 Collatz loop steps</span>
+                        <span class="game-score">Score: <span id="l1-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height: 2.2;">
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l1-zone-0" data-expected="while n > 1:" data-pool-id="l1-pool">
+                            </div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px;">
+                            <span>if n % 2 == 0:</span>
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; padding-left:40px;">
+                            <div class="drop-zone" id="l1-zone-1" data-expected="n = n // 2" data-pool-id="l1-pool">
+                            </div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px;">
+                            <span>else:</span>
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; padding-left:40px;">
+                            <div class="drop-zone" id="l1-zone-2" data-expected="n = 3 * n + 1" data-pool-id="l1-pool">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l1-pool">
+                        <div class="draggable-item" id="l1-item-while" draggable="true" data-val="while n > 1:">while n
+                            > 1:</div>
+                        <div class="draggable-item" id="l1-item-evenstep" draggable="true" data-val="n = n // 2">n = n
+                            // 2</div>
+                        <div class="draggable-item" id="l1-item-oddstep" draggable="true" data-val="n = 3 * n + 1">n = 3
+                            * n + 1</div>
+                        <div class="draggable-item" id="l1-item-while-wrong" draggable="true" data-val="while n >= 0:">
+                            while n >= 0:</div>
+                        <div class="draggable-item" id="l1-item-evenstep-wrong" draggable="true" data-val="n = n / 2">n
+                            = n / 2</div>
+                        <div class="draggable-item" id="l1-item-oddstep-wrong" draggable="true"
+                            data-val="n = 3 * n - 1">n = 3 * n - 1</div>
+                    </div>
+                    <button class="action" onclick="l1Verify()">Verify Code Block</button>
+                    <div class="game-feedback" id="l1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S2 L2 -->
+        <div class="level-panel" id="s2-l2">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>The for Loop &amp; range() Generator</h3>
+                <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                    <strong>Core Concepts:</strong>
+                    <p>The <code>for</code> loop iterates over members of an iterable sequence:</p>
+                    <ul>
+                        <li><strong>range(start, stop, step):</strong> Generates a sequence of integers. Crucially, the
+                            <code>stop</code> boundary is **exclusive**.</li>
+                    </ul>
+                </div>
+                <h4>range() Signatures</h4>
+                <table>
+                    <tr>
+                        <th>Syntax</th>
+                        <th>Sequence Generated</th>
+                    </tr>
+                    <tr>
+                        <td><code>range(5)</code></td>
+                        <td>0, 1, 2, 3, 4 (implied start=0, step=1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>range(2, 8)</code></td>
+                        <td>2, 3, 4, 5, 6, 7</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l2">LEVEL 2</span>range() Sequence Simulator</h3>
+                <div class="row">
+                    <div><label>range start</label><input type="number" id="s2l2-start" value="0"></div>
+                    <div><label>range stop (exclusive)</label><input type="number" id="s2l2-stop" value="10"></div>
+                    <div><label>step</label><input type="number" id="s2l2-step" value="1"></div>
+                </div>
+                <button class="action" onclick="s2l2Run()">▶ Run for Loop</button>
+                <div class="output" id="s2l2-out">com: configure range and run</div>
+                <div class="loop-track" id="s2l2-track"></div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>range() Step Parameterizer</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct integers into the <code>range()</code> parameters
+                    to generate the descending stepping sequence: <code>[15, 11, 7, 3]</code>.
+                </div>
+                <div class="game-container" id="l2-game">
+                    <div class="game-header">
+                        <span>🎯 Range Sequence Parameterizer</span>
+                        <span class="game-score">Score: <span id="l2-score">0</span>/3</span>
+                    </div>
+                    <div class="formula-builder"
+                        style="display:flex; gap:8px; align-items:center; font-family:var(--mono); flex-wrap:wrap;">
+                        <span>for i in range(</span>
+                        <div class="drop-zone" id="l2-zone-0" data-expected="15" data-pool-id="l2-pool"></div>
+                        <span>,</span>
+                        <div class="drop-zone" id="l2-zone-1" data-expected="1" data-pool-id="l2-pool"></div>
+                        <span>,</span>
+                        <div class="drop-zone" id="l2-zone-2" data-expected="-4" data-pool-id="l2-pool"></div>
+                        <span>):</span>
+                    </div>
+                    <div class="items-pool" id="l2-pool">
+                        <div class="draggable-item" id="l2-item-15" draggable="true" data-val="15">15</div>
+                        <div class="draggable-item" id="l2-item-1" draggable="true" data-val="1">1</div>
+                        <div class="draggable-item" id="l2-item-neg4" draggable="true" data-val="-4">-4</div>
+                        <div class="draggable-item" id="l2-item-3" draggable="true" data-val="3">3</div>
+                        <div class="draggable-item" id="l2-item-0" draggable="true" data-val="0">0</div>
+                        <div class="draggable-item" id="l2-item-neg1" draggable="true" data-val="-1">-1</div>
+                        <div class="draggable-item" id="l2-item-4" draggable="true" data-val="4">4</div>
+                    </div>
+                    <button class="action" onclick="l2Verify()">Verify Parameters</button>
+                    <div class="game-feedback" id="l2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S2 L3 -->
+        <div class="level-panel" id="s2-l3">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Loop Modifiers: break &amp; continue</h3>
+                <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                    <strong>Core Concepts:</strong>
+                    <p>Altering iteration scopes dynamically:</p>
+                    <ul>
+                        <li><strong>break:</strong> Exits the enclosing loop block immediately.</li>
+                        <li><strong>continue:</strong> Skips current block statement logic and proceeds to the next
+                            iteration.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l3">LEVEL 3</span>Control Modifiers Sandbox</h3>
+                <div class="row">
+                    <div><label>Loop from 1 to</label><input type="number" id="s2l3-end" value="10"></div>
+                    <div>
+                        <label>Control statement</label>
+                        <select id="s2l3-mode">
+                            <option value="break">break at number</option>
+                            <option value="continue">continue (skip) at number</option>
+                        </select>
+                    </div>
+                    <div><label>Target number</label><input type="number" id="s2l3-target" value="5"></div>
+                </div>
+                <button class="action" onclick="s2l3Run()">▶ Run Loop</button>
+                <div class="output" id="s2l3-out">com: pick break or continue and a target number</div>
+                <div class="loop-track" id="s2l3-track"></div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Prime Search &amp; loop-else Guard</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct statements to construct a prime-checking loop. The
+                    loop should stop searching immediately when a divisor is found, and set <code>is_prime = True</code>
+                    only if the loop finishes entirely without any divisors!
+                </div>
+                <div class="game-container" id="l3-game">
+                    <div class="game-header">
+                        <span>🎯 Loop Else Verification</span>
+                        <span class="game-score">Score: <span id="l3-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0">for i in range(2, n):</div>
+                        <div class="lvl1">if n % i == 0:</div>
+                        <div class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l3-zone-0" data-expected="break" data-pool-id="l3-pool"></div>
+                        </div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                            <div class="drop-zone" id="l3-zone-1" data-expected="else:" data-pool-id="l3-pool"></div>
+                        </div>
+                        <div class="lvl1" style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                            <div class="drop-zone" id="l3-zone-2" data-expected="is_prime = True"
+                                data-pool-id="l3-pool"></div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l3-pool">
+                        <div class="draggable-item" id="l3-item-break" draggable="true" data-val="break">break</div>
+                        <div class="draggable-item" id="l3-item-else" draggable="true" data-val="else:">else:</div>
+                        <div class="draggable-item" id="l3-item-istrue" draggable="true" data-val="is_prime = True">
+                            is_prime = True</div>
+                        <div class="draggable-item" id="l3-item-continue" draggable="true" data-val="continue">continue
+                        </div>
+                        <div class="draggable-item" id="l3-item-elif" draggable="true" data-val="elif:">elif:</div>
+                        <div class="draggable-item" id="l3-item-isfalse" draggable="true" data-val="is_prime = False">
+                            is_prime = False</div>
+                    </div>
+                    <button class="action" onclick="l3Verify()">Verify Loop Flow</button>
+                    <div class="game-feedback" id="l3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S2 L4 -->
+        <div class="level-panel" id="s2-l4">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Nested Loops &amp; Outer-Inner Grid Traversal</h3>
+                <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                    <strong>Core Concepts:</strong>
+                    <p>For every step in the outer loop, the inner loop completes fully:</p>
+                    <ul>
+                        <li><strong>Total cycles:</strong> Size of Outer loop (N) multiplied by size of Inner loop (M) =
+                            <code>N × M</code>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l4">LEVEL 4</span>Nested Grid Star Generator</h3>
+                <div class="row">
+                    <div><label>Table size (n × n)</label><input type="number" id="s2l4-n" value="5" min="2" max="10">
+                    </div>
+                    <div><label>Pattern</label>
+                        <select id="s2l4-mode">
+                            <option value="table">Multiplication table</option>
+                            <option value="triangle">Star triangle</option>
+                            <option value="pyramid">Star pyramid</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="action" onclick="s2l4Run()">▶ Generate Pattern</button>
+                <div class="output" id="s2l4-out" style="font-family: var(--mono); font-size:0.8rem; line-height:1.4;">
+                    com: choose size and pattern</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Identity Matrix Diagonal Check</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct conditions and boundaries to complete a nested grid
+                    traversal function that validates if a square matrix is an identity matrix (diagonal elements are 1,
+                    all others are 0).
+                </div>
+                <div class="game-container" id="l4-game">
+                    <div class="game-header">
+                        <span>🎯 Identity Matrix Validator</span>
+                        <span class="game-score">Score: <span id="l4-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0">is_identity = True</div>
+                        <div class="lvl0">for r in range(size):</div>
+                        <div class="lvl1">for c in range(size):</div>
+                        <div class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <span>if </span>
+                            <div class="drop-zone" id="l4-zone-0" data-expected="r == c" data-pool-id="l4-pool"></div>
+                            <span>:</span>
+                        </div>
+                        <div class="lvl3" style="display:flex; align-items:center; gap:8px;">
+                            <span>if matrix[r][c] != </span>
+                            <div class="drop-zone" id="l4-zone-1" data-expected="1" data-pool-id="l4-pool"></div>
+                            <span>:</span>
+                        </div>
+                        <div class="lvl4">is_identity = False</div>
+                        <div class="lvl2">else:</div>
+                        <div class="lvl3" style="display:flex; align-items:center; gap:8px;">
+                            <span>if matrix[r][c] != </span>
+                            <div class="drop-zone" id="l4-zone-2" data-expected="0" data-pool-id="l4-pool"></div>
+                            <span>:</span>
+                        </div>
+                        <div class="lvl4">is_identity = False</div>
+                    </div>
+                    <div class="items-pool" id="l4-pool">
+                        <div class="draggable-item" id="l4-item-diag" draggable="true" data-val="r == c">r == c</div>
+                        <div class="draggable-item" id="l4-item-one" draggable="true" data-val="1">1</div>
+                        <div class="draggable-item" id="l4-item-zero" draggable="true" data-val="0">0</div>
+                        <div class="draggable-item" id="l4-item-nodiag" draggable="true" data-val="r != c">r != c</div>
+                        <div class="draggable-item" id="l4-item-size" draggable="true" data-val="size">size</div>
+                        <div class="draggable-item" id="l4-item-rvar" draggable="true" data-val="r">r</div>
+                    </div>
+                    <button class="action" onclick="l4Verify()">Verify Matrix Check</button>
+                    <div class="game-feedback" id="l4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S2 L5 -->
+        <div class="level-panel" id="s2-l5">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Parallel Streams &amp; Nested Unpacking</h3>
+                <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                    <strong>Core Concepts:</strong>
+                    <p>Unlocking advanced sequence traversal patterns in Python:</p>
+                    <ul>
+                        <li><strong>enumerate(iterable):</strong> Yields index-element pairs:
+                            <code>(index, item)</code>.</li>
+                        <li><strong>zip(*iterables):</strong> Pairs corresponding items from multiple sequences. It
+                            terminates at the length of the shortest iterable.</li>
+                        <li><strong>Zipped Tuple Unpacking:</strong> Combining them as <code>enumerate(zip(A, B))</code>
+                            yields nested structures like <code>(idx, (itemA, itemB))</code>, requiring parentheses for
+                            correct syntax unpacking in the loop header.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l5">LEVEL 5</span>Iteration Helpers Sandbox</h3>
+                <div class="row">
+                    <div><label>List A (comma-separated)</label><input type="text" id="s2l5-a"
+                            value="Python,Java,C++,Rust"></div>
+                    <div><label>List B (comma-separated)</label><input type="text" id="s2l5-b" value="90,78,65,88">
+                    </div>
+                </div>
+                <button class="action" onclick="s2l5Enum()">▶ enumerate()</button>
+                <button class="action ghost" onclick="s2l5Zip()">▶ zip()</button>
+                <button class="action ghost" onclick="s2l5ForElse()">▶ for-else search</button>
+                <div class="output" id="s2l5-out">com: enter two lists and try each operation</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Zipped Stream Unpacker</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct components to unpack the index and parallel items
+                    correctly in the loop header to process names and scores together!
+                </div>
+                <div class="game-container" id="l5-game">
+                    <div class="game-header">
+                        <span>🎯 Zipped Stream Unpacking</span>
+                        <span class="game-score">Score: <span id="l5-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>for </span>
+                            <div class="drop-zone" id="l5-zone-0" data-expected="idx" data-pool-id="l5-pool"></div>
+                            <span>, </span>
+                            <div class="drop-zone" id="l5-zone-1" data-expected="(name, score)" data-pool-id="l5-pool">
+                            </div>
+                            <span> in </span>
+                            <div class="drop-zone" id="l5-zone-2" data-expected="enumerate" data-pool-id="l5-pool">
+                            </div>
+                            <span>(zip(names, scores)):</span>
+                        </div>
+                        <div class="lvl1">if idx % 2 == 0:</div>
+                        <div class="lvl2">print(f"{idx}: {name} scored {score}")</div>
+                    </div>
+                    <div class="items-pool" id="l5-pool">
+                        <div class="draggable-item" id="l5-item-idx" draggable="true" data-val="idx">idx</div>
+                        <div class="draggable-item" id="l5-item-zipped" draggable="true" data-val="(name, score)">(name,
+                            score)</div>
+                        <div class="draggable-item" id="l5-item-enum" draggable="true" data-val="enumerate">enumerate
+                        </div>
+                        <div class="draggable-item" id="l5-item-unparenthesized" draggable="true"
+                            data-val="name, score">name, score</div>
+                        <div class="draggable-item" id="l5-item-zip" draggable="true" data-val="zip">zip</div>
+                        <div class="draggable-item" id="l5-item-index" draggable="true" data-val="index">index</div>
+                    </div>
+                    <button class="action" onclick="l5Verify()">Verify Loop Structure</button>
+                    <div class="game-feedback" id="l5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Module 2 · Decision Making &amp; Functions · Section 2.2</div>
+    </main>
+
+    <script>
+        const SUBTOPIC = 's2';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Collatz Conjecture Loop' },
+            { cls: 'l2', label: 'Level 2 · Custom Step range()' },
+            { cls: 'l3', label: 'Level 3 · Prime Search loop-else' },
+            { cls: 'l4', label: 'Level 4 · Identity Matrix Traversal' },
+            { cls: 'l5', label: 'Level 5 · Zipped Stream Unpacking' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.innerHTML = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, btn);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, btn) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll(`.level-panel`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        // ===================== DRAG & DROP UTILITIES =====================
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            let target = e.currentTarget;
+
+            if (target.classList.contains("drop-zone") || target.classList.contains("items-pool") || target.classList.contains("bucket")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+        }
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .items-pool, .bucket").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+        }
+
+        // ===================== PUZZLE VERIFICATIONS =====================
+        function l1Verify() {
+            const slots = ['l1-zone-0', 'l1-zone-1', 'l1-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l1-score').textContent = score;
+            const feedback = document.getElementById('l1-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! You have correctly structured the Collatz Conjecture branching while loop!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Loop statements out of order. Verify evaluation check and increment blocks. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            const slots = ['l2-zone-0', 'l2-zone-1', 'l2-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feedback = document.getElementById('l2-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Match correct! Starting at 15, stopping exclusively at 1 with a step of -4 correctly generates the sequence [15, 11, 7, 3]!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Mismatched parameters. Verify range start, stop exclusive, and negative step variables. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            const slots = ['l3-zone-0', 'l3-zone-1', 'l3-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feedback = document.getElementById('l3-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Perfect! The loop-else guard executes its block only if the loop finishes entirely without triggering a break!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Loop-else block incorrectly constructed. Ensure break is hit on factor discovery, and the else clause triggers the prime assignment. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            const slots = ['l4-zone-0', 'l4-zone-1', 'l4-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feedback = document.getElementById('l4-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! Diagonal coordinates (r == c) must match 1, and non-diagonal coordinates must match 0!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Identity matrix check incorrect. Ensure diagonal cells evaluate to 1 and off-diagonals evaluate to 0. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            const slots = ['l5-zone-0', 'l5-zone-1', 'l5-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feedback = document.getElementById('l5-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Flawless unpacking! enumerate yields the index first, and zip unpacks names and scores in parallel!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Zipped unpacker mismatch. Verify how tuple elements align within the enumerate index wrapping. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        // ===================== SIMULATION LOGIC =====================
+        function s2l1Run() {
+            const start = parseInt(document.getElementById('s2l1-start').value);
+            const end = parseInt(document.getElementById('s2l1-end').value);
+            const step = parseInt(document.getElementById('s2l1-step').value) || 1;
+            const out = document.getElementById('s2l1-out');
+            const track = document.getElementById('s2l1-track');
+            if (step <= 0) { out.innerHTML = '<span class="err">Step must be > 0 (else infinite loop in Python!)</span>'; track.innerHTML = ''; return; }
+            if (end < start) { out.innerHTML = '<span class="err">End must be >= Start for this while loop</span>'; track.innerHTML = ''; return; }
+            const iters = [];
+            let i = start;
+            while (i <= end && iters.length < 50) { iters.push(i); i += step; }
+            out.innerHTML =
+                `<span class="com">>>> i = ${start}</span>
+while i <= ${end}:
+    print(i)
+    i += ${step}
+
+<span class="lbl">Iterations:</span>  ${iters.length}
+<span class="lbl">Values:</span>      [${iters.slice(0, 15).join(', ')}${iters.length > 15 ? ', ...' : ''}]
+<span class="lbl">Final i:</span>     ${iters[iters.length - 1] + step} <span class="com">(condition fails)</span>`;
+            track.innerHTML = iters.slice(0, 20).map(v => `<div class="loop-item">${v}</div>`).join('');
+        }
+
+        function s2l2Run() {
+            const start = parseInt(document.getElementById('s2l2-start').value);
+            const stop = parseInt(document.getElementById('s2l2-stop').value);
+            const step = parseInt(document.getElementById('s2l2-step').value) || 1;
+            const out = document.getElementById('s2l2-out');
+            const track = document.getElementById('s2l2-track');
+            if (step === 0) { out.innerHTML = '<span class="err">ValueError: range() step cannot be zero</span>'; track.innerHTML = ''; return; }
+            const vals = [];
+            if (step > 0) { for (let i = start; i < stop && vals.length < 50; i += step)vals.push(i); }
+            else { for (let i = start; i > stop && vals.length < 50; i += step)vals.push(i); }
+            out.innerHTML =
+                `<span class="com">>>> for i in range(${start}, ${stop}, ${step}):</span>
+<span class="com">...     print(i)</span>
+
+range(${start}, ${stop}, ${step})
+→ [${vals.slice(0, 15).join(', ')}${vals.length > 15 ? ', ...' : ''}]
+
+<span class="lbl">Total iterations:</span> ${vals.length}
+<span class="com"># stop value (${stop}) is EXCLUDED</span>`;
+            track.innerHTML = vals.slice(0, 20).map(v => `<div class="loop-item">${v}</div>`).join('');
+        }
+
+        function s2l3Run() {
+            const end = parseInt(document.getElementById('s2l3-end').value) || 10;
+            const mode = document.getElementById('s2l3-mode').value;
+            const target = parseInt(document.getElementById('s2l3-target').value) || 5;
+            const out = document.getElementById('s2l3-out');
+            const track = document.getElementById('s2l3-track');
+            const printed = [], skipped = [], stopped = [];
+            let brokeAt = null;
+            for (let i = 1; i <= end; i++) {
+                if (mode === 'break' && i === target) { stopped.push(i); brokeAt = i; break; }
+                if (mode === 'continue' && i === target) { skipped.push(i); continue; }
+                printed.push(i);
+            }
+            if (mode === 'break') {
+                out.innerHTML =
+                    `<span class="com">>>> for i in range(1, ${end + 1}):</span>
+    if i == ${target}:
+        break        <span class="ok">← exits loop entirely</span>
+    print(i)
+
+<span class="lbl">Printed:</span> [${printed.join(', ')}]
+<span class="err">Break at:</span> ${brokeAt} (loop stopped here)
+<span class="com"># ${end - brokeAt} values after ${brokeAt} were NEVER reached</span>`;
+                track.innerHTML = printed.map(v => `<div class="loop-item">${v}</div>`).join('') + `<div class="loop-item brk">BREAK@${brokeAt}</div>`;
+            } else {
+                out.innerHTML =
+                    `<span class="com">>>> for i in range(1, ${end + 1}):</span>
+    if i == ${target}:
+        continue     <span class="ok">← skips to next iteration</span>
+    print(i)
+
+<span class="lbl">Printed:</span>  [${printed.join(', ')}]
+<span class="warn">Skipped:</span>  [${skipped.join(', ')}]
+<span class="com"># Loop still ran all ${end} iterations</span>`;
+                track.innerHTML = [...Array(end)].map((_, idx) => {
+                    const v = idx + 1;
+                    if (v === target) return `<div class="loop-item skip">skip(${v})</div>`;
+                    return `<div class="loop-item">${v}</div>`;
+                }).join('');
+            }
+        }
+
+        function s2l4Run() {
+            const n = parseInt(document.getElementById('s2l4-n').value) || 5;
+            const mode = document.getElementById('s2l4-mode').value;
+            const out = document.getElementById('s2l4-out');
+            let result = '';
+            if (mode === 'table') {
+                const header = '    ' + [...Array(n)].map((_, j) => String(j + 1).padStart(4)).join('');
+                result = header + '\n' + '    ' + '-'.repeat(n * 4) + '\n';
+                for (let i = 1; i <= n; i++) {
+                    result += String(i).padStart(2) + ' | ';
+                    for (let j = 1; j <= n; j++)result += String(i * j).padStart(4);
+                    result += '\n';
+                }
+                result += `\nTotal iterations: ${n}×${n} = ${n * n}`;
+            } else if (mode === 'triangle') {
+                for (let i = 1; i <= n; i++)result += '* '.repeat(i) + '\n';
+                result += `\nfor i in range(1,${n + 1}):\n    print('* ' * i)`;
+            } else {
+                for (let i = 1; i <= n; i++) {
+                    const spaces = ' '.repeat(n - i);
+                    result += spaces + '* '.repeat(i) + '\n';
+                }
+                result += `\nfor i in range(1,${n + 1}):\n    print(' '*(${n}-i) + '* '*i)`;
+            }
+            out.textContent = result;
+        }
+
+        function s2l5Enum() {
+            const a = document.getElementById('s2l5-a').value.split(',').map(s => s.trim());
+            const out = document.getElementById('s2l5-out');
+            out.innerHTML = `<span class="com">>>> for i, lang in enumerate(langs):</span>\n` +
+                a.map((v, i) => `    (${i}, "${v}")`).join('\n') +
+                `\n\n<span class="lbl">enumerate()</span> gives index + value pairs\nUseful when you need both position and content`;
+        }
+        function s2l5Zip() {
+            const a = document.getElementById('s2l5-a').value.split(',').map(s => s.trim());
+            const b = document.getElementById('s2l5-b').value.split(',').map(s => s.trim());
+            const out = document.getElementById('s2l5-out');
+            const pairs = [];
+            const len = Math.min(a.length, b.length);
+            for (let i = 0; i < len; i++)pairs.push(`    ("${a[i]}", ${b[i]})`);
+            out.innerHTML = `<span class="com">>>> for lang, score in zip(langs, scores):</span>\n` +
+                pairs.join('\n') +
+                (a.length !== b.length ? `\n\n<span class="warn">⚠ Lists have different lengths (${a.length} vs ${b.length})\nzip() stops at the shorter one — ${Math.abs(a.length - b.length)} item(s) dropped!</span>` : `\n\n<span class="ok">✅ Both lists same length — no data lost</span>`);
+        }
+        function s2l5ForElse() {
+            const a = document.getElementById('s2l5-a').value.split(',').map(s => s.trim());
+            const search = 'Java';
+            const found = a.includes(search);
+            const out = document.getElementById('s2l5-out');
+            out.innerHTML = `<span class="com">>>> Searching for "${search}" in ${JSON.stringify(a)}</span>
+for lang in langs:
+    if lang == "${search}":
+        print("Found!")
+        break
+else:
+    print("Not found")   <span class="com"># runs only if no break</span>
+
+<span class="${found ? 'ok' : 'warn'}">${found ? `"${search}" was found → break fired → else SKIPPED` : `"${search}" not found → loop completed → else RUNS`}</span>`;
+        }
+
+        // Init
+        initDragAndDrop();
+        shufflePools();
+        s2l1Run();
+    </script>
+</body>
+
+</html>

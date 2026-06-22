@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Scope — LEGB, Closures &amp; Nested Functions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+            margin-top: 10px;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* ================= VISUALIZERS ================= */
+        .scope-box {
+            border: 1px solid #ffd1d5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #ffffff;
+        }
+
+        .scope-box .scope-label {
+            font-family: var(--body);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: var(--red-deep);
+        }
+
+        .scope-var {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            padding: 10px 14px;
+            background: #fff8f8;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--red);
+        }
+
+        /* ================= DRAG AND DROP CUSTOM STYLES ================= */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 40px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        .bucket-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .bucket {
+            flex: 1;
+            min-height: 160px;
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bucket.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.03);
+        }
+
+        .bucket-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #5a4b4b;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            width: 100%;
+            text-align: center;
+            padding-bottom: 8px;
+            margin-bottom: 6px;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Variable <span>Scopes &amp; Closures</span></h1>
+        <p class="sub">Understand namespaces and lifetime. Learn how variables resolve via LEGB rules, override via
+            global/nonlocal bounds, and preserve states inside closures.</p>
+    </header>
+
+    <main>
+        <div class="sec-head">
+            <div class="sec-num">// SUBTOPIC 2.4</div>
+            <h2>Scope · Nested Functions · global/nonlocal</h2>
+            <p>Master Python's scope resolution layers. Work through the 5 progression levels from local boundaries to
+                closures, stubs, and variable shadowing.</p>
+        </div>
+
+        <div class="level-strip" id="s4-levels"></div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="s4-bar" style="width:20%"></div>
+        </div>
+
+        <!-- S4 L1 -->
+        <div class="level-panel active" id="s4-l1">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Local vs Global Scope</h3>
+                <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                    <strong>Core Concepts:</strong>
+                    <p>Variables reside in isolated namespaces based on where they are initialized:</p>
+                    <ul>
+                        <li><strong>Local Scope:</strong> Variables created inside a function are local to it. They are
+                            created on function invocation and garbage collected immediately when the function
+                            terminates.</li>
+                        <li><strong>Global Scope:</strong> Variables initialized at the module root level. They are
+                            accessible by any function in the module for reading, but modifying them requires explicit
+                            keywords.</li>
+                        <li><strong>LEGB Lookup Rule:</strong> When resolving a variable name, Python searches
+                            namespaces in strict order: **L**ocal → **E**nclosing → **G**lobal → **B**uilt-in.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l1">LEVEL 1</span>Scope Visualizer Sandbox</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Input custom global and local numeric states to watch how
+                    namespaces isolate values in the visual diagram below.
+                </div>
+                <div class="row">
+                    <div><label>Global variable value</label><input type="number" id="s4l1-gval" value="100"></div>
+                    <div><label>Local variable value (inside function)</label><input type="number" id="s4l1-lval"
+                            value="42"></div>
+                </div>
+                <button class="action" onclick="s4l1Run()">▶ Demo Scope</button>
+                <div class="output" id="s4l1-out">com: set values and run</div>
+
+                <div id="s4l1-vis" style="margin-top:14px;display:none;">
+                    <div class="scope-box global-scope">
+                        <div class="scope-label" style="color:var(--l1);">🌐 Global Scope</div>
+                        <div class="scope-var" id="s4l1-g1" style="border-left-color:var(--l1);"></div>
+                    </div>
+                    <div class="scope-box local-scope">
+                        <div class="scope-label" style="color:var(--l2);">📦 Local Scope (inside function)</div>
+                        <div class="scope-var" id="s4l1-l1" style="border-left-color:var(--l2);"></div>
+                    </div>
+                </div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Try referencing the local variable outside the function block in your script. Why does Python
+                        throw a <code>NameError</code>?</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Variable Scope &amp; LEGB Resolving</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag each variable or parameter into its correct scope boundary
+                    relative to the innermost function <code>inner</code>!
+                </div>
+                <div class="indent-demo" style="margin-bottom:18px; line-height:1.8;">
+                    <span class="lvl0">a = 100</span>
+                    <span class="lvl0"></span>
+                    <span class="lvl0">def outer(b):</span>
+                    <span class="lvl1">c = 200</span>
+                    <span class="lvl1"></span>
+                    <span class="lvl1">def inner(d):</span>
+                    <span class="lvl2">e = 300</span>
+                    <span class="lvl2">return a + b + c + d + e</span>
+                </div>
+                <div class="game-container" id="l1-game">
+                    <div class="game-header">
+                        <span>🎯 Scope Boundary Sorter</span>
+                        <span class="game-score">Score: <span id="l1-score">0</span>/5</span>
+                    </div>
+                    <div class="bucket-container" style="flex-wrap: wrap;">
+                        <div class="bucket" id="bucket-global" data-pool-id="l1-pool">
+                            <div class="bucket-title">🌐 Global Scope</div>
+                        </div>
+                        <div class="bucket" id="bucket-enclosing" style="border-color:var(--l3);"
+                            data-pool-id="l1-pool">
+                            <div class="bucket-title">📦 Enclosing Scope (outer)</div>
+                        </div>
+                        <div class="bucket" id="bucket-local" style="border-color:var(--l2);" data-pool-id="l1-pool">
+                            <div class="bucket-title">🔒 Local Scope (inner)</div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l1-pool">
+                        <div class="draggable-item" id="l1-item-a" draggable="true" data-expected="bucket-global"
+                            data-val="a">a</div>
+                        <div class="draggable-item" id="l1-item-b" draggable="true" data-expected="bucket-enclosing"
+                            data-val="b">b</div>
+                        <div class="draggable-item" id="l1-item-c" draggable="true" data-expected="bucket-enclosing"
+                            data-val="c">c</div>
+                        <div class="draggable-item" id="l1-item-d" draggable="true" data-expected="bucket-local"
+                            data-val="d">d</div>
+                        <div class="draggable-item" id="l1-item-e" draggable="true" data-expected="bucket-local"
+                            data-val="e">e</div>
+                    </div>
+                    <button class="action" onclick="l1Verify()">Verify Scope Assignment</button>
+                    <div class="game-feedback" id="l1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4 L2 -->
+        <div class="level-panel" id="s4-l2">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Overriding Scope: global &amp; nonlocal</h3>
+                <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                    <strong>Core Concepts:</strong>
+                    <p>By default, trying to assign a value inside a function to a variable declared outside creates a
+                        *new local* variable rather than modifying the outer one. Keywords change this behavior:</p>
+                    <ul>
+                        <li><strong>global:</strong> Declares that a variable inside the function refers to the
+                            module-level global namespace.</li>
+                        <li><strong>nonlocal:</strong> Declares that a variable refers to the nearest enclosing scope
+                            (excluding global). Vital for nested functions holding state.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l2">LEVEL 2</span>Namespace Modification Sandbox</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Set initial states and increment counts to see how the global
+                    keyword allows a function block to edit global namespace cells.
+                </div>
+                <div class="row">
+                    <div><label>Counter start value</label><input type="number" id="s4l2-start" value="0"></div>
+                    <div><label>Increment by</label><input type="number" id="s4l2-inc" value="1"></div>
+                </div>
+                <button class="action" onclick="s4l2Inc()">▶ Increment (global)</button>
+                <button class="action ghost" onclick="s4l2Reset()">↺ Reset</button>
+                <div class="output" id="s4l2-out">com: press Increment to modify the global counter</div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>What happens if you try to assign <code>count += 1</code> inside a function without declaring
+                        <code>global count</code> first? It throws an <code>UnboundLocalError</code>!</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Three-Tier Scope Override</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct override keywords (<code>nonlocal</code> and
+                    <code>global</code>) to allow nested scopes to modify enclosing vs global variables.
+                </div>
+                <div class="game-container" id="l2-game">
+                    <div class="game-header">
+                        <span>🎯 Scope Modifier Target Bindings</span>
+                        <span class="game-score">Score: <span id="l2-score">0</span>/2</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">x = 0 # Global variable</span>
+                        <span class="lvl0"></span>
+                        <span class="lvl0">def outer():</span>
+                        <span class="lvl1">x = 10 # Enclosing variable</span>
+                        <span class="lvl1"></span>
+                        <span class="lvl1">def inner():</span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l2-zone-0" data-expected="nonlocal" data-pool-id="l2-pool"></div>
+                            <span>x # Target outer's x</span>
+                        </span>
+                        <span class="lvl2">x = 20</span>
+                        <span class="lvl2"></span>
+                        <span class="lvl2">def deepest():</span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px; padding-left:60px;">
+                            <div class="drop-zone" id="l2-zone-1" data-expected="global" data-pool-id="l2-pool"></div>
+                            <span>x # Target global x</span>
+                        </span>
+                        <span class="lvl2" style="padding-left:60px;">x = 30</span>
+                    </div>
+                    <div class="items-pool" id="l2-pool">
+                        <div class="draggable-item" id="l2-item-nonlocal" draggable="true" data-val="nonlocal">nonlocal
+                        </div>
+                        <div class="draggable-item" id="l2-item-global" draggable="true" data-val="global">global</div>
+                        <div class="draggable-item" id="l2-item-local" draggable="true" data-val="local">local</div>
+                        <div class="draggable-item" id="l2-item-outer" draggable="true" data-val="outer">outer</div>
+                        <div class="draggable-item" id="l2-item-xvar" draggable="true" data-val="x">x</div>
+                    </div>
+                    <button class="action" onclick="l2Verify()">Verify Override Keywords</button>
+                    <div class="game-feedback" id="l2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4 L3 -->
+        <div class="level-panel" id="s4-l3">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Nested Functions &amp; Closures</h3>
+                <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                    <strong>Core Concepts:</strong>
+                    <p>A nested function is a function defined inside another outer function:</p>
+                    <ul>
+                        <li><strong>Inner Namespace Access:</strong> Inner functions can read variables from their outer
+                            enclosing function (via Enclosing scope).</li>
+                        <li><strong>Closures:</strong> A closure is a record storing a function together with an
+                            environment. Even after the outer function finishes executing, the inner function continues
+                            to "remember" and access variables from the outer scope's namespace.</li>
+                    </ul>
+                </div>
+                <h4>Closure Constructor Pattern</h4>
+                <div class="indent-demo">
+                    <span class="lvl0">def make_multiplier(factor):</span>
+                    <span class="lvl1">def multiply(x):</span>
+                    <span class="lvl2">return x * factor # factor is captured from enclosing scope</span>
+                    <span class="lvl1">return multiply</span>
+                    <span class="lvl0"></span>
+                    <span class="lvl0">double = make_multiplier(2)</span>
+                    <span class="lvl0">double(5) # returns 10</span>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l3">LEVEL 3</span>Closure Factory Sandbox</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Set a multiplier factor (outer variable) and multiply values
+                    inside the inner closure structure.
+                </div>
+                <div class="row">
+                    <div><label>Multiplier (outer param)</label><input type="number" id="s4l3-mult" value="3"></div>
+                    <div><label>Value to multiply (inner call)</label><input type="number" id="s4l3-val" value="7">
+                    </div>
+                </div>
+                <button class="action" onclick="s4l3Run()">▶ Create Closure &amp; Call</button>
+                <div class="output" id="s4l3-out">com: build a multiplier factory function</div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Change multiplier to 5 and evaluate. Where is the multiplier factor 5 stored? It resides inside
+                        the function's internal <code>__closure__</code> attribute!</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Stateful Closure Accumulator</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct tokens to complete a stateful closure counter
+                    factory function that maintains its running count across calls!
+                </div>
+                <div class="game-container" id="l3-game">
+                    <div class="game-header">
+                        <span>🎯 Closure State Accumulator</span>
+                        <span class="game-score">Score: <span id="l3-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">def make_counter(start=0):</span>
+                        <span class="lvl1">count = start</span>
+                        <span class="lvl1"></span>
+                        <span class="lvl1">def counter(increment=1):</span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l3-zone-0" data-expected="nonlocal" data-pool-id="l3-pool"></div>
+                            <span>count</span>
+                        </span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l3-zone-1" data-expected="count" data-pool-id="l3-pool"></div>
+                            <span>+= increment</span>
+                        </span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <span>return </span>
+                            <div class="drop-zone" id="l3-zone-2" data-expected="count" data-pool-id="l3-pool"></div>
+                        </span>
+                        <span class="lvl1" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <span>return </span>
+                            <div class="drop-zone" id="l3-zone-3" data-expected="counter" data-pool-id="l3-pool"></div>
+                        </span>
+                    </div>
+                    <div class="items-pool" id="l3-pool">
+                        <div class="draggable-item" id="l3-item-nonlocal" draggable="true" data-val="nonlocal">nonlocal
+                        </div>
+                        <div class="draggable-item" id="l3-item-count1" draggable="true" data-val="count">count</div>
+                        <div class="draggable-item" id="l3-item-count2" draggable="true" data-val="count">count</div>
+                        <div class="draggable-item" id="l3-item-counter" draggable="true" data-val="counter">counter
+                        </div>
+                        <div class="draggable-item" id="l3-item-global" draggable="true" data-val="global">global</div>
+                        <div class="draggable-item" id="l3-item-start" draggable="true" data-val="start">start</div>
+                        <div class="draggable-item" id="l3-item-increment" draggable="true" data-val="increment">
+                            increment</div>
+                        <div class="draggable-item" id="l3-item-make" draggable="true" data-val="make_counter">
+                            make_counter</div>
+                    </div>
+                    <button class="action" onclick="l3Verify()">Verify Closure</button>
+                    <div class="game-feedback" id="l3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4 L4 -->
+        <div class="level-panel" id="s4-l4">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Decorators &amp; Closure Wrapper Scopes</h3>
+                <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                    <strong>Core Concepts:</strong>
+                    <p>A decorator is a function that takes another function as an argument, extends its behavior
+                        without modifying it, and returns a new function (closure wrapper):</p>
+                    <ul>
+                        <li><strong>Wrapper Function:</strong> The nested inner function that receives arguments,
+                            executes the wrapped function, and optionally transforms findings.</li>
+                        <li><strong>Argument Delegation (*args, **kwargs):</strong> Allows the decorator wrapper to
+                            accept any arbitrary positional or keyword arguments and forward them seamlessly.</li>
+                        <li><strong>Function Return:</strong> The outer decorator function must return the inner wrapper
+                            function reference (without calling it).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l4">LEVEL 4</span>Decorator Scope Sandbox</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Choose a closure-based decorator type and input value to see how
+                    the wrapper intercepts execution.
+                </div>
+                <div class="row">
+                    <div>
+                        <label>Decorator wrapper logic</label>
+                        <select id="s4l4-decorator">
+                            <option value="uppercase">@uppercase (Converts return to upper)</option>
+                            <option value="reverse">@reverse (Reverses returned string)</option>
+                            <option value="bracket">@bracket (Wraps return in [brackets])</option>
+                        </select>
+                    </div>
+                    <div><label>Function input string</label><input type="text" id="s4l4-val" value="python"></div>
+                </div>
+                <button class="action" onclick="s4l4Run()">▶ Wrap &amp; Execute</button>
+                <div class="output" id="s4l4-out">com: choose wrapper options and run</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>High-Order Decorator Scope</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct tokens to complete a decorator that logs execution
+                    details by calling the wrapped function with all arguments!
+                </div>
+                <div class="game-container" id="l4-game">
+                    <div class="game-header">
+                        <span>🎯 Decorator Wrapper Scope</span>
+                        <span class="game-score">Score: <span id="l4-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">def log_execution(func):</span>
+                        <span class="lvl1">def wrapper(*args, **kwargs):</span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>result = </span>
+                            <div class="drop-zone" id="l4-zone-0" data-expected="func" data-pool-id="l4-pool"></div>
+                            <span>(</span>
+                            <div class="drop-zone" id="l4-zone-1" data-expected="*args" data-pool-id="l4-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l4-zone-2" data-expected="**kwargs" data-pool-id="l4-pool"></div>
+                            <span>)</span>
+                        </span>
+                        <span class="lvl2">return f"Result: {result}"</span>
+                        <span class="lvl1" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <span>return </span>
+                            <div class="drop-zone" id="l4-zone-3" data-expected="wrapper" data-pool-id="l4-pool"></div>
+                        </span>
+                    </div>
+                    <div class="items-pool" id="l4-pool">
+                        <div class="draggable-item" id="l4-item-func" draggable="true" data-val="func">func</div>
+                        <div class="draggable-item" id="l4-item-args-unpack" draggable="true" data-val="*args">*args
+                        </div>
+                        <div class="draggable-item" id="l4-item-kwargs-unpack" draggable="true" data-val="**kwargs">
+                            **kwargs</div>
+                        <div class="draggable-item" id="l4-item-wrapper" draggable="true" data-val="wrapper">wrapper
+                        </div>
+                        <div class="draggable-item" id="l4-item-args-raw" draggable="true" data-val="args">args</div>
+                        <div class="draggable-item" id="l4-item-kwargs-raw" draggable="true" data-val="kwargs">kwargs
+                        </div>
+                        <div class="draggable-item" id="l4-item-logexec" draggable="true" data-val="log_execution">
+                            log_execution</div>
+                        <div class="draggable-item" id="l4-item-starfunc" draggable="true" data-val="*func">*func</div>
+                    </div>
+                    <button class="action" onclick="l4Verify()">Verify Decorator Wrapper</button>
+                    <div class="game-feedback" id="l4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4 L5 -->
+        <div class="level-panel" id="s4-l5">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Variable Shadowing &amp; LEGB Resolving</h3>
+                <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                    <strong>Core Concepts:</strong>
+                    <p>Variable shadowing occurs when a variable declared within a local scope has the same name as one
+                        in an outer scope:</p>
+                    <ul>
+                        <li><strong>Shadowing Action:</strong> The local variable "shadows" (hides) the outer variable.
+                            Inside the function, the name resolves to the local value, leaving the outer variable
+                            untouched.</li>
+                        <li><strong>Debugging Shadowing:</strong> Unintentional shadowing (like overriding built-in
+                            names like <code>list</code>, <code>id</code>, or <code>str</code>) is a common source of
+                            bugs in Python applications.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l5">LEVEL 5</span>LEGB Trace Resolution Table</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Configure variables at global, enclosing, and local scopes under
+                    the same variable name to watch how namespaces isolate values.
+                </div>
+                <div class="row">
+                    <div><label>Variable name</label><input type="text" id="s4l5-varname" value="x"></div>
+                    <div><label>Global value</label><input type="number" id="s4l5-gval" value="10"></div>
+                    <div><label>Enclosing value</label><input type="number" id="s4l5-eval" value="20"></div>
+                    <div><label>Local value</label><input type="number" id="s4l5-lval" value="30"></div>
+                </div>
+                <button class="action" onclick="s4l5Run()">▶ Trace LEGB Resolution</button>
+                <div class="output" id="s4l5-out">com: set values and trace how Python resolves the variable</div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Change local to 30. Observe how inner functions look up. If the local variable is deleted, where
+                        does Python find the value next?</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>LEGB Execution Trace</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Trace the nested scopes and nonlocal assignments step-by-step. Drag
+                    the correct evaluated results to match the output variables at each scope execution checkpoint!
+                </div>
+                <div class="indent-demo" style="margin-bottom:18px; line-height:1.8;">
+                    <span class="lvl0">x = 10</span>
+                    <span class="lvl0"></span>
+                    <span class="lvl0">def outer():</span>
+                    <span class="lvl1">x = 20</span>
+                    <span class="lvl1">def inner():</span>
+                    <span class="lvl2">nonlocal x</span>
+                    <span class="lvl2">x = 30</span>
+                    <span class="lvl2">return x</span>
+                    <span class="lvl1"></span>
+                    <span class="lvl1">val_1 = inner()</span>
+                    <span class="lvl1">val_2 = x</span>
+                    <span class="lvl1">return val_1, val_2</span>
+                    <span class="lvl0"></span>
+                    <span class="lvl0">val_3 = outer()</span>
+                    <span class="lvl0">val_4 = x</span>
+                </div>
+                <div class="game-container" id="l5-game">
+                    <div class="game-header">
+                        <span>🎯 LEGB Value Resolution Trace</span>
+                        <span class="game-score">Score: <span id="l5-score">0</span>/4</span>
+                    </div>
+                    <div class="formula-builder"
+                        style="display:flex; flex-direction:column; gap:12px; font-family:var(--mono); align-items: flex-start;">
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <span style="min-width:200px;">val_1 (inner() return):</span>
+                            <div class="drop-zone" id="l5-zone-0" data-expected="30" data-pool-id="l5-pool"></div>
+                        </div>
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <span style="min-width:200px;">val_2 (enclosing x):</span>
+                            <div class="drop-zone" id="l5-zone-1" data-expected="30" data-pool-id="l5-pool"></div>
+                        </div>
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <span style="min-width:200px;">val_3 (outer() return):</span>
+                            <div class="drop-zone" id="l5-zone-2" data-expected="(30, 30)" data-pool-id="l5-pool"></div>
+                        </div>
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <span style="min-width:200px;">val_4 (global x):</span>
+                            <div class="drop-zone" id="l5-zone-3" data-expected="10" data-pool-id="l5-pool"></div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l5-pool">
+                        <div class="draggable-item" id="l5-item-30a" draggable="true" data-val="30">30</div>
+                        <div class="draggable-item" id="l5-item-30b" draggable="true" data-val="30">30</div>
+                        <div class="draggable-item" id="l5-item-tuple-30-30" draggable="true" data-val="(30, 30)">(30,
+                            30)</div>
+                        <div class="draggable-item" id="l5-item-10" draggable="true" data-val="10">10</div>
+                        <div class="draggable-item" id="l5-item-20" draggable="true" data-val="20">20</div>
+                        <div class="draggable-item" id="l5-item-tuple-20-30" draggable="true" data-val="(20, 30)">(20,
+                            30)</div>
+                        <div class="draggable-item" id="l5-item-tuple-30-10" draggable="true" data-val="(30, 10)">(30,
+                            10)</div>
+                        <div class="draggable-item" id="l5-item-100" draggable="true" data-val="100">100</div>
+                    </div>
+                    <button class="action" onclick="l5Verify()">Verify LEGB Trace</button>
+                    <div class="game-feedback" id="l5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Module 2 · Decision Making &amp; Functions · Section 2.4</div>
+    </main>
+
+    <script>
+        const SUBTOPIC = 's4';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Scope Boundaries' },
+            { cls: 'l2', label: 'Level 2 · Enclosing Overrides' },
+            { cls: 'l3', label: 'Level 3 · Stateful Closures' },
+            { cls: 'l4', label: 'Level 4 · Decorator Wrappers' },
+            { cls: 'l5', label: 'Level 5 · LEGB Trace Resolving' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.innerHTML = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, btn);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, btn) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll(`.level-panel`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        // ===================== SIMULATION LOGIC =====================
+        function s4l1Run() {
+            const gval = document.getElementById('s4l1-gval').value;
+            const lval = document.getElementById('s4l1-lval').value;
+            const out = document.getElementById('s4l1-out');
+            const vis = document.getElementById('s4l1-vis');
+            out.innerHTML =
+                `<span class="com">>>> x = ${gval}   # global</span>
+
+def show_local():
+    x = ${lval}    <span class="com"># local — shadows global</span>
+    print(x)        <span class="ok">→ ${lval}</span>
+
+show_local()        <span class="ok">→ prints ${lval} (local x)</span>
+print(x)            <span class="ok">→ prints ${gval} (global x unchanged)</span>
+
+<span class="com"># LEGB: Python found x locally first — global not touched</span>`;
+            vis.style.display = 'block';
+            document.getElementById('s4l1-g1').textContent = `x = ${gval}  (global)`;
+            document.getElementById('s4l1-l1').textContent = `x = ${lval}  (local — destroyed after function ends)`;
+        }
+
+        let s4l2counter = 0;
+        function s4l2Inc() {
+            const inc = parseInt(document.getElementById('s4l2-inc').value) || 1;
+            s4l2counter += inc;
+            const out = document.getElementById('s4l2-out');
+            out.innerHTML =
+                `<span class="com">>>> count = ${s4l2counter - inc}   # global</span>
+
+def increment():
+    global count        <span class="ok">← declares intent to modify global</span>
+    count += ${inc}
+
+increment()
+<span class="lbl">count =</span> ${s4l2counter}
+
+<span class="com"># Without "global count" → UnboundLocalError!</span>
+<span class="com"># Python would think you're creating a new local variable</span>`;
+        }
+        function s4l2Reset() {
+            const start = parseInt(document.getElementById('s4l2-start').value) || 0;
+            s4l2counter = start;
+            document.getElementById('s4l2-out').innerHTML = `<span class="com">Counter reset to ${start}</span>`;
+        }
+
+        function s4l3Run() {
+            const mult = parseInt(document.getElementById('s4l3-mult').value) || 3;
+            const val = parseInt(document.getElementById('s4l3-val').value) || 7;
+            const out = document.getElementById('s4l3-out');
+            const result = mult * val;
+            out.innerHTML =
+                `<span class="com">>>> # Factory function — returns a closure</span>
+def make_multiplier(factor):       <span class="com"># outer fn</span>
+    def multiply(x):               <span class="com"># inner fn (closure)</span>
+        return factor * x          <span class="com"># "closes over" factor=${mult}</span>
+    return multiply
+
+times${mult} = make_multiplier(${mult})
+<span class="com"># times${mult} now holds the inner function</span>
+<span class="com"># it "remembers" factor=${mult} even after make_multiplier() ended</span>
+
+times${mult}(${val})
+<span class="ok">→ ${result}</span>
+
+<span class="com"># factor=${mult} is captured in the closure's __closure__</span>`;
+        }
+
+        function s4l4Run() {
+            const dec = document.getElementById('s4l4-decorator').value;
+            const val = document.getElementById('s4l4-val').value;
+            const out = document.getElementById('s4l4-out');
+            let result = '';
+            let decCode = '';
+            if (dec === 'uppercase') {
+                result = val.toUpperCase();
+                decCode = `def uppercase(func):
+    def wrapper(text):
+        return func(text).upper()
+    return wrapper`;
+            } else if (dec === 'reverse') {
+                result = val.split('').reverse().join('');
+                decCode = `def reverse(func):
+    def wrapper(text):
+        return func(text)[::-1]
+    return wrapper`;
+            } else {
+                result = `[${val}]`;
+                decCode = `def bracket(func):
+    def wrapper(text):
+        return f"[{func(text)}]"
+    return wrapper`;
+            }
+            out.innerHTML =
+                `<span class="com"># Decorator Definition:</span>
+${decCode}
+
+@${dec}
+def get_message(s):
+    return s
+
+get_message("${val}")
+<span class="ok">→ "${result}"</span>
+
+<span class="com"># The decorator returned 'wrapper', wrapping 'get_message'.</span>
+<span class="com"># The call get_message("${val}") was intercepted by the wrapper!</span>`;
+        }
+
+        function s4l5Run() {
+            const varname = document.getElementById('s4l5-varname').value.trim() || 'x';
+            const gval = document.getElementById('s4l5-gval').value;
+            const eval_ = document.getElementById('s4l5-eval').value;
+            const lval = document.getElementById('s4l5-lval').value;
+            const out = document.getElementById('s4l5-out');
+            out.innerHTML =
+                `<span class="com">>>> ${varname} = ${gval}   # G — Global</span>
+
+def outer():
+    ${varname} = ${eval_}   <span class="com"># E — Enclosing</span>
+    def inner():
+        ${varname} = ${lval}   <span class="com"># L — Local</span>
+        print(${varname})      <span class="ok">→ ${lval}  (Local found first)</span>
+    inner()
+    print(${varname})          <span class="ok">→ ${eval_}  (Enclosing)</span>
+
+outer()
+print(${varname})              <span class="ok">→ ${gval}  (Global)</span>
+
+<span class="lbl">LEGB Resolution Order:</span>
+  L → Local:     ${varname} = ${lval}   (innermost — found first)
+  E → Enclosing: ${varname} = ${eval_}   (outer function)
+  G → Global:    ${varname} = ${gval}   (module level)
+  B → Builtin:   (not applicable here)
+
+<span class="com"># Each scope has its OWN ${varname} — they don't conflict</span>`;
+        }
+
+        // ===================== DRAG & DROP UTILITIES =====================
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            let target = e.currentTarget;
+
+            if (target.classList.contains("drop-zone") || target.classList.contains("items-pool") || target.classList.contains("bucket")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+        }
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .items-pool, .bucket").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+        }
+
+        // ===================== PUZZLE VERIFICATIONS =====================
+        function l1Verify() {
+            const globalBucket = document.getElementById('bucket-global');
+            const enclosingBucket = document.getElementById('bucket-enclosing');
+            const localBucket = document.getElementById('bucket-local');
+            let score = 0;
+
+            Array.from(globalBucket.children).forEach(item => {
+                if (item.classList.contains('draggable-item') && item.dataset.expected === 'bucket-global') {
+                    score++;
+                }
+            });
+            Array.from(enclosingBucket.children).forEach(item => {
+                if (item.classList.contains('draggable-item') && item.dataset.expected === 'bucket-enclosing') {
+                    score++;
+                }
+            });
+            Array.from(localBucket.children).forEach(item => {
+                if (item.classList.contains('draggable-item') && item.dataset.expected === 'bucket-local') {
+                    score++;
+                }
+            });
+
+            document.getElementById('l1-score').textContent = score;
+            const feedback = document.getElementById('l1-feedback');
+            if (score === 5) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Perfect! Relative to inner: e is local, d is local (param), b and c are enclosing, and a is global!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Some variables are in the wrong scope. Check their definition levels relative to the inner function. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            const slots = ['l2-zone-0', 'l2-zone-1'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feedback = document.getElementById('l2-feedback');
+            if (score === 2) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Outstanding! nonlocal targets the enclosing x of outer, and global targets the module-level global x!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect override keyword. Enclosing variables require nonlocal; global variables require global. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            const slots = ['l3-zone-0', 'l3-zone-1', 'l3-zone-2', 'l3-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feedback = document.getElementById('l3-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Correct! Declaring nonlocal count inside counter allows it to mutate the enclosing accumulator start cell, returning the inner function reference creates a working closure!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect closure construction. Check where nonlocal declaration is placed and what function is returned. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            const slots = ['l4-zone-0', 'l4-zone-1', 'l4-zone-2', 'l4-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feedback = document.getElementById('l4-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Splendid! The decorator wrapper intercepts execution, calls func(*args, **kwargs) forwarding all arguments, and returns wrapper!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect decorator wrapper syntax. Ensure func call forwards unpacked *args and **kwargs, and wrapper function reference is returned. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            const slots = ['l5-zone-0', 'l5-zone-1', 'l5-zone-2', 'l5-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feedback = document.getElementById('l5-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Flawless! inner() returns 30, which updates enclosing x to 30. outer() returns (30, 30) while global x is untouched (10)!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Trace resolution incorrect. Trace nonlocal mutation side effects on enclosing scope vs global isolation. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        // Init
+        initDragAndDrop();
+        shufflePools();
+        s4l1Run();
+        s4l2counter = parseInt(document.getElementById('s4l2-start').value) || 0;
+    </script>
+</body>
+
+</html>

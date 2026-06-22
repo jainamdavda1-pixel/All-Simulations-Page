@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Strings, Formatting &amp; Type Casting</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        /* ===== LEVEL PANEL ===== */
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== MISC ===== */
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+
+        .pillbtn {
+            border: 1px solid #ffd1d5;
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--ink);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .pillbtn:hover,
+        .pillbtn.sel {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: #fff8f8;
+            border: 1px dashed #ffd1d5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .err {
+            color: #dc2626;
+            text-decoration: underline wavy;
+        }
+
+        /* ===== GAME CONTAINER ===== */
+        .game-container {
+            background: #ffffff;
+            border: 2px solid #ffd1d5;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            box-shadow: 4px 4px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffebeb;
+            padding-bottom: 12px;
+        }
+
+        .game-header span {
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--red-deep);
+        }
+
+        .game-score {
+            font-family: var(--mono);
+            color: var(--red);
+            font-size: 0.85rem;
+        }
+
+        .type-puzzle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fffafa;
+            border: 1px solid #ffe3e5;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        .type-puzzle-row:hover {
+            border-color: #ffd1d5;
+            background: #fff8f8;
+        }
+
+        .expr-text {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .drop-zone {
+            width: 130px;
+            height: 38px;
+            border: 2px dashed #ffd1d5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .drop-zone.hover {
+            border-color: var(--red);
+            background: #fff8f8;
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .items-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px;
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 70px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .draggable-item {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: grab;
+            background: #ffffff;
+            border: 1px solid #ffd1d5;
+            color: var(--ink);
+            box-shadow: 2px 2px 0 #ffebeb;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--red);
+            box-shadow: 3px 3px 0 #ffd1d5;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+        }
+
+        .game-feedback {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            background: var(--correct-bg);
+            color: var(--correct);
+            border-color: rgba(46, 125, 50, 0.2);
+        }
+
+        .game-feedback.wrong {
+            background: var(--wrong-bg);
+            color: var(--wrong);
+            border-color: rgba(183, 28, 28, 0.2);
+        }
+
+        .bit-cell {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .bit-cell.one {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #b35a5a;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Python <span>Strings</span></h1>
+        <p class="sub">Every string method, slicing operator, and casting rule broken into 5 levels — from zero to
+            expert.
+            Work each level, hit the interactive challenges, and climb the ladder one rung at a time.</p>
+    </header>
+
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- SUBTOPIC 3: STRINGS -->
+        <!-- ============================================================ -->
+        <section id="s3" class="section active">
+            <div class="sec-head">
+                <div class="sec-num">// SUBTOPIC 3</div>
+                <h2>Strings, format(), print() &amp; Type Casting</h2>
+                <p>Strings are sequences, f-strings are formatting powerhouses, and type casting is how Python crosses
+                    boundaries between types. Work through every level.</p>
+            </div>
+
+            <div class="level-strip" id="s3-levels"></div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" id="s3-bar" style="width:20%"></div>
+            </div>
+
+            <!-- S3 L1 -->
+            <div class="level-panel active" id="s3-l1">
+                <!-- LEVEL 1 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Stdout Streaming &amp; print() Control</h3>
+                    <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                        <strong>Core Concepts:</strong>
+                        <p>Python's string output and concatenation systems utilize dedicated buffering and stream
+                            routing
+                            mechanisms:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Stream Parameters:</strong> The <code>print()</code> function writes to the
+                                standard output
+                                stream (<code>sys.stdout</code>). By default, it joins multiple arguments using a space
+                                separator
+                                (<code>sep=' '</code>) and appends a trailing newline character (<code>end='\n'</code>)
+                                which flushes
+                                the line buffer. Overriding these parameters changes stream assembly directly.</li>
+                            <li><strong>Explicit Conversion Barriers:</strong> Python is strongly typed and refuses to
+                                perform
+                                implicit type coercion during concatenation. For example, <code>"Age: " + 21</code>
+                                raises a
+                                <code>TypeError</code>. The integer must be explicitly converted using
+                                <code>str(21)</code> before
+                                concatenating.
+                            </li>
+                            <li><strong>Triple-Quoted Strings:</strong> Multi-line string literals created using
+                                <code>"""</code> or
+                                <code>'''</code> retain all literal newlines and spaces, serving as convenient inline
+                                docstrings or
+                                structured templates in memory.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l1">LEVEL 1</span>Absolute Basics — String Creation &amp;
+                        <code>print()</code></h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Creating strings with single, double, and triple quotes. The
+                        <code>print()</code> function with <code>sep</code> and <code>end</code> parameters. String
+                        concatenation
+                        with <code>+</code> and <code>len()</code>.
+                    </div>
+                    <div class="row">
+                        <div><label>Your name</label><input type="text" id="s3l1-name" value="Rohan"></div>
+                        <div><label>Your city</label><input type="text" id="s3l1-city" value="Pune"></div>
+                        <div>
+                            <label>print() sep</label>
+                            <select id="s3l1-sep">
+                                <option value=" ">sep=' ' (default)</option>
+                                <option value=", ">sep=', '</option>
+                                <option value=" | ">sep=' | '</option>
+                                <option value=" → ">sep=' → '</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label>print() end</label>
+                            <select id="s3l1-end">
+                                <option value="\n">end='\n' (default)</option>
+                                <option value="">end='' (no newline)</option>
+                                <option value="!">end='!'</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="action" onclick="s3l1Run()">▶ Run print()</button>
+                    <div class="output" id="s3l1-out">com: fill in your name and city</div>
+                </div>
+
+                <!-- LEVEL 1 GAME: PRINT PARAMETERS & CONCATENATION -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>print() Parameters &amp; Concatenation</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct separators, indicators, or concatenation
+                        elements from the
+                        pool and drop them into the print calls and expressions to yield the target output!
+                    </div>
+                    <div class="game-container" id="l1-game">
+                        <div class="game-header">
+                            <span>🎯 Parameter &amp; Concatenation Placement</span>
+                            <span class="game-score">Score: <span id="l1-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l1-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">print("A", "B", "C", sep=[ drop ])</span>
+                                <span>→ A-B-C</span>
+                                <div class="drop-zone" id="l1-zone-0" data-expected='"-"' data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">print("A", "B", end=[ drop ])</span>
+                                <span>→ A B!</span>
+                                <div class="drop-zone" id="l1-zone-1" data-expected='"!"' data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Age: " [ drop ] 21</span>
+                                <span>→ "Age: 21"</span>
+                                <div class="drop-zone" id="l1-zone-2" data-expected="+ str(" data-pool-id="l1-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">print("Hello", "World", sep=[ drop ], end=[ drop ])</span>
+                                <span>→ HelloWorld</span>
+                                <div class="drop-zone" id="l1-zone-3" data-expected='""' data-pool-id="l1-pool"></div>
+                                <div class="drop-zone" id="l1-zone-4" data-expected='""' data-pool-id="l1-pool"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l1-pool">
+                            <div class="draggable-item" id="l1-opt-dash" draggable="true" data-val='"-"'>"-"</div>
+                            <div class="draggable-item" id="l1-opt-excl" draggable="true" data-val='"!"'>"!"</div>
+                            <div class="draggable-item" id="l1-opt-cast" draggable="true" data-val="+ str(">+ str(</div>
+                            <div class="draggable-item" id="l1-opt-empty1" draggable="true" data-val='""'>""</div>
+                            <div class="draggable-item" id="l1-opt-empty2" draggable="true" data-val='""'>""</div>
+                        </div>
+
+                        <button class="action" onclick="l1Verify()">Verify print()</button>
+                        <div class="game-feedback" id="l1-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S3 L2 -->
+            <div class="level-panel" id="s3-l2">
+                <!-- LEVEL 2 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>String Immutability &amp; Interning Mechanics</h3>
+                    <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                        <strong>Core Concepts:</strong>
+                        <p>Python handles text manipulation with memory optimization constraints at the interpreter
+                            level:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Immutability constraint:</strong> In Python, strings are immutable (cannot be
+                                altered in
+                                place). When you call string methods like <code>.replace()</code>,
+                                <code>.lower()</code>, or
+                                <code>.strip()</code>, the original string in memory is untouched. Instead, Python
+                                allocates a
+                                completely new string object and returns its pointer.
+                            </li>
+                            <li><strong>Method Chaining:</strong> Because each string method returns a new string
+                                reference, they can
+                                be chained sequentially (e.g. <code>s.strip().lower().replace(" ", "-")</code>),
+                                resolving from left to
+                                right.</li>
+                            <li><strong>String Interning:</strong> To optimize memory usage, CPython performs "string
+                                interning" on
+                                compile-time constants (e.g. short strings containing only letters, numbers, and
+                                underscores). These
+                                objects are stored in a lookup table, meaning multiple variables pointing to the same
+                                literal share a
+                                single memory block.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l2">LEVEL 2</span>Core Application — f-strings, <code>format()</code> &amp;
+                        String
+                        Methods</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> f-strings (<code>f"Hello {name}"</code>),
+                        <code>.format()</code>, and the
+                        essential string methods: <code>.upper()</code> <code>.lower()</code> <code>.strip()</code>
+                        <code>.replace()</code> <code>.split()</code> <code>.title()</code>.
+                    </div>
+                    <label>Your string</label>
+                    <input type="text" id="s3l2-str" value="  python is Fun!  " style="margin-bottom:14px;">
+                    <div class="grid3" id="s3l2-methods"></div>
+                    <div class="output" id="s3l2-out" style="margin-top:14px;">com: click a method to apply it</div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="tag">PLAYGROUND</span>format() Builder</h3>
+                    <div class="row">
+                        <div><label>Name</label><input type="text" id="s3l2-fname" value="Rohan"></div>
+                        <div><label>Score</label><input type="text" id="s3l2-fscore" value="87.5"></div>
+                    </div>
+                    <label>Template — use {} placeholders</label>
+                    <input type="text" id="s3l2-ftemplate" value="Hello {}, your score is {:.1f}%"
+                        style="margin-bottom:14px;">
+                    <button class="action" onclick="s3l2Format()">▶ Run format()</button>
+                    <div class="output" id="s3l2-fout" style="margin-top:14px;">com: edit template and run</div>
+                </div>
+
+                <!-- LEVEL 2 GAME: METHOD CHAINING PIPELINE -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>String Methods Pipeline</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct method block from the pool and drop it into the
+                        slots to
+                        transform the target variable <code>s = "  pYtHoN iS cOoL  "</code> into the expected output.
+                    </div>
+                    <div class="game-container" id="l2-game">
+                        <div class="game-header">
+                            <span>🎯 Method Chain Outputs</span>
+                            <span class="game-score">Score: <span id="l2-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l2-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "python is cool"</span>
+                                <div class="drop-zone" id="l2-zone-0" data-expected=".strip().lower()"
+                                    data-pool-id="l2-pool" style="width: 150px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s.strip()[ drop ]</span>
+                                <span>→ "pYtHoN iS cOoL"</span>
+                                <div class="drop-zone" id="l2-zone-1" data-expected='.replace("  ", "")'
+                                    data-pool-id="l2-pool" style="width: 150px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s.strip().lower()[ drop ]</span>
+                                <span>→ ["python", "is", "cool"]</span>
+                                <div class="drop-zone" id="l2-zone-2" data-expected=".split()" data-pool-id="l2-pool"
+                                    style="width: 150px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s.strip()[ drop ]</span>
+                                <span>→ "PYtHoN iS cOoL"</span>
+                                <div class="drop-zone" id="l2-zone-3" data-expected=".swapcase()" data-pool-id="l2-pool"
+                                    style="width: 150px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">f"Title: {s[ drop ]}"</span>
+                                <span>→ "Title: Python Is Cool"</span>
+                                <div class="drop-zone" id="l2-zone-4" data-expected=".strip().title()"
+                                    data-pool-id="l2-pool" style="width: 150px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l2-pool">
+                            <div class="draggable-item" id="l2-opt-strip-lower" draggable="true"
+                                data-val=".strip().lower()">
+                                .strip().lower()</div>
+                            <div class="draggable-item" id="l2-opt-repl" draggable="true" data-val='.replace("  ", "")'>
+                                .replace(" ",
+                                "")</div>
+                            <div class="draggable-item" id="l2-opt-split" draggable="true" data-val=".split()">.split()
+                            </div>
+                            <div class="draggable-item" id="l2-opt-swap" draggable="true" data-val=".swapcase()">
+                                .swapcase()</div>
+                            <div class="draggable-item" id="l2-opt-strip-title" draggable="true"
+                                data-val=".strip().title()">
+                                .strip().title()</div>
+                        </div>
+
+                        <button class="action" onclick="l2Verify()">Verify Methods</button>
+                        <div class="game-feedback" id="l2-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S3 L3 -->
+            <div class="level-panel" id="s3-l3">
+                <!-- LEVEL 3 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Slice Objects &amp; Step Mechanics</h3>
+                    <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                        <strong>Core Concepts:</strong>
+                        <p>Slicing is a native C-level indexing operation optimized inside the CPython interpreter:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Slice instantiation:</strong> The bracket notation
+                                <code>s[start:stop:step]</code> evaluates
+                                under the hood by creating a built-in <code>slice(start, stop, step)</code> object. This
+                                is passed to
+                                the string's <code>__getitem__</code> method.</li>
+                            <li><strong>Pointer math &amp; Steps:</strong> Negative indices count backward from the end
+                                pointer using
+                                <code>len(s) + index</code>. When step is negative, iteration runs backward from the
+                                start bounds. If
+                                start is omitted, it defaults to the end index; if stop is omitted, it bounds before the
+                                start index.
+                            </li>
+                            <li><strong>Linear Memory efficiency:</strong> Slicing strings copies data to create a new
+                                string object.
+                                However, slicing sequence structures like bytearrays or memoryviews returns a reference
+                                buffer view
+                                instead of deep copying.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="tag">CONCEPT</span>Indexing Visualizer</h3>
+                    <div id="s3l3-indexvis" style="margin-top:8px;"></div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l3">LEVEL 3</span>Intermediate Tricks — Slicing &amp; Membership</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> String indexing (positive and negative), slicing with
+                        <code>[start:stop:step]</code>, reversing with <code>[::-1]</code>, and the <code>in</code>
+                        membership
+                        operator.
+                    </div>
+                    <label>String to slice</label>
+                    <input type="text" id="s3l3-str" value="Python" style="margin-bottom:14px;">
+                    <div class="row">
+                        <div><label>start (blank = 0)</label><input type="text" id="s3l3-start" placeholder="e.g. 1">
+                        </div>
+                        <div><label>stop (blank = end)</label><input type="text" id="s3l3-stop" placeholder="e.g. 4">
+                        </div>
+                        <div><label>step (blank = 1)</label><input type="text" id="s3l3-step" placeholder="e.g. -1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="action" onclick="s3l3Slice()">▶ Slice It</button>
+                        <button class="action ghost" onclick="s3l3Reverse()">▶ Reverse [::-1]</button>
+                    </div>
+                    <div class="output" id="s3l3-out">com: enter a string and slicing params</div>
+                </div>
+
+                <!-- LEVEL 3 GAME: SLICING INDEX MASTER -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Slicing Index Master</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Given the base string <code>s = "Python"</code>, drag the
+                        correct slicing
+                        expression bracket and drop it into the slot next to the expected resulting output!
+                    </div>
+                    <div class="game-container" id="l3-game">
+                        <div class="game-header">
+                            <span>🎯 Slicing Output Matcher</span>
+                            <span class="game-score">Score: <span id="l3-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l3-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "yth"</span>
+                                <div class="drop-zone" id="l3-zone-0" data-expected="[1:4]" data-pool-id="l3-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "Pt"</span>
+                                <div class="drop-zone" id="l3-zone-1" data-expected="[:4:2]" data-pool-id="l3-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "hon"</span>
+                                <div class="drop-zone" id="l3-zone-2" data-expected="[-3:]" data-pool-id="l3-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "nohtyP"</span>
+                                <div class="drop-zone" id="l3-zone-3" data-expected="[::-1]" data-pool-id="l3-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">s[ drop ]</span>
+                                <span>→ "oht"</span>
+                                <div class="drop-zone" id="l3-zone-4" data-expected="[4:1:-1]" data-pool-id="l3-pool">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l3-pool">
+                            <div class="draggable-item" id="l3-opt-slice1" draggable="true" data-val="[1:4]">[1:4]</div>
+                            <div class="draggable-item" id="l3-opt-slice2" draggable="true" data-val="[:4:2]">[:4:2]
+                            </div>
+                            <div class="draggable-item" id="l3-opt-slice3" draggable="true" data-val="[-3:]">[-3:]</div>
+                            <div class="draggable-item" id="l3-opt-slice4" draggable="true" data-val="[::-1]">[::-1]
+                            </div>
+                            <div class="draggable-item" id="l3-opt-slice5" draggable="true" data-val="[4:1:-1]">[4:1:-1]
+                            </div>
+                        </div>
+
+                        <button class="action" onclick="l3Verify()">Verify Slices</button>
+                        <div class="game-feedback" id="l3-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S3 L4 -->
+            <div class="level-panel" id="s3-l4">
+                <!-- LEVEL 4 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Truthiness Evaluation &amp; Parsing Exceptions</h3>
+                    <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                        <strong>Core Concepts:</strong>
+                        <p>Type casting is an explicit constructor call creating new instances in memory:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Truthy/Falsy Evaluation:</strong> Calling <code>bool(obj)</code> delegates under
+                                the hood to
+                                <code>obj.__bool__()</code>. If that method is missing, it checks
+                                <code>obj.__len__()</code>. Because
+                                string literals define <code>__len__</code>, they are falsy only when their length is
+                                zero (e.g.
+                                <code>""</code>). Non-empty strings (even <code>"0"</code> or <code>"False"</code>)
+                                evaluate to
+                                <code>True</code>.
+                            </li>
+                            <li><strong>Float-to-Int Truncation:</strong> Casting a float to an int using
+                                <code>int()</code> truncates
+                                the decimals toward zero (equivalent to <code>math.trunc()</code>), rather than
+                                rounding.</li>
+                            <li><strong>Parsing Constraints:</strong> <code>int()</code> parses integer string
+                                representations under
+                                base-10. If the string contains non-digits (like decimal dots: <code>"3.14"</code>), the
+                                underlying
+                                C-parser (<code>strtol</code>) fails and raises a <code>ValueError</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l4">LEVEL 4</span>Advanced Edge Cases — Type Casting &amp; Truthy/Falsy
+                    </h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> <code>int()</code> <code>float()</code> <code>str()</code>
+                        <code>bool()</code> — and what causes <code>ValueError</code>. The truthy/falsy surprise:
+                        <code>bool("0")</code> is <code>True</code> because <code>"0"</code> is a non-empty string!
+                    </div>
+                    <div class="row">
+                        <div style="flex:2"><label>Value to cast</label><input type="text" id="s3l4-val" value="3.99">
+                        </div>
+                        <div>
+                            <label>Cast to</label>
+                            <select id="s3l4-type">
+                                <option value="int">int()</option>
+                                <option value="float">float()</option>
+                                <option value="str">str()</option>
+                                <option value="bool">bool()</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="action" onclick="s3l4Cast()">▶ Cast It</button>
+                    <div class="output" id="s3l4-out">com: try "hello" → int() for a ValueError!</div>
+                </div>
+
+                <!-- LEVEL 4 GAME: TYPE CASTING GATEKEEPER -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Type Casting Gatekeeper</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the evaluated cast results or error badges from the pool
+                        and drop them
+                        into the equations to satisfy Python's conversion logic!
+                    </div>
+                    <div class="game-container" id="l4-game">
+                        <div class="game-header">
+                            <span>🎯 Casting Outputs &amp; Error Checks</span>
+                            <span class="game-score">Score: <span id="l4-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l4-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">int("42")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l4-zone-0" data-expected="42" data-pool-id="l4-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">int(3.99)</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l4-zone-1" data-expected="3" data-pool-id="l4-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">bool("False")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l4-zone-2" data-expected="True" data-pool-id="l4-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">bool("")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l4-zone-3" data-expected="False" data-pool-id="l4-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">int("3.14")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l4-zone-4" data-expected="ValueError" data-pool-id="l4-pool">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l4-pool">
+                            <div class="draggable-item" id="l4-opt-42" draggable="true" data-val="42">42</div>
+                            <div class="draggable-item" id="l4-opt-3" draggable="true" data-val="3">3</div>
+                            <div class="draggable-item" id="l4-opt-true" draggable="true" data-val="True">True</div>
+                            <div class="draggable-item" id="l4-opt-false" draggable="true" data-val="False">False</div>
+                            <div class="draggable-item" id="l4-opt-valerr" draggable="true" data-val="ValueError">
+                                ValueError</div>
+                        </div>
+
+                        <button class="action" onclick="l4Verify()">Verify Casting</button>
+                        <div class="game-feedback" id="l4-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S3 L5 -->
+            <div class="level-panel" id="s3-l5">
+                <!-- LEVEL 5 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Concatenation Complexity &amp; Search Semantics</h3>
+                    <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                        <strong>Core Concepts:</strong>
+                        <p>Advanced string operations differ significantly in runtime complexity and exception handling:
+                        </p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>join() vs. + Loops:</strong> Using string concatenation (<code>+</code>) inside
+                                loops runs in
+                                <code>O(N<sup>2</sup>)</code> complexity because each concatenation creates a brand-new
+                                string copy.
+                                Alternatively, <code>str.join()</code> takes a sequence and computes the exact memory
+                                required in a
+                                single pre-allocation pass, copying segments in <code>O(N)</code> linear time.
+                            </li>
+                            <li><strong>Substring Search Mechanics:</strong>
+                                <ul>
+                                    <li><code>.find(sub)</code>: Returns the lowest integer index of the substring, or
+                                        <code>-1</code> if
+                                        missing. Perfect for boolean conditionals (e.g.
+                                        <code>if s.find("x") != -1:</code>).</li>
+                                    <li><code>.index(sub)</code>: Works similarly, but raises a <code>ValueError</code>
+                                        on failure,
+                                        forcing developers to wrap searches in a <code>try-except</code> block.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Alignment formatting:</strong> <code>.ljust(width)</code> and
+                                <code>.rjust(width)</code> align
+                                text left and right by padding with spaces or custom characters.
+                                <code>.zfill(width)</code> is a
+                                specialized version of rjust that pads exclusively with leading zeros, commonly used for
+                                sorting numbers
+                                as alphabetical index strings.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l5">LEVEL 5</span>Expert Mastery — <code>join()</code>, <code>find()</code>
+                        vs
+                        <code>index()</code>, Table Formatting
+                    </h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> <code>str.join()</code> for assembling strings, the difference
+                        between
+                        <code>.find()</code> (returns −1 on miss) and <code>.index()</code> (raises ValueError), and
+                        <code>.ljust()</code>/<code>.rjust()</code>/<code>.zfill()</code> for aligned table output.
+                    </div>
+                    <label>Words to join (comma-separated)</label>
+                    <div class="row">
+                        <div style="flex:3"><input type="text" id="s3l5-words" value="Data,Science,Python"></div>
+                        <div><label>Separator</label><input type="text" id="s3l5-sep" value=" → "></div>
+                    </div>
+                    <label>Search for substring</label>
+                    <div class="row">
+                        <div style="flex:2"><input type="text" id="s3l5-haystack" value="Hello Python World"></div>
+                        <div><label>Find</label><input type="text" id="s3l5-needle" value="Python"></div>
+                    </div>
+                    <button class="action" onclick="s3l5Run()">▶ Run join() + find() + index()</button>
+                    <div class="output" id="s3l5-out">com: fill in above and run</div>
+                </div>
+
+                <!-- LEVEL 5 GAME: EXPERT ALIGNMENT & SUBSTRING SOLVER -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Expert Alignment &amp; Substring Solver</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct resolved results from the pool and drop them
+                        into the slots
+                        next to the expert Python string formatting and search operations!
+                    </div>
+                    <div class="game-container" id="l5-game">
+                        <div class="game-header">
+                            <span>🎯 Advanced Formatting &amp; Substring Search</span>
+                            <span class="game-score">Score: <span id="l5-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l5-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"-".join(["A", "B", "C"])</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l5-zone-0" data-expected='"A-B-C"' data-pool-id="l5-pool"
+                                    style="width: 140px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Python".find("z")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l5-zone-1" data-expected="-1" data-pool-id="l5-pool"
+                                    style="width: 140px;">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Python".index("y")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l5-zone-2" data-expected="1" data-pool-id="l5-pool"
+                                    style="width: 140px;">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Hi".zfill(4)</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l5-zone-3" data-expected='"00Hi"' data-pool-id="l5-pool"
+                                    style="width: 140px;"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"A".ljust(3, ".")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l5-zone-4" data-expected='"A.."' data-pool-id="l5-pool"
+                                    style="width: 140px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l5-pool">
+                            <div class="draggable-item" id="l5-opt-joined" draggable="true" data-val='"A-B-C"'>"A-B-C"
+                            </div>
+                            <div class="draggable-item" id="l5-opt-find-miss" draggable="true" data-val="-1">-1</div>
+                            <div class="draggable-item" id="l5-opt-idx" draggable="true" data-val="1">1</div>
+                            <div class="draggable-item" id="l5-opt-zfill" draggable="true" data-val='"00Hi"'>"00Hi"
+                            </div>
+                            <div class="draggable-item" id="l5-opt-pad" draggable="true" data-val='"A.."'>"A.."</div>
+                        </div>
+
+                        <button class="action" onclick="l5Verify()">Verify Alignments</button>
+                        <div class="game-feedback" id="l5-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <div class="footer-note">MODULE 1 · LEVELED PROGRESSION · 5 LEVELS · STRINGS &amp; TYPE CASTING IN PYTHON</div>
+
+    <script>
+        /* =====================================================
+           LEVEL SYSTEM — specific to s3
+           ===================================================== */
+        const SUBTOPIC = 's3';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Absolute Basics' },
+            { cls: 'l2', label: 'Level 2 · Core Application' },
+            { cls: 'l3', label: 'Level 3 · Intermediate Tricks' },
+            { cls: 'l4', label: 'Level 4 · Advanced Edge Cases' },
+            { cls: 'l5', label: 'Level 5 · Expert Mastery' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.textContent = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, lv.cls);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, cls) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach((b, i) => {
+                b.classList.toggle('active', i === num - 1);
+            });
+            document.querySelectorAll(`[id^="${st}-l"]`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        /* =====================================================
+           SUBTOPIC 3 - STRINGS
+           ===================================================== */
+
+        // L1
+        function s3l1Run() {
+            const name = document.getElementById('s3l1-name').value || 'Rohan';
+            const city = document.getElementById('s3l1-city').value || 'Pune';
+            const sep = document.getElementById('s3l1-sep').value;
+            const end = document.getElementById('s3l1-end').value;
+            const out = document.getElementById('s3l1-out');
+            const result = [name, city].join(sep);
+            out.innerHTML =
+                `<span class="com">>>> name = "${name}";  city = "${city}"</span>
+<span class="com">>>> print(name, city, sep="${sep.replace(/\n/, '\\n')}", end="${end === '\n' ? '\\n' : end || '(empty)'}")</span>
+${result}${end === '\n' ? '' : end}
+<span class="lbl">len(name)</span>   →  ${name.length}
+<span class="lbl">len(city)</span>   →  ${city.length}
+<span class="lbl">Concat:</span>     name + " lives in " + city → "${name} lives in ${city}"`;
+        }
+
+        // L2 methods
+        const s3methods = [
+            { label: '.upper()', fn: s => s.toUpperCase() },
+            { label: '.lower()', fn: s => s.toLowerCase() },
+            { label: '.strip()', fn: s => `'${s.trim()}'` },
+            { label: '.title()', fn: s => s.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1).toLowerCase()) },
+            { label: '.replace("Fun","Cool")', fn: s => s.replace('Fun', 'Cool') },
+            { label: '.split()', fn: s => JSON.stringify(s.trim().split(/\s+/)) },
+            { label: 'len()', fn: s => String(s.length) },
+            { label: '.find("Fun")', fn: s => String(s.indexOf('Fun')) },
+            { label: '[::-1] reverse', fn: s => s.split('').reverse().join('') },
+            { label: '.count("o")', fn: s => String((s.match(/o/gi) || []).length) },
+            { label: '.startswith(" ")', fn: s => s.startsWith(' ') ? 'True' : 'False' },
+            { label: '.strip().title()', fn: s => s.trim().replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1).toLowerCase()) },
+        ];
+        const s3mb = document.getElementById('s3l2-methods');
+        s3methods.forEach(m => {
+            const d = document.createElement('div'); d.className = 'pillbtn'; d.textContent = m.label;
+            d.onclick = () => {
+                const s = document.getElementById('s3l2-str').value;
+                let res; try { res = m.fn(s); } catch (e) { res = 'Error: ' + e.message; }
+                document.getElementById('s3l2-out').innerHTML = `<span class="com">>>> s = "${s}"</span>\n>>> s${m.label}\n${res}`;
+            };
+            s3mb.appendChild(d);
+        });
+
+        function s3l2Format() {
+            const name = document.getElementById('s3l2-fname').value;
+            const score = document.getElementById('s3l2-fscore').value;
+            const tmpl = document.getElementById('s3l2-ftemplate').value;
+            const args = [name, score]; let idx = 0;
+            let result = tmpl.replace(/\{(:[^}]*)?\}/g, (match, spec) => {
+                let val = args[idx++] || '';
+                if (spec && spec.includes('.') && spec.includes('f')) {
+                    const dec = parseInt(spec.match(/\.(\d+)f/)[1]);
+                    val = parseFloat(val).toFixed(dec);
+                }
+                return val;
+            });
+            document.getElementById('s3l2-fout').innerHTML =
+                `<span class="com">>>> template.format(name, score)</span>
+"${result}"
+<span class="com"># f-string equivalent:</span>
+f"${tmpl.replace('{:.1f}', '{score:.1f}').replace('{}', '{name}')}"  →  "${result}"`;
+        }
+
+        // L3 slicing
+        function s3l3Slice() {
+            const s = document.getElementById('s3l3-str').value || 'Python';
+            const startRaw = document.getElementById('s3l3-start').value.trim();
+            const stopRaw = document.getElementById('s3l3-stop').value.trim();
+            const stepRaw = document.getElementById('s3l3-step').value.trim();
+            const start = startRaw === '' ? undefined : parseInt(startRaw);
+            const stop = stopRaw === '' ? undefined : parseInt(stopRaw);
+            const step = stepRaw === '' ? 1 : parseInt(stepRaw);
+            const out = document.getElementById('s3l3-out');
+            let result = '';
+            const len = s.length;
+            const startI = start === undefined ? (step > 0 ? 0 : len - 1) : (start < 0 ? Math.max(len + start, 0) : Math.min(start, len));
+            const stopI = stop === undefined ? (step > 0 ? len : -1) : (stop < 0 ? Math.max(len + stop, -1) : Math.min(stop, len));
+            if (step > 0) { for (let i = startI; i < stopI; i += step)result += s[i]; }
+            else { for (let i = startI; i > stopI; i += step)result += s[i]; }
+            const notation = `s[${startRaw === '' ? '' : startRaw}:${stopRaw === '' ? '' : stopRaw}:${stepRaw === '' ? '' : stepRaw}]`;
+            out.innerHTML = `<span class="com">>>> s = "${s}"</span>\n>>> ${notation}\n"${result}"`;
+            s3l3ShowIndex(s);
+        }
+
+        function s3l3Reverse() {
+            const s = document.getElementById('s3l3-str').value || 'Python';
+            document.getElementById('s3l3-out').innerHTML =
+                `<span class="com">>>> s = "${s}"</span>
+>>> s[::-1]
+"${s.split('').reverse().join('')}"
+<span class="com"># start:stop:step — step of -1 reads backwards</span>`;
+            s3l3ShowIndex(s);
+        }
+
+        function s3l3ShowIndex(s) {
+            const vis = document.getElementById('s3l3-indexvis');
+            let html = '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;">';
+            s.split('').forEach((ch, i) => {
+                html += `<div style="text-align:center;"><div style="font-family:var(--mono);font-size:0.75rem;color:var(--red-deep);margin-bottom:2px;">${i}</div><div class="bit-cell one" style="width:30px;height:30px;font-size:0.9rem;">${ch}</div><div style="font-family:var(--mono);font-size:0.7rem;color:#888;margin-top:2px;">${i - s.length}</div></div>`;
+            });
+            html += '</div><div style="font-family:var(--mono);font-size:0.75rem;color:#888;margin-top:6px;">⬆ positive index &nbsp;|&nbsp; ⬆ negative index</div>';
+            vis.innerHTML = html;
+        }
+        s3l3ShowIndex('Python');
+
+        // L4 casting
+        function s3l4Cast() {
+            const raw = document.getElementById('s3l4-val').value.trim();
+            const to = document.getElementById('s3l4-type').value;
+            const out = document.getElementById('s3l4-out');
+            let result, err = null;
+            try {
+                switch (to) {
+                    case 'int':
+                        if (raw === 'True') result = 1;
+                        else if (raw === 'False') result = 0;
+                        else if (/^-?\d+\.\d+$/.test(raw)) result = Math.trunc(parseFloat(raw));
+                        else if (/^-?\d+$/.test(raw)) result = parseInt(raw);
+                        else throw new Error(`invalid literal for int() with base 10: '${raw}'`);
+                        break;
+                    case 'float':
+                        if (raw === 'True') result = 1.0; else if (raw === 'False') result = 0.0;
+                        else if (!isNaN(parseFloat(raw))) result = parseFloat(raw);
+                        else throw new Error(`could not convert string to float: '${raw}'`);
+                        break;
+                    case 'str': result = `'${raw}'`; break;
+                    case 'bool':
+                        const falsy = ['', '0', '0.0', 'False', '[]', '{}', '()', 'None', 'set()'];
+                        result = !falsy.includes(raw);
+                        break;
+                }
+            } catch (e) { err = e.message; }
+            if (err) {
+                out.innerHTML = `<span class="com">>>> ${to}("${raw}")</span>\n<span class="err">ValueError: ${err}</span>`;
+            } else {
+                out.innerHTML = `<span class="com">>>> ${to}(${/^-?\d/.test(raw) || raw === 'True' || raw === 'False' ? raw : `'${raw}'`})</span>\n${to === 'bool' ? (result ? 'True' : 'False') : result}\n<span class="lbl">type() →</span> ${to}`;
+            }
+        }
+
+        // L5
+        function s3l5Run() {
+            const words = document.getElementById('s3l5-words').value.split(',').map(w => w.trim()).filter(Boolean);
+            const sep = document.getElementById('s3l5-sep').value;
+            const hay = document.getElementById('s3l5-haystack').value;
+            const needle = document.getElementById('s3l5-needle').value;
+            const out = document.getElementById('s3l5-out');
+            const joined = words.join(sep);
+            const fi = hay.indexOf(needle);
+            out.innerHTML =
+                `<span class="com"># join()</span>
+words = ${JSON.stringify(words)}
+"${sep}".join(words)  →  "${joined}"
+
+<span class="com"># find() — returns -1 if not found (no error)</span>
+"${hay}".find("${needle}")   →  ${fi}
+
+<span class="com"># index() — raises ValueError if not found</span>
+${fi >= 0 ? `"${hay}".index("${needle}")  →  ${fi}` : `<span class="err">ValueError: substring not found</span>`}
+
+<span class="com"># Table formatting demo</span>
+"Apple".ljust(15) + "₹40".rjust(6)   →  "${('Apple').padEnd(15)}${'₹40'.padStart(6)}"
+"Milk".ljust(15)  + "₹80".rjust(6)   →  "${('Milk').padEnd(15)}${'₹80'.padStart(6)}"`;
+        }
+
+        /* =====================================================
+           DRAG AND DROP ENGINE & GAME VERIFICATIONS
+           ===================================================== */
+        let draggedElement = null;
+
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        // Call shufflePools on parse/load
+        setTimeout(shufflePools, 0);
+
+        document.querySelectorAll('.draggable-item').forEach(item => {
+            item.addEventListener('dragstart', function (e) {
+                draggedElement = this;
+                this.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', this.dataset.val);
+            });
+            item.addEventListener('dragend', function () {
+                this.classList.remove('dragging');
+                draggedElement = null;
+            });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('hover');
+            });
+            zone.addEventListener('dragleave', function () {
+                this.classList.remove('hover');
+            });
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('hover');
+                if (draggedElement && draggedElement.parentNode.id === this.dataset.poolId) {
+                    if (this.children.length > 0) {
+                        const oldItem = this.children[0];
+                        const pool = document.getElementById(this.dataset.poolId);
+                        pool.appendChild(oldItem);
+                    }
+                    this.appendChild(draggedElement);
+                }
+            });
+            zone.addEventListener('dblclick', function () {
+                if (this.children.length > 0) {
+                    const item = this.children[0];
+                    const pool = document.getElementById(this.dataset.poolId);
+                    pool.appendChild(item);
+                }
+            });
+        });
+
+        function l1Verify() {
+            let score = 0;
+            const zones = [
+                { id: 'l1-zone-0', exp: '"-"' },
+                { id: 'l1-zone-1', exp: '"!"' },
+                { id: 'l1-zone-2', exp: '+ str(' },
+                { id: 'l1-zone-3', exp: '""' },
+                { id: 'l1-zone-4', exp: '""' }
+            ];
+            zones.forEach(z => {
+                const zoneEl = document.getElementById(z.id);
+                if (zoneEl.children.length > 0 && zoneEl.children[0].dataset.val === z.exp) {
+                    score++;
+                    zoneEl.style.borderColor = 'var(--correct)';
+                    zoneEl.style.background = 'var(--correct-bg)';
+                } else {
+                    zoneEl.style.borderColor = 'var(--wrong)';
+                    zoneEl.style.background = 'var(--wrong-bg)';
+                }
+            });
+            document.getElementById('l1-score').textContent = score;
+            const feed = document.getElementById('l1-feedback');
+            feed.style.display = 'block';
+            if (score === 5) {
+                feed.className = 'game-feedback correct';
+                feed.innerHTML = '<strong>Excellent!</strong> You have correctly matched the string formatting parameters and concatenation explicit casting. You understand stdout stream control and dynamic concatenation bounds.';
+            } else {
+                feed.className = 'game-feedback wrong';
+                feed.innerHTML = '<strong>Some equations are incorrect.</strong> Double-click items to return them to the pool and try again. Remember that integer string type casting is required to concatenate numbers.';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            let score = 0;
+            const zones = [
+                { id: 'l2-zone-0', exp: '.strip().lower()' },
+                { id: 'l2-zone-1', exp: '.replace("  ", "")' },
+                { id: 'l2-zone-2', exp: '.split()' },
+                { id: 'l2-zone-3', exp: '.swapcase()' },
+                { id: 'l2-zone-4', exp: '.strip().title()' }
+            ];
+            zones.forEach(z => {
+                const zoneEl = document.getElementById(z.id);
+                if (zoneEl.children.length > 0 && zoneEl.children[0].dataset.val === z.exp) {
+                    score++;
+                    zoneEl.style.borderColor = 'var(--correct)';
+                    zoneEl.style.background = 'var(--correct-bg)';
+                } else {
+                    zoneEl.style.borderColor = 'var(--wrong)';
+                    zoneEl.style.background = 'var(--wrong-bg)';
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feed = document.getElementById('l2-feedback');
+            feed.style.display = 'block';
+            if (score === 5) {
+                feed.className = 'game-feedback correct';
+                feed.innerHTML = '<strong>Fantastic!</strong> You successfully constructed string method pipelines. You understand how string methods return new strings and can be chained, as well as the rules of case conversion and splitting.';
+            } else {
+                feed.className = 'game-feedback wrong';
+                feed.innerHTML = '<strong>Pipeline incomplete or incorrect.</strong> Keep in mind that <code>.split()</code> returns a list of strings, and <code>.swapcase()</code> toggles upper/lower case.';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            let score = 0;
+            const zones = [
+                { id: 'l3-zone-0', exp: '[1:4]' },
+                { id: 'l3-zone-1', exp: '[:4:2]' },
+                { id: 'l3-zone-2', exp: '[-3:]' },
+                { id: 'l3-zone-3', exp: '[::-1]' },
+                { id: 'l3-zone-4', exp: '[4:1:-1]' }
+            ];
+            zones.forEach(z => {
+                const zoneEl = document.getElementById(z.id);
+                if (zoneEl.children.length > 0 && zoneEl.children[0].dataset.val === z.exp) {
+                    score++;
+                    zoneEl.style.borderColor = 'var(--correct)';
+                    zoneEl.style.background = 'var(--correct-bg)';
+                } else {
+                    zoneEl.style.borderColor = 'var(--wrong)';
+                    zoneEl.style.background = 'var(--wrong-bg)';
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feed = document.getElementById('l3-feedback');
+            feed.style.display = 'block';
+            if (score === 5) {
+                feed.className = 'game-feedback correct';
+                feed.innerHTML = '<strong>Success!</strong> You have mastered string slicing! You understand positive/negative indexes, step bounds, and reversing logic.';
+            } else {
+                feed.className = 'game-feedback wrong';
+                feed.innerHTML = '<strong>Incorrect slices.</strong> Remember: negative steps walk backward, meaning <code>start</code> must be greater than <code>stop</code> (e.g. <code>[4:1:-1]</code>).';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            let score = 0;
+            const zones = [
+                { id: 'l4-zone-0', exp: '42' },
+                { id: 'l4-zone-1', exp: '3' },
+                { id: 'l4-zone-2', exp: 'True' },
+                { id: 'l4-zone-3', exp: 'False' },
+                { id: 'l4-zone-4', exp: 'ValueError' }
+            ];
+            zones.forEach(z => {
+                const zoneEl = document.getElementById(z.id);
+                if (zoneEl.children.length > 0 && zoneEl.children[0].dataset.val === z.exp) {
+                    score++;
+                    zoneEl.style.borderColor = 'var(--correct)';
+                    zoneEl.style.background = 'var(--correct-bg)';
+                } else {
+                    zoneEl.style.borderColor = 'var(--wrong)';
+                    zoneEl.style.background = 'var(--wrong-bg)';
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feed = document.getElementById('l4-feedback');
+            feed.style.display = 'block';
+            if (score === 5) {
+                feed.className = 'game-feedback correct';
+                feed.innerHTML = '<strong>Brilliant!</strong> You resolved all type casting edge cases. You understand that float-to-int casts truncate values, string decimals raise value errors on integer casting, and string truthiness is determined purely by length.';
+            } else {
+                feed.className = 'game-feedback wrong';
+                feed.innerHTML = '<strong>Incorrect casting.</strong> Remember: a non-empty string like <code>"False"</code> evaluates to <code>True</code> under <code>bool()</code>!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            let score = 0;
+            const zones = [
+                { id: 'l5-zone-0', exp: '"A-B-C"' },
+                { id: 'l5-zone-1', exp: '-1' },
+                { id: 'l5-zone-2', exp: '1' },
+                { id: 'l5-zone-3', exp: '"00Hi"' },
+                { id: 'l5-zone-4', exp: '"A.."' }
+            ];
+            zones.forEach(z => {
+                const zoneEl = document.getElementById(z.id);
+                if (zoneEl.children.length > 0 && zoneEl.children[0].dataset.val === z.exp) {
+                    score++;
+                    zoneEl.style.borderColor = 'var(--correct)';
+                    zoneEl.style.background = 'var(--correct-bg)';
+                } else {
+                    zoneEl.style.borderColor = 'var(--wrong)';
+                    zoneEl.style.background = 'var(--wrong-bg)';
+                }
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feed = document.getElementById('l5-feedback');
+            feed.style.display = 'block';
+            if (score === 5) {
+                feed.className = 'game-feedback correct';
+                feed.innerHTML = '<strong>Masterful!</strong> You have verified all advanced string search and alignment formatting. You fully understand search offsets, padding, and join constructs.';
+            } else {
+                feed.className = 'game-feedback wrong';
+                feed.innerHTML = '<strong>Formatting errors detected.</strong> Double check that <code>zfill</code> pads left with zero, and <code>find()</code> returns <code>-1</code> when a character is absent.';
+                shufflePools();
+            }
+        }
+    </script>
+</body>
+
+</html>

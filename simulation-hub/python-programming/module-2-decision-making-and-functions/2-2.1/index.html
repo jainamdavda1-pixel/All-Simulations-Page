@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Decision Making — if, elif, else &amp; match-case</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+            margin-top: 10px;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* ================= VISUALIZERS ================= */
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 24px 0;
+        }
+
+        .flow-box {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            background: #FFF;
+            min-width: 180px;
+        }
+
+        .flow-box.condition {
+            background: var(--bg-main);
+            border-radius: 30px;
+        }
+
+        .flow-box.active-path {
+            background: var(--red) !important;
+            border-color: var(--red) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
+        }
+
+        .flow-label {
+            font-family: var(--body);
+            font-size: 0.75rem;
+            color: #5a4b4b;
+            margin: 6px 0;
+            font-weight: 600;
+        }
+
+        .flow-branch {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .flow-branch-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* ================= DRAG AND DROP CUSTOM STYLES ================= */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 40px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        .type-puzzle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border: 1px solid #ffd1d5;
+        }
+
+        .expr-text {
+            font-family: var(--mono);
+            color: var(--red-deep);
+            font-size: 0.95rem;
+        }
+
+        .bucket-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .bucket {
+            flex: 1;
+            min-height: 160px;
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bucket.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.03);
+        }
+
+        .bucket-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #5a4b4b;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            width: 100%;
+            text-align: center;
+            padding-bottom: 8px;
+            margin-bottom: 6px;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>if / elif / else &amp; <span>Branching</span></h1>
+        <p class="sub">Python's decision-making engine. Learn how conditions evaluate, how indentation defines
+            structure, and how pattern matching evaluates paths.</p>
+    </header>
+
+    <main>
+        <div class="sec-head">
+            <div class="sec-num">// SUBTOPIC 2.1</div>
+            <h2>if · if-else · elif · Nested if · pass · match-case</h2>
+            <p>Master the execution branches of Python. Work through the 5 progression levels from simple binary logic
+                gates to multi-condition pattern matching.</p>
+        </div>
+
+        <div class="level-strip" id="s1-levels"></div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="s1-bar" style="width:20%"></div>
+        </div>
+
+        <!-- S1 L1 -->
+        <div class="level-panel active" id="s1-l1">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Simple if &amp; if-else Branches</h3>
+                <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                    <strong>Core Concepts:</strong>
+                    <p>Execution branching allows a program to choose different paths based on conditions:</p>
+                    <ul>
+                        <li><strong>Conditional Execution:</strong> Code inside an <code>if</code> block evaluates only
+                            when its Boolean condition is <code>True</code>.</li>
+                        <li><strong>Indentation Syntax:</strong> Python does not use braces to define scopes. It
+                            strictly relies on indentation (4 spaces).</li>
+                    </ul>
+                </div>
+
+                <h4>Comparison Reference</h4>
+                <table>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Meaning</th>
+                        <th>Example → Result</th>
+                    </tr>
+                    <tr>
+                        <td><code>==</code></td>
+                        <td>Equal to</td>
+                        <td><code>5 == 5 → True</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>!=</code></td>
+                        <td>Not equal</td>
+                        <td><code>5 != 3 → True</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>Greater than</td>
+                        <td><code>7 &gt; 3 → True</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td>Less than</td>
+                        <td><code>2 &lt; 9 → True</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l1">LEVEL 1</span>Interactive Boolean Gate</h3>
+                <label>Enter a number</label>
+                <div class="row">
+                    <div style="flex:3"><input type="number" id="s1l1-num" value="17" placeholder="e.g. 17"></div>
+                    <div style="flex:1"><button class="action" onclick="s1l1Run()">▶ Evaluate</button></div>
+                </div>
+                <div class="output" id="s1l1-out">com: enter a number and click Evaluate</div>
+                <div id="s1l1-flow" style="margin-top:16px;"></div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Leap Year Checker Ordering</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct branching boundaries into sequence so that leap
+                    years (divisible by 4, but not by 100 unless also divisible by 400) are evaluated correctly!
+                </div>
+                <div class="game-container" id="l1-game">
+                    <div class="game-header">
+                        <span>🎯 Leap Year Logic Sequence</span>
+                        <span class="game-score">Score: <span id="l1-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo">
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l1-zone-0" data-expected="if year % 400 == 0:"
+                                data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">is_leap = True
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l1-zone-1" data-expected="elif year % 100 == 0:"
+                                data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">is_leap = False
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l1-zone-2" data-expected="elif year % 4 == 0:"
+                                data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">is_leap = True
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l1-zone-3" data-expected="else:" data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">is_leap = False
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l1-pool">
+                        <div class="draggable-item" id="l1-item-0" draggable="true" data-val="if year % 400 == 0:">if
+                            year % 400 == 0:</div>
+                        <div class="draggable-item" id="l1-item-1" draggable="true" data-val="elif year % 100 == 0:">
+                            elif year % 100 == 0:</div>
+                        <div class="draggable-item" id="l1-item-2" draggable="true" data-val="elif year % 4 == 0:">elif
+                            year % 4 == 0:</div>
+                        <div class="draggable-item" id="l1-item-3" draggable="true" data-val="else:">else:</div>
+                        <div class="draggable-item" id="l1-item-4" draggable="true" data-val="if year % 4 == 0:">if year
+                            % 4 == 0:</div>
+                        <div class="draggable-item" id="l1-item-5" draggable="true" data-val="elif year % 100 != 0:">
+                            elif year % 100 != 0:</div>
+                    </div>
+                    <button class="action" onclick="l1Verify()">Verify Leap Year Chain</button>
+                    <div class="game-feedback" id="l1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S1 L2 -->
+        <div class="level-panel" id="s1-l2">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>elif Chains and Mutually Exclusive Paths</h3>
+                <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                    <strong>Core Concepts:</strong>
+                    <p>Chaining conditions with <code>elif</code> handles multi-way branches:</p>
+                    <ul>
+                        <li><strong>Order Matters:</strong> Python checks conditions top-to-bottom and exits the entire
+                            chain on the first matches.</li>
+                    </ul>
+                </div>
+                <h4>elif Chain Structure</h4>
+                <div class="indent-demo">
+                    <span class="lvl0">score = 72</span>
+                    <span class="lvl0">if score &gt;= 90: grade = "A"</span>
+                    <span class="lvl0">elif score &gt;= 80: grade = "B"</span>
+                    <span class="lvl0">elif score &gt;= 70: grade = "C" <span style="color:#888"># matches
+                            first</span></span>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l2">LEVEL 2</span>elif Chain Simulator</h3>
+                <label>Enter a score (0–100)</label>
+                <div class="row">
+                    <div style="flex:3"><input type="number" id="s1l2-score" value="72" min="0" max="100"></div>
+                    <div style="flex:1"><button class="action" onclick="s1l2Run()">▶ Get Grade</button></div>
+                </div>
+                <div class="output" id="s1l2-out">com: enter a score to see grade evaluation</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>FizzBuzz Branch Precedence</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the conditions into correct sequential order so that multiples
+                    of 15 evaluate as "FizzBuzz" instead of being shadowed by simpler conditions!
+                </div>
+                <div class="game-container" id="l2-game">
+                    <div class="game-header">
+                        <span>🎯 FizzBuzz Precedence Sequence</span>
+                        <span class="game-score">Score: <span id="l2-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo">
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l2-zone-0" data-expected="if num % 15 == 0:"
+                                data-pool-id="l2-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">val = "FizzBuzz"
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l2-zone-1" data-expected="elif num % 3 == 0:"
+                                data-pool-id="l2-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">val = "Fizz"
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l2-zone-2" data-expected="elif num % 5 == 0:"
+                                data-pool-id="l2-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">val = "Buzz"
+                        </div>
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                            <div class="drop-zone" id="l2-zone-3" data-expected="else:" data-pool-id="l2-pool"></div>
+                        </div>
+                        <div class="code-line" style="display:block; padding-left:20px; color:#15803d;">val = str(num)
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l2-pool">
+                        <div class="draggable-item" id="l2-item-0" draggable="true" data-val="if num % 15 == 0:">if num
+                            % 15 == 0:</div>
+                        <div class="draggable-item" id="l2-item-1" draggable="true" data-val="elif num % 3 == 0:">elif
+                            num % 3 == 0:</div>
+                        <div class="draggable-item" id="l2-item-2" draggable="true" data-val="elif num % 5 == 0:">elif
+                            num % 5 == 0:</div>
+                        <div class="draggable-item" id="l2-item-3" draggable="true" data-val="else:">else:</div>
+                        <div class="draggable-item" id="l2-item-4" draggable="true" data-val="if num % 3 == 0:">if num %
+                            3 == 0:</div>
+                        <div class="draggable-item" id="l2-item-5" draggable="true" data-val="elif num % 15 == 0:">elif
+                            num % 15 == 0:</div>
+                    </div>
+                    <button class="action" onclick="l2Verify()">Verify Precedence Chain</button>
+                    <div class="game-feedback" id="l2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S1 L3 -->
+        <div class="level-panel" id="s1-l3">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Nested Conditions &amp; Logical Operators</h3>
+                <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                    <strong>Core Concepts:</strong>
+                    <p>Compound conditions combine Boolean paths:</p>
+                    <ul>
+                        <li><code>and</code>: Requires both operands to evaluate to <code>True</code>.</li>
+                        <li><code>or</code>: Requires at least one operand to be <code>True</code>.</li>
+                        <li><code>not</code>: Negates the condition check.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l3">LEVEL 3</span>Nested Gatekeeper</h3>
+                <div class="row">
+                    <div>
+                        <label>Age</label>
+                        <input type="number" id="s1l3-age" value="20" placeholder="Age">
+                    </div>
+                    <div>
+                        <label>Has valid ID?</label>
+                        <select id="s1l3-id">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Is VIP?</label>
+                        <select id="s1l3-vip">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="action" onclick="s1l3Run()">▶ Check Club Entry</button>
+                <div class="output" id="s1l3-out">com: fill details and click Check</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Short-Circuit Access Guard</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct logical operators into the checks to restrict
+                    access (allowing admins or master keys as long as they aren't suspended, and staff who aren't
+                    suspended and hold valid tokens).
+                </div>
+                <div class="game-container" id="l3-game">
+                    <div class="game-header">
+                        <span>🎯 Access Control Gates</span>
+                        <span class="game-score">Score: <span id="l3-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0"># Check admin or master overrides first, ensuring they are not
+                            suspended</span>
+                        <span class="lvl0" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>if (is_admin </span>
+                            <div class="drop-zone" id="l3-zone-0" data-expected="or" data-pool-id="l3-pool"></div>
+                            <span> has_master_key) </span>
+                            <div class="drop-zone" id="l3-zone-1" data-expected="and not" data-pool-id="l3-pool"></div>
+                            <span> is_suspended:</span>
+                        </span>
+                        <span class="lvl1">access = True</span>
+                        <span class="lvl0"># Check normal staff clearance</span>
+                        <span class="lvl0" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>elif is_staff </span>
+                            <div class="drop-zone" id="l3-zone-2" data-expected="and not" data-pool-id="l3-pool"></div>
+                            <span> is_suspended </span>
+                            <div class="drop-zone" id="l3-zone-3" data-expected="and" data-pool-id="l3-pool"></div>
+                            <span> has_token:</span>
+                        </span>
+                        <span class="lvl1">access = True</span>
+                    </div>
+                    <div class="items-pool" id="l3-pool">
+                        <div class="draggable-item" id="l3-item-or" draggable="true" data-val="or">or</div>
+                        <div class="draggable-item" id="l3-item-andnot1" draggable="true" data-val="and not">and not
+                        </div>
+                        <div class="draggable-item" id="l3-item-andnot2" draggable="true" data-val="and not">and not
+                        </div>
+                        <div class="draggable-item" id="l3-item-and" draggable="true" data-val="and">and</div>
+                        <div class="draggable-item" id="l3-item-not" draggable="true" data-val="not">not</div>
+                        <div class="draggable-item" id="l3-item-ornot" draggable="true" data-val="or not">or not</div>
+                    </div>
+                    <button class="action" onclick="l3Verify()">Verify Logic Operators</button>
+                    <div class="game-feedback" id="l3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S1 L4 -->
+        <div class="level-panel" id="s1-l4">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Ternary Expressions &amp; the pass Statement</h3>
+                <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                    <strong>Core Concepts:</strong>
+                    <p>Inline expressions compress structural paths:</p>
+                    <ul>
+                        <li><strong>Ternary Shorthand:</strong>
+                            <code>x = val_if_true if condition else val_if_false</code>.</li>
+                        <li><strong>pass statement:</strong> Syntactical placeholder code when empty blocks are
+                            required.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l4">LEVEL 4</span>Ternary Compiler</h3>
+                <div class="row">
+                    <div><label>Value A</label><input type="number" id="s1l4-a" value="42"></div>
+                    <div><label>Value B</label><input type="number" id="s1l4-b" value="99"></div>
+                </div>
+                <button class="action" onclick="s1l4Run()">▶ Run Ternary</button>
+                <div class="output" id="s1l4-out">com: enter two values</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Nested Inline Ternary</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct inline branches to build a single-line nested
+                    ternary expression that maps sign categories:
+                    <code>"Positive" if x > 0 else "Negative" if x < 0 else "Zero"</code>.
+                </div>
+                <div class="game-container" id="l4-game">
+                    <div class="game-header">
+                        <span>🎯 Nested Inline Expressions</span>
+                        <span class="game-score">Score: <span id="l4-score">0</span>/4</span>
+                    </div>
+                    <div class="formula-builder"
+                        style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-family:var(--mono);">
+                        <span>category = "Positive" </span>
+                        <div class="drop-zone" id="l4-zone-0" data-expected="if x > 0" data-pool-id="l4-pool"></div>
+                        <div class="drop-zone" id="l4-zone-1" data-expected="else" data-pool-id="l4-pool"></div>
+                        <span> "Negative" </span>
+                        <div class="drop-zone" id="l4-zone-2" data-expected="if x < 0" data-pool-id="l4-pool"></div>
+                        <div class="drop-zone" id="l4-zone-3" data-expected="else" data-pool-id="l4-pool"></div>
+                        <span> "Zero"</span>
+                    </div>
+                    <div class="items-pool" id="l4-pool">
+                        <div class="draggable-item" id="l4-item-ifpos" draggable="true" data-val="if x > 0">if x > 0
+                        </div>
+                        <div class="draggable-item" id="l4-item-else1" draggable="true" data-val="else">else</div>
+                        <div class="draggable-item" id="l4-item-ifneg" draggable="true" data-val="if x < 0">if x &lt; 0
+                        </div>
+                        <div class="draggable-item" id="l4-item-else2" draggable="true" data-val="else">else</div>
+                        <div class="draggable-item" id="l4-item-ifzero" draggable="true" data-val="if x == 0">if x == 0
+                        </div>
+                        <div class="draggable-item" id="l4-item-elif" draggable="true" data-val="elif x < 0">elif x &lt;
+                            0</div>
+                    </div>
+                    <button class="action" onclick="l4Verify()">Verify Expression</button>
+                    <div class="game-feedback" id="l4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S1 L5 -->
+        <div class="level-panel" id="s1-l5">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Truthiness &amp; Structural Pattern Matching</h3>
+                <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                    <strong>Core Concepts:</strong>
+                    <p>Implicit values dictate logical branching paths:</p>
+                    <ul>
+                        <li><strong>Falsy variables:</strong> <code>0</code>, <code>0.0</code>, empty containers
+                            (<code>[]</code>, <code>""</code>, <code>None</code>, and <code>False</code>).</li>
+                        <li><strong>Truthy variables:</strong> Everything else.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l5">LEVEL 5</span>Introspect Truthiness</h3>
+                <label>Select a Python object value</label>
+                <div class="row">
+                    <div style="flex:2">
+                        <select id="s1l5-val">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value='""'>"" (empty string)</option>
+                            <option value='"hello"'>"hello"</option>
+                            <option value="[]">[] (empty list)</option>
+                            <option value="[1,2]">[1, 2]</option>
+                            <option value="None">None</option>
+                            <option value="False">False</option>
+                            <option value="True">True</option>
+                        </select>
+                    </div>
+                    <div style="flex:1"><button class="action" onclick="s1l5Run()">▶ Test Truthiness</button></div>
+                </div>
+                <div class="output" id="s1l5-out">com: pick a value and test its truthiness</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Advanced Truthiness Sorter</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag each Python value into its correct logic classification bucket!
+                    Beware of tricky objects like non-empty strings, collections containing zero, or empty sequences!
+                </div>
+                <div class="game-container" id="l5-game">
+                    <div class="game-header">
+                        <span>🎯 Truthiness sorting station</span>
+                        <span class="game-score">Score: <span id="l5-score">0</span>/8</span>
+                    </div>
+                    <div class="bucket-container">
+                        <div class="bucket" id="bucket-truthy">
+                            <div class="bucket-title">Truthy (bool(x) == True)</div>
+                        </div>
+                        <div class="bucket" id="bucket-falsy" style="border-color:var(--wrong);">
+                            <div class="bucket-title">Falsy (bool(x) == False)</div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l5-pool">
+                        <div class="draggable-item" id="l5-val-0" draggable="true" data-expected="bucket-falsy"
+                            data-val="0.0">0.0</div>
+                        <div class="draggable-item" id="l5-val-1" draggable="true" data-expected="bucket-truthy"
+                            data-val="[0]">[0]</div>
+                        <div class="draggable-item" id="l5-val-2" draggable="true" data-expected="bucket-falsy"
+                            data-val="set()">set()</div>
+                        <div class="draggable-item" id="l5-val-3" draggable="true" data-expected="bucket-truthy"
+                            data-val='"0"'>"0"</div>
+                        <div class="draggable-item" id="l5-val-4" draggable="true" data-expected="bucket-truthy"
+                            data-val='"False"'>"False"</div>
+                        <div class="draggable-item" id="l5-val-5" draggable="true" data-expected="bucket-falsy"
+                            data-val="None">None</div>
+                        <div class="draggable-item" id="l5-val-6" draggable="true" data-expected="bucket-falsy"
+                            data-val="()">()</div>
+                        <div class="draggable-item" id="l5-val-7" draggable="true" data-expected="bucket-truthy"
+                            data-val='{"a": 0}'>{"a": 0}</div>
+                    </div>
+                    <button class="action" onclick="l5Verify()">Defuse Truthiness sorting</button>
+                    <div class="game-feedback" id="l5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Module 2 · Decision Making &amp; Functions · Section 2.1</div>
+    </main>
+
+    <script>
+        const SUBTOPIC = 's1';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Simple if/else' },
+            { cls: 'l2', label: 'Level 2 · elif Chains' },
+            { cls: 'l3', label: 'Level 3 · Nested &amp; Logical' },
+            { cls: 'l4', label: 'Level 4 · Ternary &amp; pass' },
+            { cls: 'l5', label: 'Level 5 · Truthiness &amp; match' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.innerHTML = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, btn);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, btn) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll(`.level-panel`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        // ===================== DRAG & DROP UTILITIES =====================
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            let target = e.currentTarget;
+
+            if (target.classList.contains("drop-zone") || target.classList.contains("items-pool") || target.classList.contains("bucket")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+        }
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .items-pool, .bucket").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+        }
+
+        // ===================== PUZZLE VERIFICATIONS =====================
+        function l1Verify() {
+            const slots = ['l1-zone-0', 'l1-zone-1', 'l1-zone-2', 'l1-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l1-score').textContent = score;
+            const feedback = document.getElementById('l1-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! You have correctly structured the leap year checker! Ordering by 400 first, followed by 100, then 4 ensures no overlap bugs.';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect leap year structure ordering. Remember that years divisible by 100 must check 400 first. Reshuffling items pool!';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            const slots = ['l2-zone-0', 'l2-zone-1', 'l2-zone-2', 'l2-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feedback = document.getElementById('l2-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! Multiple of 15 check MUST be first, otherwise multiples of 15 are captured by the mod 3 or mod 5 checks first!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect precedence sequence. Think about what happens to 15 if mod 3 runs first. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            const slots = ['l3-zone-0', 'l3-zone-1', 'l3-zone-2', 'l3-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feedback = document.getElementById('l3-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Match correct! Compound conditions resolve perfectly. Operators like "and not" prevent access for suspended personnel!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Mismatched logic operators. Check override vs staff validation gates. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            const slots = ['l4-zone-0', 'l4-zone-1', 'l4-zone-2', 'l4-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feedback = document.getElementById('l4-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Brilliant! The nested ternary expression correctly evaluates: positive if x > 0, otherwise negative if x < 0, else zero!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Nested inline branches mismatched. Verify ternary keyword sequences. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            const truthy = document.getElementById('bucket-truthy');
+            const falsy = document.getElementById('bucket-falsy');
+            let score = 0;
+            Array.from(truthy.children).forEach(item => {
+                if (item.dataset.expected === 'bucket-truthy') score++;
+            });
+            Array.from(falsy.children).forEach(item => {
+                if (item.dataset.expected === 'bucket-falsy') score++;
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feedback = document.getElementById('l5-feedback');
+            if (score === 8) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Flawless! You correctly classified non-empty sequences (like [0]) as Truthy, and zero floats or empty tuples as Falsy!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Some objects are placed in the wrong buckets. Remember: non-empty collections containing zero are Truthy, but empty tuples are Falsy!';
+            }
+        }
+
+        // ===================== SIMULATION LOGIC =====================
+        function s1l1Run() {
+            const n = parseFloat(document.getElementById('s1l1-num').value);
+            const out = document.getElementById('s1l1-out');
+            const flow = document.getElementById('s1l1-flow');
+            let branch, result;
+            if (n > 0) { branch = 'positive'; result = `✅ ${n} > 0  →  POSITIVE`; }
+            else if (n < 0) { branch = 'negative'; result = `⚠️ ${n} < 0  →  NEGATIVE`; }
+            else { branch = 'zero'; result = `🔵 ${n} == 0  →  ZERO`; }
+            out.innerHTML =
+                `<span class="com">>>> num = ${n}</span>
+if num > 0:
+    print("positive")
+elif num < 0:
+    print("negative")
+else:
+    print("zero")
+
+<span class="ok">${result}</span>`;
+            flow.innerHTML = `
+<div class="flow-diagram">
+  <div class="flow-box condition ${branch === 'positive' ? 'active-path' : ''}">num &gt; 0 ?</div>
+  <div class="flow-branch" style="margin-top:8px;">
+    <div class="flow-branch-col">
+      <div class="flow-label">True</div>
+      <div class="flow-box action ${branch === 'positive' ? 'active-path' : ''}">"positive"</div>
+    </div>
+    <div class="flow-branch-col">
+      <div class="flow-label">False</div>
+      <div class="flow-box condition">num &lt; 0 ?</div>
+      <div class="flow-branch" style="margin-top:6px;">
+        <div class="flow-branch-col">
+          <div class="flow-label">True</div>
+          <div class="flow-box action ${branch === 'negative' ? 'active-path' : ''}">"negative"</div>
+        </div>
+        <div class="flow-branch-col">
+          <div class="flow-label">False</div>
+          <div class="flow-box action ${branch === 'zero' ? 'active-path' : ''}">"zero"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+        }
+
+        function s1l2Run() {
+            const s = parseFloat(document.getElementById('s1l2-score').value);
+            const out = document.getElementById('s1l2-out');
+            if (isNaN(s) || s < 0 || s > 100) { out.innerHTML = '<span class="err">Enter a score between 0 and 100</span>'; return; }
+            let grade, msg;
+            if (s >= 90) { grade = 'A'; msg = 'Distinction!'; }
+            else if (s >= 80) { grade = 'B'; msg = 'First Class'; }
+            else if (s >= 70) { grade = 'C'; msg = 'Second Class'; }
+            else if (s >= 60) { grade = 'D'; msg = 'Pass'; }
+            else { grade = 'F'; msg = 'Fail — remedial required'; }
+            out.innerHTML =
+                `<span class="com">>>> score = ${s}</span>
+if score >= 90: grade = "A"
+elif score >= 80: grade = "B"
+elif score >= 70: grade = "C"   ${s >= 70 && s < 80 ? '<span class="ok">← MATCHED</span>' : ''}
+elif score >= 60: grade = "D"   ${s >= 60 && s < 70 ? '<span class="ok">← MATCHED</span>' : ''}
+else:            grade = "F"   ${s < 60 ? '<span class="ok">← MATCHED</span>' : ''}
+
+<span class="lbl">grade =</span> "${grade}"   <span class="ok">→ ${msg}</span>
+<span class="com"># Branches below the match are SKIPPED</span>`;
+        }
+
+        function s1l3Run() {
+            const age = parseInt(document.getElementById('s1l3-age').value);
+            const hasId = document.getElementById('s1l3-id').value === 'yes';
+            const isVip = document.getElementById('s1l3-vip').value === 'yes';
+            const out = document.getElementById('s1l3-out');
+            let result, logic;
+            if (isVip && age >= 18) { result = '✅ ENTRY GRANTED (VIP + Adult)'; logic = 'isVip and age >= 18'; }
+            else if (isVip && age < 18) { result = '❌ DENIED (VIP but underage)'; logic = 'isVip but age < 18'; }
+            else if (age >= 18 && hasId) { result = '✅ ENTRY GRANTED (Adult + Valid ID)'; logic = 'age >= 18 and has_id'; }
+            else if (age < 18) { result = '❌ DENIED (Underage — no exceptions)'; logic = 'age < 18'; }
+            else { result = '❌ DENIED (No valid ID)'; logic = 'age >= 18 but not has_id'; }
+            out.innerHTML =
+                `<span class="com">>>> age=${age}, has_id=${hasId}, is_vip=${isVip}</span>
+if is_vip and age >= 18:
+    entry = True   # VIP fast lane
+elif age >= 18 and has_id:
+    entry = True   # standard entry
+else:
+    entry = False  # denied
+
+<span class="ok">Matched: ${logic}</span>
+<span class="lbl">Result:</span> ${result}`;
+        }
+
+        function s1l4Run() {
+            const a = parseFloat(document.getElementById('s1l4-a').value);
+            const b = parseFloat(document.getElementById('s1l4-b').value);
+            const out = document.getElementById('s1l4-out');
+            const maxVal = a > b ? a : b;
+            const minVal = a < b ? a : b;
+            out.innerHTML =
+                `<span class="com">>>> a = ${a}, b = ${b}</span>
+
+<span class="com"># Ternary — inline if</span>
+larger  = a if a > b else b   →  ${maxVal}
+smaller = a if a < b else b   →  ${minVal}
+
+<span class="com"># Equivalent multi-line:</span>
+if a > b:
+    larger = a
+else:
+    larger = b
+
+<span class="com"># pass — placeholder</span>
+def future_feature():
+    pass   <span class="com"># returns None, no error</span>
+future_feature()  →  None`;
+        }
+
+        function s1l5Run() {
+            const v = document.getElementById('s1l5-val').value;
+            const out = document.getElementById('s1l5-out');
+            let truthy;
+            if (v === '0' || v === '""' || v === '[]' || v === 'None' || v === 'False') truthy = false;
+            else truthy = true;
+            const symbol = truthy ? '✅ TRUTHY' : '❌ FALSY';
+            out.innerHTML =
+                `<span class="com">>>> val = ${v}</span>
+if val:
+    print("TRUTHY")
+else:
+    print("FALSY")
+
+<span class="com"># Python evaluates:</span>
+bool(${v})  →  ${truthy}
+<span class="${truthy ? 'ok' : 'err'}">${symbol}</span>
+
+<span class="com"># Falsy values: 0, 0.0, "", [], {}, set(), None, False</span>
+<span class="com"># Everything else is TRUTHY</span>`;
+        }
+
+        // Init
+        initDragAndDrop();
+        shufflePools();
+        s1l1Run();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Functions — Parameters, *args &amp; **kwargs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+            margin-top: 10px;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* ================= VISUALIZERS ================= */
+        .func-vis {
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+        }
+
+        .func-vis .func-name {
+            color: var(--ink);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .func-vis .param-tag {
+            display: inline-block;
+            background: var(--ink);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 4px;
+        }
+
+        .func-vis .return-val {
+            background: rgba(225, 6, 0, 0.03);
+            color: var(--red);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px dashed var(--red);
+        }
+
+        /* ================= DRAG AND DROP CUSTOM STYLES ================= */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 40px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        .formula-builder {
+            background: #fffafa;
+            border: 1px solid #ffd1d5;
+            padding: 18px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--ink);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Python <span>Functions</span></h1>
+        <p class="sub">Encapsulate code and build abstractions. Master the details of parameter binding, variable scopes
+            (*args / **kwargs), validation stubs, and return values.</p>
+    </header>
+
+    <main>
+        <div class="sec-head">
+            <div class="sec-num">// SUBTOPIC 2.3</div>
+            <h2>Functions · Parameters · Argument Types</h2>
+            <p>Master Python's functional scope boundaries. Work through the 5 progression levels from defining
+                functions to advanced unpacking of tuples and dict bindings.</p>
+        </div>
+
+        <div class="level-strip" id="s3-levels"></div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="s3-bar" style="width:20%"></div>
+        </div>
+
+        <!-- S3 L1 -->
+        <div class="level-panel active" id="s3-l1">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Defining &amp; Invoking Functions</h3>
+                <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                    <strong>Core Concepts:</strong>
+                    <p>Functions are named, modular blocks of code that perform specific tasks:</p>
+                    <ul>
+                        <li><strong>def Keyword:</strong> Declares functions: <code>def function_name(params):</code>.
+                        </li>
+                        <li><strong>return Keyword:</strong> Exits scope and sends value back. Defaults to
+                            <code>None</code>.</li>
+                    </ul>
+                </div>
+                <h4>Function Anatomy</h4>
+                <div class="indent-demo">
+                    <span class="lvl0"><span style="color:#b30500">def</span> greet(name):</span>
+                    <span class="lvl1">message = "Hello, " + name</span>
+                    <span class="lvl1"><span style="color:#b30500">return</span> message</span>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l1">LEVEL 1</span>Custom Function Builder</h3>
+                <div class="row">
+                    <div><label>Function name</label><input type="text" id="s3l1-name" value="greet"></div>
+                    <div><label>Parameter</label><input type="text" id="s3l1-param" value="name"></div>
+                    <div><label>Call with argument</label><input type="text" id="s3l1-arg" value="Alice"></div>
+                </div>
+                <button class="action" onclick="s3l1Run()">▶ Define &amp; Call</button>
+                <div class="output" id="s3l1-out">com: fill in the function builder above</div>
+                <div class="func-vis" id="s3l1-vis" style="display:none;"></div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Parameter Delimiter Matcher</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct syntax delimiters to define a function where
+                    parameters <code>a</code> and <code>b</code> are positional-only, and parameter <code>d</code> is
+                    keyword-only.
+                </div>
+                <div class="game-container" id="l1-game">
+                    <div class="game-header">
+                        <span>🎯 Delimiter Enforcer (/ and *)</span>
+                        <span class="game-score">Score: <span id="l1-score">0</span>/2</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="code-line" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>def process_data(a, b,</span>
+                            <div class="drop-zone" id="l1-zone-0" data-expected="/" data-pool-id="l1-pool"></div>
+                            <span>, c,</span>
+                            <div class="drop-zone" id="l1-zone-1" data-expected="*" data-pool-id="l1-pool"></div>
+                            <span>, d=10):</span>
+                        </div>
+                        <div class="code-line"
+                            style="display:block; padding-left:20px; margin-top:6px; color:var(--red-deep);">
+                            <span>return (a + b) * c - d</span>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l1-pool">
+                        <div class="draggable-item" id="l1-item-slash" draggable="true" data-val="/">/</div>
+                        <div class="draggable-item" id="l1-item-star" draggable="true" data-val="*">*</div>
+                        <div class="draggable-item" id="l1-item-backslash" draggable="true" data-val="\">\</div>
+                        <div class="draggable-item" id="l1-item-amp" draggable="true" data-val="&">&amp;</div>
+                        <div class="draggable-item" id="l1-item-def" draggable="true" data-val="def">def</div>
+                        <div class="draggable-item" id="l1-item-lambda" draggable="true" data-val="lambda">lambda</div>
+                    </div>
+                    <button class="action" onclick="l1Verify()">Verify Delimiters</button>
+                    <div class="game-feedback" id="l1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3 L2 -->
+        <div class="level-panel" id="s3-l2">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Required vs Keyword vs Default Arguments</h3>
+                <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                    <strong>Core Concepts:</strong>
+                    <p>Binding parameters dynamically during calls:</p>
+                    <ul>
+                        <li><strong>Required variables:</strong> Must be supplied by positional inputs.</li>
+                        <li><strong>Default values:</strong> Fallbacks. Must be declared *after* required parameters.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l2">LEVEL 2</span>Argument Binding Sandbox</h3>
+                <div class="row">
+                    <div><label>item (required)</label><input type="text" id="s3l2-item" value="coffee"></div>
+                    <div><label>qty (default=1)</label><input type="number" id="s3l2-qty" value="1"></div>
+                    <div><label>currency (default="INR")</label><input type="text" id="s3l2-curr" value="INR"></div>
+                    <div><label>price (required)</label><input type="number" id="s3l2-price" value="150"></div>
+                </div>
+                <button class="action" onclick="s3l2Run()">▶ Call Function</button>
+                <div class="output" id="s3l2-out">com: fill the parameters above</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Mixed Constraints Call Binder</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Call the <code>configure</code> function for host
+                    <code>'localhost'</code> on port <code>8080</code> securely (<code>True</code>) with a timeout of
+                    <code>30</code>. Remember, positional arguments cannot follow keyword arguments, and keyword-only
+                    parameters must be passed with keyword names.
+                </div>
+                <div class="game-container" id="l2-game">
+                    <div class="game-header">
+                        <span>🎯 Mixed Ordering Check</span>
+                        <span class="game-score">Score: <span id="l2-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">def configure(host, port=80, *, secure=True, timeout=10):</span>
+                        <span class="lvl1">pass</span>
+                        <span class="lvl0"
+                            style="margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>configure(</span>
+                            <div class="drop-zone" id="l2-zone-0" data-expected="&quot;localhost&quot;"
+                                data-pool-id="l2-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l2-zone-1" data-expected="8080" data-pool-id="l2-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l2-zone-2" data-expected="secure=True" data-pool-id="l2-pool">
+                            </div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l2-zone-3" data-expected="timeout=30" data-pool-id="l2-pool">
+                            </div>
+                            <span>)</span>
+                        </span>
+                    </div>
+                    <div class="items-pool" id="l2-pool">
+                        <div class="draggable-item" id="l2-item-hostval" draggable="true"
+                            data-val="&quot;localhost&quot;">"localhost"</div>
+                        <div class="draggable-item" id="l2-item-portval" draggable="true" data-val="8080">8080</div>
+                        <div class="draggable-item" id="l2-item-secval" draggable="true" data-val="secure=True">
+                            secure=True</div>
+                        <div class="draggable-item" id="l2-item-timeval" draggable="true" data-val="timeout=30">
+                            timeout=30</div>
+                        <div class="draggable-item" id="l2-item-hostkw" draggable="true"
+                            data-val="host=&quot;localhost&quot;">host="localhost"</div>
+                        <div class="draggable-item" id="l2-item-sectru" draggable="true" data-val="True">True</div>
+                        <div class="draggable-item" id="l2-item-timevalraw" draggable="true" data-val="30">30</div>
+                    </div>
+                    <button class="action" onclick="l2Verify()">Verify Function Call</button>
+                    <div class="game-feedback" id="l2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3 L3 -->
+        <div class="level-panel" id="s3-l3">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Variable-Length Arguments: *args &amp; **kwargs</h3>
+                <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                    <strong>Core Concepts:</strong>
+                    <p>Arguments collectors pack arbitrary bounds:</p>
+                    <ul>
+                        <li><strong>*args:</strong> Packs extra positional arguments into a **tuple**.</li>
+                        <li><strong>**kwargs:</strong> Packs extra keyword arguments into a **dictionary**.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l3">LEVEL 3</span>Collection Collector</h3>
+                <div class="row">
+                    <div><label>*args — comma-separated numbers</label><input type="text" id="s3l3-args"
+                            value="10, 20, 30, 40"></div>
+                </div>
+                <div class="row">
+                    <div><label>**kwargs — key=value pairs (e.g. name=Alice, city=Mumbai)</label><input type="text"
+                            id="s3l3-kwargs" value="name=Alice, city=Mumbai"></div>
+                </div>
+                <button class="action" onclick="s3l3Run()">▶ Unpack Arguments</button>
+                <div class="output" id="s3l3-out">com: enter values and run</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Unpacking Operator Binds</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Complete the call to <code>display(x, y, z)</code> by unpacking the
+                    coordinates list (for positional parameters <code>x</code> and <code>y</code>) and the configuration
+                    dictionary (for keyword parameter <code>z</code>).
+                </div>
+                <div class="game-container" id="l3-game">
+                    <div class="game-header">
+                        <span>🎯 Unpacking Operators (* and **)</span>
+                        <span class="game-score">Score: <span id="l3-score">0</span>/2</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">def display(x, y, z):</span>
+                        <span class="lvl1">return x + y + z</span>
+                        <span class="lvl0" style="margin-top:10px;">coords = [10, 20]</span>
+                        <span class="lvl0">config = {"z": 30}</span>
+                        <span class="lvl0"
+                            style="margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>result = display(</span>
+                            <div class="drop-zone" id="l3-zone-0" data-expected="*coords" data-pool-id="l3-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l3-zone-1" data-expected="**config" data-pool-id="l3-pool"></div>
+                            <span>)</span>
+                        </span>
+                    </div>
+                    <div class="items-pool" id="l3-pool">
+                        <div class="draggable-item" id="l3-item-unpcoords" draggable="true" data-val="*coords">*coords
+                        </div>
+                        <div class="draggable-item" id="l3-item-unpconfig" draggable="true" data-val="**config">**config
+                        </div>
+                        <div class="draggable-item" id="l3-item-coords" draggable="true" data-val="coords">coords</div>
+                        <div class="draggable-item" id="l3-item-config" draggable="true" data-val="config">config</div>
+                        <div class="draggable-item" id="l3-item-starconfig" draggable="true" data-val="*config">*config
+                        </div>
+                        <div class="draggable-item" id="l3-item-ampcoords" draggable="true" data-val="&amp;coords">
+                            &amp;coords</div>
+                    </div>
+                    <button class="action" onclick="l3Verify()">Verify Unpacking</button>
+                    <div class="game-feedback" id="l3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3 L4 -->
+        <div class="level-panel" id="s3-l4">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Input Guards, Type Hints &amp; PEP 484</h3>
+                <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                    <strong>Core Concepts:</strong>
+                    <p>Assertions and typing structures protect variables:</p>
+                    <ul>
+                        <li><strong>Type hints:</strong> Optional metadata annotations used by static analysis tools.
+                            Ignored at runtime.</li>
+                        <li><strong>Guards:</strong> Raise errors programmatically to stop math calculations on invalid
+                            objects.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l4">LEVEL 4</span>Interest Guard Calculator</h3>
+                <div class="row">
+                    <div><label>Principal (₹)</label><input type="number" id="s3l4-p" value="10000"></div>
+                    <div><label>Rate (%)</label><input type="number" id="s3l4-r" value="8.5"></div>
+                    <div><label>Years</label><input type="number" id="s3l4-t" value="5"></div>
+                </div>
+                <button class="action" onclick="s3l4Run()">▶ Calculate Interest</button>
+                <div class="output" id="s3l4-out">com: enter values — try negative rate or 0 years</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Callable &amp; Union Annotations</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct type hint annotations and error guards to complete
+                    the implementation of the <code>execute</code> function which accepts a callback parameter.
+                </div>
+                <div class="game-container" id="l4-game">
+                    <div class="game-header">
+                        <span>🎯 Callback &amp; Union Type Hinting</span>
+                        <span class="game-score">Score: <span id="l4-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <span>def execute(func:</span>
+                            <div class="drop-zone" id="l4-zone-0" data-expected="Callable[[int],int]"
+                                data-pool-id="l4-pool"></div>
+                            <span>, val:</span>
+                            <div class="drop-zone" id="l4-zone-1" data-expected="int" data-pool-id="l4-pool"></div>
+                            <span>)</span>
+                            <div class="drop-zone" id="l4-zone-2" data-expected="-&gt;Union[int,str]"
+                                data-pool-id="l4-pool"></div>
+                            <span>:</span>
+                        </span>
+                        <span class="lvl1">if val &lt; 0:</span>
+                        <span class="lvl2" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <span>return</span>
+                            <div class="drop-zone" id="l4-zone-3" data-expected="&quot;Error: Negative value&quot;"
+                                data-pool-id="l4-pool"></div>
+                        </span>
+                        <span class="lvl1">return func(val)</span>
+                    </div>
+                    <div class="items-pool" id="l4-pool">
+                        <div class="draggable-item" id="l4-item-callable" draggable="true"
+                            data-val="Callable[[int],int]">Callable[[int], int]</div>
+                        <div class="draggable-item" id="l4-item-int" draggable="true" data-val="int">int</div>
+                        <div class="draggable-item" id="l4-item-union" draggable="true" data-val="-&gt;Union[int,str]">
+                            -&gt; Union[int, str]</div>
+                        <div class="draggable-item" id="l4-item-errstr" draggable="true"
+                            data-val="&quot;Error: Negative value&quot;">"Error: Negative value"</div>
+                        <div class="draggable-item" id="l4-item-callable-simple" draggable="true" data-val="Callable">
+                            Callable</div>
+                        <div class="draggable-item" id="l4-item-intarrow" draggable="true" data-val="int-&gt;int">int
+                            -&gt; int</div>
+                        <div class="draggable-item" id="l4-item-orhint" draggable="true" data-val="int|str">int | str
+                        </div>
+                        <div class="draggable-item" id="l4-item-raiseerr" draggable="true" data-val="raiseValueError">
+                            raise ValueError</div>
+                    </div>
+                    <button class="action" onclick="l4Verify()">Verify Annotations</button>
+                    <div class="game-feedback" id="l4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3 L5 -->
+        <div class="level-panel" id="s3-l5">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Tuple Packing &amp; Multiple Return Values</h3>
+                <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                    <strong>Core Concepts:</strong>
+                    <p>Unpacking packed tuples from function returns:</p>
+                    <ul>
+                        <li><strong>Implicit Packing:</strong> Commas pack outputs: <code>return min, max</code>.</li>
+                        <li><strong>Unpacking:</strong> Multiple variables match index structures directly:
+                            <code>mn, mx = analyze(nums)</code>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l5">LEVEL 5</span>Statistical Pack Unpacker</h3>
+                <div class="row">
+                    <div><label>Comma-separated numbers</label><input type="text" id="s3l5-nums"
+                            value="4, 9, 2, 15, 7, 11"></div>
+                </div>
+                <button class="action" onclick="s3l5Run()">▶ Analyse &amp; Unpack</button>
+                <div class="output" id="s3l5-out">com: enter a list of numbers</div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Extended Starred Unpacker</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Unpack the tuple returned by <code>stats()</code>. Extract the first
+                    item into <code>first</code>, all middle items (as a list) into <code>middle</code>, and the last
+                    item into <code>last</code>.
+                </div>
+                <div class="game-container" id="l5-game">
+                    <div class="game-header">
+                        <span>🎯 Starred Remainder (*rest) Unpacking</span>
+                        <span class="game-score">Score: <span id="l5-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <span class="lvl0">def stats():</span>
+                        <span class="lvl1">return 1, 2, 3, 4, 5</span>
+                        <span class="lvl0"
+                            style="margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <div class="drop-zone" id="l5-zone-0" data-expected="first" data-pool-id="l5-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l5-zone-1" data-expected="*middle" data-pool-id="l5-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l5-zone-2" data-expected="last" data-pool-id="l5-pool"></div>
+                            <span>= stats()</span>
+                        </span>
+                    </div>
+                    <div class="items-pool" id="l5-pool">
+                        <div class="draggable-item" id="l5-item-first" draggable="true" data-val="first">first</div>
+                        <div class="draggable-item" id="l5-item-starmiddle" draggable="true" data-val="*middle">*middle
+                        </div>
+                        <div class="draggable-item" id="l5-item-last" draggable="true" data-val="last">last</div>
+                        <div class="draggable-item" id="l5-item-middle" draggable="true" data-val="middle">middle</div>
+                        <div class="draggable-item" id="l5-item-starfirst" draggable="true" data-val="*first">*first
+                        </div>
+                        <div class="draggable-item" id="l5-item-lastval" draggable="true" data-val="last_val">last_val
+                        </div>
+                    </div>
+                    <button class="action" onclick="l5Verify()">Verify Unpacking</button>
+                    <div class="game-feedback" id="l5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Module 2 · Decision Making &amp; Functions · Section 2.3</div>
+    </main>
+
+    <script>
+        const SUBTOPIC = 's3';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Parameter Delimiters' },
+            { cls: 'l2', label: 'Level 2 · Mixed Call Ordering' },
+            { cls: 'l3', label: 'Level 3 · Unpacking Operators' },
+            { cls: 'l4', label: 'Level 4 · Callable &amp; Union Hints' },
+            { cls: 'l5', label: 'Level 5 · Starred Remainder Unpack' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.innerHTML = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, btn);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, btn) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll(`.level-panel`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        // ===================== DRAG & DROP UTILITIES =====================
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            let target = e.currentTarget;
+
+            if (target.classList.contains("drop-zone") || target.classList.contains("items-pool") || target.classList.contains("bucket")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+        }
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .items-pool, .bucket").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+        }
+
+        // ===================== PUZZLE VERIFICATIONS =====================
+        function l1Verify() {
+            const slots = ['l1-zone-0', 'l1-zone-1'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l1-score').textContent = score;
+            const feedback = document.getElementById('l1-feedback');
+            if (score === 2) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Correct! Preceding / enforces positional-only parameters, and succeeding * enforces keyword-only arguments!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect parameter delimiters. Remember that / marks positional-only parameters and * marks keyword-only parameters. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            const slots = ['l2-zone-0', 'l2-zone-1', 'l2-zone-2', 'l2-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feedback = document.getElementById('l2-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! Positional arguments are passed first, followed by default/keyword overrides, and keyword-only parameters must be named.';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect call arguments. Check positional ordering vs keyword-only requirements. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            const slots = ['l3-zone-0', 'l3-zone-1'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feedback = document.getElementById('l3-feedback');
+            if (score === 2) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Correct mapping! The single asterisk * unpacks lists/iterables, and the double asterisk ** unpacks dictionary mappings!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Unpacking mismatch. Verify the correct use of * and ** operators for list and dictionary unpacking. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            const slots = ['l4-zone-0', 'l4-zone-1', 'l4-zone-2', 'l4-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feedback = document.getElementById('l4-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! The function signature specifies a Callable argument and Union return type, guarded by a boundary check.';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Annotation or guard mismatch. Verify Callable syntax and Union return types. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            const slots = ['l5-zone-0', 'l5-zone-1', 'l5-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feedback = document.getElementById('l5-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Correct unpacking! *middle acts as a starred expression collecting the leftover sequence items into a list!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Unpacking mismatch. Confirm the placement of the asterisk * operator on the remainder variable. Reshuffling pool!';
+                shufflePools();
+            }
+        }
+
+        // ===================== SIMULATION LOGIC =====================
+        function s3l1Run() {
+            const name = document.getElementById('s3l1-name').value.trim() || 'greet';
+            const param = document.getElementById('s3l1-param').value.trim() || 'name';
+            const arg = document.getElementById('s3l1-arg').value.trim() || 'Alice';
+            const out = document.getElementById('s3l1-out');
+            const vis = document.getElementById('s3l1-vis');
+            out.innerHTML =
+                `<span class="com">>>> def ${name}(${param}):</span>
+        message = "Hello, " + ${param}
+        return message
+
+${name}(<span class="lbl">"${arg}"</span>)
+<span class="ok">→ "Hello, ${arg}"</span>
+
+<span class="com"># Without return: ${name}("${arg}") → None</span>`;
+            vis.style.display = 'block';
+            vis.innerHTML = `<div class="func-name">def ${name}(<span style="color:#b30500">${param}</span>):</div>
+<div style="margin-top:8px;">Parameters: <span class="param-tag">${param}</span></div>
+<div style="margin-top:8px;">Called with: <span class="param-tag" style="background:var(--red);">${arg}</span></div>
+<div class="return-val">return "Hello, ${arg}"</div>`;
+        }
+
+        function s3l2Run() {
+            const item = document.getElementById('s3l2-item').value.trim() || 'coffee';
+            const qty = parseInt(document.getElementById('s3l2-qty').value) || 1;
+            const curr = document.getElementById('s3l2-curr').value.trim() || 'INR';
+            const price = parseFloat(document.getElementById('s3l2-price').value) || 0;
+            const out = document.getElementById('s3l2-out');
+            const total = (qty * price).toFixed(2);
+            out.innerHTML =
+                `<span class="com">>>> def order(item, price, qty=1, currency="INR"):</span>
+        total = qty * price
+        return f"{qty}x {item} @ {currency} {price} = {currency} {total}"
+
+<span class="com"># Required args: item="${item}", price=${price}</span>
+<span class="com"># Default/keyword: qty=${qty}, currency="${curr}"</span>
+
+order("${item}", ${price}, qty=${qty}, currency="${curr}")
+<span class="ok">→ "${qty}x ${item} @ ${curr} ${price} = ${curr} ${total}"</span>
+
+<span class="com"># Default args must come AFTER required args in def</span>
+<span class="com"># Keyword args can be passed in any order</span>`;
+        }
+
+        function s3l3Run() {
+            const argsRaw = document.getElementById('s3l3-args').value;
+            const kwargsRaw = document.getElementById('s3l3-kwargs').value;
+            const out = document.getElementById('s3l3-out');
+            const nums = argsRaw.split(',').map(s => s.trim()).filter(Boolean);
+            const total = nums.reduce((a, b) => a + parseFloat(b), 0);
+            const pairs = kwargsRaw.split(',').map(s => {
+                const [k, v] = s.split('=').map(x => x.trim());
+                return { k, v };
+            }).filter(p => p.k && p.v);
+            const kdict = pairs.map(p => `'${p.k}': '${p.v}'`).join(', ');
+            out.innerHTML =
+                `<span class="com">>>> def demo(*args, **kwargs):</span>
+        print(args)
+        print(kwargs)
+
+demo(${nums.join(', ')}, ${pairs.map(p => `${p.k}="${p.v}"`).join(', ')})
+
+args   →  (${nums.join(', ')})
+         <span class="com"># tuple of ${nums.length} positional arg(s)</span>
+
+kwargs →  {${kdict}}
+         <span class="com"># dict of ${pairs.length} keyword arg(s)</span>
+
+<span class="lbl">sum(*args):</span>  ${total.toFixed(2)}
+<span class="lbl">keys:</span>       [${pairs.map(p => `'${p.k}'`).join(', ')}]`;
+        }
+
+        function s3l4Run() {
+            const p = parseFloat(document.getElementById('s3l4-p').value);
+            const r = parseFloat(document.getElementById('s3l4-r').value);
+            const t = parseFloat(document.getElementById('s3l4-t').value);
+            const out = document.getElementById('s3l4-out');
+            if (isNaN(p) || p <= 0) { out.innerHTML = '<span class="err">ValueError: principal must be a positive number</span>'; return; }
+            if (isNaN(r) || r < 0) { out.innerHTML = '<span class="err">ValueError: rate cannot be negative</span>'; return; }
+            if (isNaN(t) || t <= 0) { out.innerHTML = '<span class="err">ValueError: time must be greater than 0</span>'; return; }
+            const si = (p * r * t / 100).toFixed(2);
+            const total = (p + parseFloat(si)).toFixed(2);
+            out.innerHTML =
+                `<span class="com">>>> def calc_interest(principal: float, rate: float, years: int) -> float:</span>
+        if principal <= 0: raise ValueError("principal must be positive")
+        if rate < 0:       raise ValueError("rate cannot be negative")
+        if years <= 0:     raise ValueError("years must be > 0")
+        return principal * rate * years / 100
+
+calc_interest(${p}, ${r}, ${t})
+
+<span class="lbl">Formula:</span>    SI = P × R × T / 100
+<span class="lbl">         </span>    SI = ${p} × ${r} × ${t} / 100
+<span class="ok">Simple Interest: ₹${si}</span>
+<span class="ok">Total Amount:    ₹${total}</span>
+<span class="com"># Type hints (:float, ->float) are documentation only</span>
+<span class="com"># Python won't error if you pass wrong types at runtime</span>`;
+        }
+
+        function s3l5Run() {
+            const raw = document.getElementById('s3l5-nums').value;
+            const nums = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const out = document.getElementById('s3l5-out');
+            if (!nums.length) { out.innerHTML = '<span class="err">Enter valid comma-separated numbers</span>'; return; }
+            const mn = Math.min(...nums);
+            const mx = Math.max(...nums);
+            const avg = (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(2);
+            const med = [...nums].sort((a, b) => a - b);
+            const midMed = med.length % 2 === 0 ? (med[med.length / 2 - 1] + med[med.length / 2]) / 2 : med[Math.floor(med.length / 2)];
+            out.innerHTML =
+                `<span class="com">>>> def analyse(numbers):</span>
+        mn  = min(numbers)
+        mx  = max(numbers)
+        avg = sum(numbers) / len(numbers)
+        med = sorted(numbers)[len//2]
+        return mn, mx, avg, med   <span class="com"># tuple</span>
+
+analyse([${nums.join(', ')}])
+
+<span class="com"># Unpacking the returned tuple:</span>
+mn, mx, avg, med = analyse(numbers)
+
+<span class="lbl">mn  =</span>  ${mn}
+<span class="lbl">mx  =</span>  ${mx}
+<span class="lbl">avg =</span>  ${avg}
+<span class="lbl">med =</span>  ${midMed}
+<span class="ok">→ 4 values returned as one tuple, unpacked into 4 variables</span>`;
+        }
+
+        // Init
+        initDragAndDrop();
+        shufflePools();
+        s3l1Run();
+    </script>
+</body>
+
+</html>

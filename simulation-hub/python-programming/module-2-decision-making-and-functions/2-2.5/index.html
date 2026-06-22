@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Advanced — Lambdas, Recursion, Copying &amp; Decorators</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+            margin-top: 10px;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl3 {
+            color: #6a1b9a;
+            padding-left: 60px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl4 {
+            color: #b71c1c;
+            padding-left: 80px;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* ================= VISUALIZERS ================= */
+        .lambda-chain {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .lambda-box {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+        }
+
+        .lambda-box.val {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 2px 2px 0 var(--red-dark);
+        }
+
+        .lambda-arrow {
+            color: #5a4b4b;
+            font-size: 1.2rem;
+        }
+
+        .rec-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .rec-frame {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--red);
+            background: #FFF;
+            border: 1px solid #ffd1d5;
+            box-shadow: 2px 2px 0 #ffebeb;
+        }
+
+        .rec-frame.top {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.03);
+            font-weight: bold;
+        }
+
+        .deco-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+            margin-top: 16px;
+        }
+
+        .deco-layer {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 3px solid;
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+        }
+
+        .deco-layer.outer {
+            border-left-color: var(--red);
+            margin-left: 0;
+        }
+
+        .deco-layer.inner {
+            border-left-color: var(--ink);
+            margin-left: 20px;
+        }
+
+        .deco-layer.core {
+            border-left-color: #5a4b4b;
+            margin-left: 40px;
+            background: #FFF;
+        }
+
+        .loop-track {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            min-height: 40px;
+        }
+
+        .loop-item {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            background: var(--red);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            animation: pop .2s ease;
+            box-shadow: 2px 2px 0 var(--red-dark);
+        }
+
+        .loop-item.skip {
+            background: var(--bg-main);
+            color: #5a4b4b;
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        /* ================= DRAG AND DROP CUSTOM STYLES ================= */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 40px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Advanced <span>Python Toolkit</span></h1>
+        <p class="sub">Harness the power of functional paradigms. Master anonymous expressions (lambdas), execution
+            recursion stacks, object copying, and function wrapper decorators.</p>
+    </header>
+
+    <main>
+        <div class="sec-head">
+            <div class="sec-num">// SUBTOPIC 2.5</div>
+            <h2>Recursion · Lambda · Copies · Decorators</h2>
+            <p>Master Python's meta-programming utilities. Work through the 5 progression levels from lambdas and arrays
+                mapping to copy safety and nested wrapper structures.</p>
+        </div>
+
+        <div class="level-strip" id="s5-levels"></div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="s5-bar" style="width:20%"></div>
+        </div>
+
+        <!-- S5 L1 -->
+        <div class="level-panel active" id="s5-l1">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Anonymous Expressions: lambda</h3>
+                <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                    <strong>Core Concepts:</strong>
+                    <p>A lambda function is a lightweight, one-line anonymous function defined without a name:</p>
+                    <ul>
+                        <li><strong>Syntax Constraints:</strong> Declared using
+                            <code>lambda arguments: expression</code>. No explicit <code>def</code> or
+                            <code>return</code> keywords are used. The evaluated expression is implicitly returned.
+                        </li>
+                        <li><strong>Single Expression Limit:</strong> Lambdas can contain *only one* expression. They
+                            cannot contain statements (such as assignments <code>=</code> or loops <code>for</code>).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l1">LEVEL 1</span>Lambda Expression Compiler</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Choose a lambda mapping operation (e.g. squaring, doubling, or
+                    checking parity) and evaluate input values inline.
+                </div>
+                <div class="row">
+                    <div><label>Operation</label>
+                        <select id="s5l1-op">
+                            <option value="square">x → x²</option>
+                            <option value="double">x → x × 2</option>
+                            <option value="iseven">x → is even?</option>
+                            <option value="greet">name → "Hello, name!"</option>
+                            <option value="add">a, b → a + b</option>
+                        </select>
+                    </div>
+                    <div><label>Input (for two-arg: use comma)</label><input type="text" id="s5l1-input" value="7">
+                    </div>
+                </div>
+                <button class="action" onclick="s5l1Run()">▶ Run Lambda</button>
+                <div class="output" id="s5l1-out">com: pick an operation and enter input</div>
+                <div class="lambda-chain" id="s5l1-chain"></div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Write a lambda that returns the larger of two inputs using an inline ternary operator:
+                        <code>lambda a, b: a if a > b else b</code>. Can a lambda have multiple statements?
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Lambda Expression Sorter</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct body expressions to complete each anonymous lambda
+                    definition!
+                </div>
+                <div class="game-container" id="l1-game">
+                    <div class="game-header">
+                        <span>🎯 Lambda Body Resolver</span>
+                        <span class="game-score">Score: <span id="l1-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px;">
+                            <span>max_val = lambda a, b: </span>
+                            <div class="drop-zone" id="l1-zone-0" data-expected="a if a > b else b"
+                                data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+                            <span>sort_key = lambda x: </span>
+                            <div class="drop-zone" id="l1-zone-1" data-expected="x[1]" data-pool-id="l1-pool"></div>
+                        </div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+                            <span>is_palindrome = lambda s: </span>
+                            <div class="drop-zone" id="l1-zone-2" data-expected="s == s[::-1]" data-pool-id="l1-pool">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l1-pool">
+                        <div class="draggable-item" id="l1-item-max" draggable="true" data-val="a if a > b else b">a if
+                            a &gt; b else b</div>
+                        <div class="draggable-item" id="l1-item-sort" draggable="true" data-val="x[1]">x[1]</div>
+                        <div class="draggable-item" id="l1-item-pal" draggable="true" data-val="s == s[::-1]">s ==
+                            s[::-1]</div>
+                        <div class="draggable-item" id="l1-item-wrong1" draggable="true" data-val="a if a > b">a if a
+                            &gt; b</div>
+                        <div class="draggable-item" id="l1-item-wrong2" draggable="true" data-val="x[0]">x[0]</div>
+                        <div class="draggable-item" id="l1-item-wrong3" draggable="true" data-val="s[::-1]">s[::-1]
+                        </div>
+                    </div>
+                    <button class="action" onclick="l1Verify()">Verify Lambdas</button>
+                    <div class="game-feedback" id="l1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S5 L2 -->
+        <div class="level-panel" id="s5-l2">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Functional Mapping &amp; Filtering</h3>
+                <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                    <strong>Core Concepts:</strong>
+                    <p>Python provides functional programmers with mapping and filtering utilities to transform arrays:
+                    </p>
+                    <ul>
+                        <li><strong>map(function, iterable):</strong> Applies the target mapping function to every
+                            single item in the input sequence.</li>
+                        <li><strong>filter(function, iterable):</strong> Evaluates each sequence item against a Boolean
+                            function, retaining only elements that yield <code>True</code>.</li>
+                        <li><strong>Lazy Evaluation:</strong> Both <code>map</code> and <code>filter</code> return lazy
+                            iterator generators. To manifest their concrete results into memory, you must wrap them with
+                            <code>list()</code>.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l2">LEVEL 2</span>Lazy Array Transformer</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Enter a comma-separated array list, and execute map or filter
+                    transforms using custom lambdas.
+                </div>
+                <div class="row">
+                    <div><label>Numbers (comma-separated)</label><input type="text" id="s5l2-nums"
+                            value="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></div>
+                </div>
+                <button class="action" onclick="s5l2Map('square')">▶ map(x²)</button>
+                <button class="action ghost" onclick="s5l2Map('double')">▶ map(×2)</button>
+                <button class="action ghost" onclick="s5l2Filter('even')">▼ filter(even)</button>
+                <button class="action ghost" onclick="s5l2Filter('gt5')">▼ filter(&gt;5)</button>
+                <div class="output" id="s5l2-out">com: enter numbers and try map or filter</div>
+                <div class="loop-track" id="s5l2-track"></div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Chain them: filter the list to keep only even numbers, then map the squares. How would you write
+                        this as a list comprehension: <code>[x**2 for x in nums if x%2==0]</code>?</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Lazy Chained Pipeline</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct mapping and filtering expressions to build a
+                    functional pipeline that squares only the even numbers in the sequence!
+                </div>
+                <div class="game-container" id="l2-game">
+                    <div class="game-header">
+                        <span>🎯 Chained functional pipeline</span>
+                        <span class="game-score">Score: <span id="l2-score">0</span>/4</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span>result = </span>
+                            <div class="drop-zone" id="l2-zone-0" data-expected="map" data-pool-id="l2-pool"></div>
+                            <span>(</span>
+                            <div class="drop-zone" id="l2-zone-1" data-expected="lambda x: x ** 2"
+                                data-pool-id="l2-pool"></div>
+                            <span>, </span>
+                            <div class="drop-zone" id="l2-zone-2" data-expected="filter" data-pool-id="l2-pool"></div>
+                            <span>(</span>
+                            <div class="drop-zone" id="l2-zone-3" data-expected="lambda x: x % 2 == 0"
+                                data-pool-id="l2-pool"></div>
+                            <span>, numbers))</span>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l2-pool">
+                        <div class="draggable-item" id="l2-item-map" draggable="true" data-val="map">map</div>
+                        <div class="draggable-item" id="l2-item-sq" draggable="true" data-val="lambda x: x ** 2">lambda
+                            x: x ** 2</div>
+                        <div class="draggable-item" id="l2-item-filter" draggable="true" data-val="filter">filter</div>
+                        <div class="draggable-item" id="l2-item-even" draggable="true" data-val="lambda x: x % 2 == 0">
+                            lambda x: x % 2 == 0</div>
+                        <div class="draggable-item" id="l2-item-zip" draggable="true" data-val="zip">zip</div>
+                        <div class="draggable-item" id="l2-item-double" draggable="true" data-val="lambda x: x * 2">
+                            lambda x: x * 2</div>
+                        <div class="draggable-item" id="l2-item-odd" draggable="true" data-val="lambda x: x % 2 != 0">
+                            lambda x: x % 2 != 0</div>
+                    </div>
+                    <button class="action" onclick="l2Verify()">Verify Pipeline</button>
+                    <div class="game-feedback" id="l2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S5 L3 -->
+        <div class="level-panel" id="s5-l3">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Recursion &amp; Context Stack Frames</h3>
+                <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                    <strong>Core Concepts:</strong>
+                    <p>Recursion is a programming technique where a function calls itself:</p>
+                    <ul>
+                        <li><strong>Base Case (The Stop Guard):</strong> A conditional branch that returns a value
+                            without making further recursive calls, preventing infinite recursion.</li>
+                        <li><strong>Recursive Case (Reduction):</strong> The path where the function calls itself with a
+                            reduced subset of parameters, moving closer to the base case.</li>
+                        <li><strong>Stack Limits:</strong> Each recursive call creates a new context frame on the
+                            execution stack. To prevent stack overflows, Python limits default recursion depth to 1000
+                            frames.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l3">LEVEL 3</span>Recursive Stack Tracer</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Select a recursive function (Factorial, Fibonacci, Sum) and step
+                    value, then execute to watch stack frames push and resolve.
+                </div>
+                <div class="row">
+                    <div><label>Function</label>
+                        <select id="s5l3-func">
+                            <option value="factorial">factorial(n)</option>
+                            <option value="fibonacci">fibonacci(n)</option>
+                            <option value="sum">sum(1..n)</option>
+                        </select>
+                    </div>
+                    <div><label>n</label><input type="number" id="s5l3-n" value="6" min="0" max="15"></div>
+                </div>
+                <button class="action" onclick="s5l3Run()">▶ Trace Recursion</button>
+                <div class="output" id="s5l3-out">com: pick a function and a value of n</div>
+                <div class="rec-stack" id="s5l3-stack"></div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Select factorial with n=0. Observe how the base case instantly resolves without adding frames.
+                        What occurs if the base case is deleted?</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Recursive Digit Sum</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct conditionals and recursion components to construct
+                    a valid digit sum reduction function!
+                </div>
+                <div class="game-container" id="l3-game">
+                    <div class="game-header">
+                        <span>🎯 Digit Sum Reduction Stack</span>
+                        <span class="game-score">Score: <span id="l3-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0">def sum_digits(n):</div>
+                        <div class="lvl1" style="display:flex; align-items:center; gap:8px;">
+                            <span>if </span>
+                            <div class="drop-zone" id="l3-zone-0" data-expected="n < 10" data-pool-id="l3-pool"></div>
+                            <span>:</span>
+                        </div>
+                        <div class="lvl2">return n</div>
+                        <div class="lvl1" style="display:flex; align-items:center; gap:8px;">
+                            <span>return </span>
+                            <div class="drop-zone" id="l3-zone-1" data-expected="n % 10" data-pool-id="l3-pool"></div>
+                            <span> + sum_digits(</span>
+                            <div class="drop-zone" id="l3-zone-2" data-expected="n // 10" data-pool-id="l3-pool"></div>
+                            <span>)</span>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l3-pool">
+                        <div class="draggable-item" id="l3-item-basecond" draggable="true" data-val="n < 10">n &lt; 10
+                        </div>
+                        <div class="draggable-item" id="l3-item-mod10" draggable="true" data-val="n % 10">n % 10</div>
+                        <div class="draggable-item" id="l3-item-div10" draggable="true" data-val="n // 10">n // 10</div>
+                        <div class="draggable-item" id="l3-item-wrongcond" draggable="true" data-val="n <= 1">n &lt;= 1
+                        </div>
+                        <div class="draggable-item" id="l3-item-floatdiv" draggable="true" data-val="n / 10">n / 10
+                        </div>
+                        <div class="draggable-item" id="l3-item-neg1" draggable="true" data-val="n - 1">n - 1</div>
+                    </div>
+                    <button class="action" onclick="l3Verify()">Verify Digit Sum</button>
+                    <div class="game-feedback" id="l3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S5 L4 -->
+        <div class="level-panel" id="s5-l4">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Memory References: Shallow vs Deep Copy</h3>
+                <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                    <strong>Core Concepts:</strong>
+                    <p>How objects duplicate inside memory affects reference isolation:</p>
+                    <ul>
+                        <li><strong>Assignment (=):</strong> Copies the memory address reference only. Both variables
+                            point to the exact same object. Modifying one modifies the other.</li>
+                        <li><strong>Shallow Copy (copy.copy):</strong> Creates a new outer container, but nested
+                            elements (like sublists) remain shared references. Modifying a nested list modifies both
+                            objects.</li>
+                        <li><strong>Deep Copy (copy.deepcopy):</strong> Fully duplicates all structures recursively,
+                            creating a completely independent copy in memory. Modifying any nested element leaves the
+                            original unchanged.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l4">LEVEL 4</span>Object Cloner Sandbox</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Enter lists and choose clone mappings to watch how mutations
+                    affect original list elements.
+                </div>
+                <div class="row">
+                    <div><label>Original outer list (comma-separated)</label><input type="text" id="s5l4-outer"
+                            value="a, b, c"></div>
+                    <div><label>Nested sub-list (comma-separated)</label><input type="text" id="s5l4-inner"
+                            value="1, 2, 3"></div>
+                </div>
+                <button class="action" onclick="s5l4Demo('assign')">▶ Assignment (=)</button>
+                <button class="action ghost" onclick="s5l4Demo('shallow')">▶ Shallow Copy</button>
+                <button class="action ghost" onclick="s5l4Demo('deep')">▶ Deep Copy</button>
+                <div class="output" id="s5l4-out">com: choose a copy type and see what changes</div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Run Shallow Copy, then change nested sublist values. Notice how nested sublists remain shared
+                        references, while outer lists are copied!</p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Copy Identity Classifier</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct assignment or copying statements to satisfy each
+                    memory address id() identity condition!
+                </div>
+                <div class="game-container" id="l4-game">
+                    <div class="game-header">
+                        <span>🎯 copy.copy vs copy.deepcopy identity</span>
+                        <span class="game-score">Score: <span id="l4-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0"># Condition 1: id(ref_a) == id(original) is True (Shared address)</div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px;">
+                            <span>ref_a = </span>
+                            <div class="drop-zone" id="l4-zone-0" data-expected="original" data-pool-id="l4-pool"></div>
+                        </div>
+                        <div class="lvl0" style="margin-top:10px;"># Condition 2: Outer is new, but inner is shared:
+                            id(ref_b[0]) == id(original[0]) is True</div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px;">
+                            <span>ref_b = </span>
+                            <div class="drop-zone" id="l4-zone-1" data-expected="copy.copy(original)"
+                                data-pool-id="l4-pool"></div>
+                        </div>
+                        <div class="lvl0" style="margin-top:10px;"># Condition 3: Entirely independent nested
+                            structures: id(ref_c[0]) == id(original[0]) is False</div>
+                        <div class="lvl0" style="display:flex; align-items:center; gap:8px;">
+                            <span>ref_c = </span>
+                            <div class="drop-zone" id="l4-zone-2" data-expected="copy.deepcopy(original)"
+                                data-pool-id="l4-pool"></div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l4-pool">
+                        <div class="draggable-item" id="l4-item-alias" draggable="true" data-val="original">original
+                        </div>
+                        <div class="draggable-item" id="l4-item-shallow" draggable="true"
+                            data-val="copy.copy(original)">copy.copy(original)</div>
+                        <div class="draggable-item" id="l4-item-deep" draggable="true"
+                            data-val="copy.deepcopy(original)">copy.deepcopy(original)</div>
+                        <div class="draggable-item" id="l4-item-bad1" draggable="true" data-val="original.copy()">
+                            original.copy()</div>
+                        <div class="draggable-item" id="l4-item-bad2" draggable="true" data-val="clone(original)">
+                            clone(original)</div>
+                    </div>
+                    <button class="action" onclick="l4Verify()">Verify Copying</button>
+                    <div class="game-feedback" id="l4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S5 L5 -->
+        <div class="level-panel" id="s5-l5">
+            <!-- Card 1: THEORY -->
+            <div class="card">
+                <h3><span class="tag">THEORY</span>Decorators &amp; Call Interception</h3>
+                <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                    <strong>Core Concepts:</strong>
+                    <p>A decorator is a meta-programming utility used to extend the behavior of a function without
+                        modifying its source code:</p>
+                    <ul>
+                        <li><strong>Wrapper Function:</strong> Decorators are functions that take another function as an
+                            argument, wrap it with extra logic (e.g. logging execution speed or validating parameters),
+                            and return the wrapper function.</li>
+                        <li><strong>Sugar Syntax:</strong> Placing <code>@decorator_name</code> directly above a
+                            function declaration is syntactic sugar for <code>func = decorator_name(func)</code>.</li>
+                    </ul>
+                </div>
+                <h4>Decorator Anatomy</h4>
+                <div class="indent-demo">
+                    <span class="lvl0">def logger(func):</span>
+                    <span class="lvl1">def wrapper(*args, **kwargs):</span>
+                    <span class="lvl2">print("Calling...")</span>
+                    <span class="lvl2">res = func(*args) # executes target</span>
+                    <span class="lvl2">return res</span>
+                    <span class="lvl1">return wrapper</span>
+                </div>
+            </div>
+
+            <!-- Card 2: SIMULATOR -->
+            <div class="card">
+                <h3><span class="lvl-tag l5">LEVEL 5</span>Decorator Interceptor</h3>
+                <div class="level-desc">
+                    <strong>Interactive Test:</strong> Choose a decorator style (Timer metrics, Log hooks, or Positive
+                    parameter validation) and execute calls to trace how the decorator wraps the execution flow.
+                </div>
+                <div class="row">
+                    <div><label>Decorator type</label>
+                        <select id="s5l5-deco">
+                            <option value="timer">@timer — measure execution time</option>
+                            <option value="logger">@logger — log calls &amp; return values</option>
+                            <option value="validate">@validate_positive — guard inputs</option>
+                        </select>
+                    </div>
+                    <div><label>Input value</label><input type="number" id="s5l5-val" value="8"></div>
+                </div>
+                <button class="action" onclick="s5l5Run()">▶ Apply Decorator</button>
+                <div class="output" id="s5l5-out">com: pick a decorator and run</div>
+                <div class="deco-wrap" id="s5l5-vis" style="margin-top:12px;display:none;"></div>
+
+                <div class="challenge-box">
+                    <div class="ch-label">🎯 Mini-Challenge</div>
+                    <p>Pick the <code>@validate_positive</code> validator decorator. Input a negative number like
+                        <code>-3</code> and run. Notice how the wrapper intercepts and raises an exception before the
+                        core function runs!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: PUZZLE -->
+            <div class="card">
+                <h3><span class="tag">PUZZLE</span>Decorator Closure Anatomy</h3>
+                <div class="level-desc">
+                    <strong>The Challenge:</strong> Drag the correct parameter definitions, calls, and return items to
+                    complete a custom wrapper decorator!
+                </div>
+                <div class="game-container" id="l5-game">
+                    <div class="game-header">
+                        <span>🎯 Decorator structural closure</span>
+                        <span class="game-score">Score: <span id="l5-score">0</span>/3</span>
+                    </div>
+                    <div class="indent-demo" style="line-height:2.2;">
+                        <div class="lvl0">def track_calls(func):</div>
+                        <div class="lvl1" style="display:flex; align-items:center; gap:8px;">
+                            <span>def wrapper(</span>
+                            <div class="drop-zone" id="l5-zone-0" data-expected="*args, **kwargs"
+                                data-pool-id="l5-pool"></div>
+                            <span>):</span>
+                        </div>
+                        <div class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <span>print(f"Calling {func.__name__}")</span>
+                        </div>
+                        <div class="lvl2" style="display:flex; align-items:center; gap:8px;">
+                            <span>result = </span>
+                            <div class="drop-zone" id="l5-zone-1" data-expected="func(*args, **kwargs)"
+                                data-pool-id="l5-pool"></div>
+                        </div>
+                        <div class="lvl2">return result</div>
+                        <div class="lvl1" style="display:flex; align-items:center; gap:8px;">
+                            <div class="drop-zone" id="l5-zone-2" data-expected="return wrapper" data-pool-id="l5-pool">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="items-pool" id="l5-pool">
+                        <div class="draggable-item" id="l5-item-args" draggable="true" data-val="*args, **kwargs">*args,
+                            **kwargs</div>
+                        <div class="draggable-item" id="l5-item-call" draggable="true" data-val="func(*args, **kwargs)">
+                            func(*args, **kwargs)</div>
+                        <div class="draggable-item" id="l5-item-retwrap" draggable="true" data-val="return wrapper">
+                            return wrapper</div>
+                        <div class="draggable-item" id="l5-item-wrongargs" draggable="true" data-val="args, kwargs">
+                            args, kwargs</div>
+                        <div class="draggable-item" id="l5-item-wrongcall" draggable="true" data-val="func">func</div>
+                        <div class="draggable-item" id="l5-item-wrongret" draggable="true" data-val="return result">
+                            return result</div>
+                    </div>
+                    <button class="action" onclick="l5Verify()">Verify Decorator Anatomy</button>
+                    <div class="game-feedback" id="l5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Module 2 · Decision Making &amp; Functions · Section 2.5</div>
+    </main>
+
+    <script>
+        const SUBTOPIC = 's5';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Lambda expressions' },
+            { cls: 'l2', label: 'Level 2 · Chained map &amp; filter' },
+            { cls: 'l3', label: 'Level 3 · Recursive Digit Sum' },
+            { cls: 'l4', label: 'Level 4 · Copy Memory &amp; id() Identity' },
+            { cls: 'l5', label: 'Level 5 · Decorator wrapper closure' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.innerHTML = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, btn);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, btn) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll(`.level-panel`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        // ===================== DRAG & DROP UTILITIES =====================
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            let target = e.currentTarget;
+
+            if (target.classList.contains("drop-zone") || target.classList.contains("items-pool") || target.classList.contains("bucket")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+        }
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .items-pool, .bucket").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+        }
+
+        // ===================== PUZZLE VERIFICATIONS =====================
+        function l1Verify() {
+            const slots = ['l1-zone-0', 'l1-zone-1', 'l1-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l1-score').textContent = score;
+            const feedback = document.getElementById('l1-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Perfect! You matched all the advanced lambda equations correctly!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Some lambda equations are incorrect. Verify mapping arguments. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            const slots = ['l2-zone-0', 'l2-zone-1', 'l2-zone-2', 'l2-zone-3'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l2-score').textContent = score;
+            const feedback = document.getElementById('l2-feedback');
+            if (score === 4) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Excellent! You have correctly chained the map and filter pipelines using lambda parameters!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect lambda pipeline arrangement. Check nesting of map/filter functions. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            const slots = ['l3-zone-0', 'l3-zone-1', 'l3-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l3-score').textContent = score;
+            const feedback = document.getElementById('l3-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Correct! The function uses modular reduction n % 10 to extract the last digit, and recursive floor division n // 10 to process the rest!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Recursion logic error. Check the base case guard, remainder modulo, and division reduction steps. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            const slots = ['l4-zone-0', 'l4-zone-1', 'l4-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l4-score').textContent = score;
+            const feedback = document.getElementById('l4-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Flawless! Assignment references the same cell, copy.copy creates a new outer layer with shared elements, and copy.deepcopy clones everything!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect copy type behaviors. Review memory reference assertions. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            const slots = ['l5-zone-0', 'l5-zone-1', 'l5-zone-2'];
+            let score = 0;
+            slots.forEach(sid => {
+                const zone = document.getElementById(sid);
+                if (zone.children.length > 0 && zone.children[0].dataset.val === zone.dataset.expected) {
+                    score++;
+                }
+            });
+            document.getElementById('l5-score').textContent = score;
+            const feedback = document.getElementById('l5-feedback');
+            if (score === 3) {
+                feedback.className = 'game-feedback correct';
+                feedback.innerHTML = '🎉 Perfect! The wrapper closure intercepts any arguments (*args, **kwargs), executes the original func, and the decorator returns the wrapper function object!';
+            } else {
+                feedback.className = 'game-feedback wrong';
+                feedback.innerHTML = '❌ Incorrect decorator architecture. Check wrapper parameters, execution call, and returned closures. Reshuffling!';
+                shufflePools();
+            }
+        }
+
+        // ===================== SIMULATION LOGIC =====================
+        function s5l1Run() {
+            const op = document.getElementById('s5l1-op').value;
+            const inp = document.getElementById('s5l1-input').value.trim();
+            const out = document.getElementById('s5l1-out');
+            const chain = document.getElementById('s5l1-chain');
+            let expr, result, args;
+            if (op === 'square') { expr = 'lambda x: x**2'; const x = parseFloat(inp) || 0; result = x * x; args = `x=${x}`; }
+            else if (op === 'double') { expr = 'lambda x: x*2'; const x = parseFloat(inp) || 0; result = x * 2; args = `x=${x}`; }
+            else if (op === 'iseven') { expr = 'lambda x: x%2==0'; const x = parseInt(inp) || 0; result = x % 2 === 0; args = `x=${x}`; }
+            else if (op === 'greet') { expr = 'lambda name: f"Hello, {name}!"'; result = `Hello, ${inp}!`; args = `name="${inp}"`; }
+            else { expr = 'lambda a, b: a+b'; const parts = inp.split(','); const a = parseFloat(parts[0]) || 0; const b = parseFloat(parts[1]) || 0; result = a + b; args = `a=${a}, b=${b}`; }
+            out.innerHTML =
+                `<span class="com">>>> # lambda — anonymous one-line function</span>
+fn = ${expr}
+
+fn(${args})
+<span class="ok">→ ${result}</span>
+
+<span class="com"># Equivalent def version:</span>
+def fn(${args.split('=')[0]}):
+    return <span style="color:#ffd97d">${expr.split(':')[1].trim()}</span>`;
+            chain.innerHTML = `
+    <div class="lambda-box fn">lambda ${args.split('=')[0].split(',').join(', ')}</div>
+    <div class="lambda-arrow">→</div>
+    <div class="lambda-box fn">${expr.split(':')[1].trim()}</div>
+    <div class="lambda-arrow">→</div>
+    <div class="lambda-box val">${result}</div>`;
+        }
+
+        function s5l2Map(type) {
+            const raw = document.getElementById('s5l2-nums').value;
+            const nums = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const out = document.getElementById('s5l2-out');
+            const track = document.getElementById('s5l2-track');
+            let result, expr;
+            if (type === 'square') { result = nums.map(n => n * n); expr = 'lambda x: x**2'; }
+            else { result = nums.map(n => n * 2); expr = 'lambda x: x*2'; }
+            out.innerHTML =
+                `<span class="com">>>> list(map(${expr}, nums))</span>
+nums    →  [${nums.join(', ')}]
+result  →  [${result.join(', ')}]
+<span class="ok">map() applies the function to EVERY element</span>
+<span class="com"># map() is lazy — wrap with list() to materialise</span>`;
+            track.innerHTML = result.map(v => `<div class="loop-item">${v}</div>`).join('');
+        }
+
+        function s5l2Filter(type) {
+            const raw = document.getElementById('s5l2-nums').value;
+            const nums = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const out = document.getElementById('s5l2-out');
+            const track = document.getElementById('s5l2-track');
+            let result, expr, skipped;
+            if (type === 'even') { result = nums.filter(n => n % 2 === 0); skipped = nums.filter(n => n % 2 !== 0); expr = 'lambda x: x%2==0'; }
+            else { result = nums.filter(n => n > 5); skipped = nums.filter(n => n <= 5); expr = 'lambda x: x>5'; }
+            out.innerHTML =
+                `<span class="com">>>> list(filter(${expr}, nums))</span>
+nums     →  [${nums.join(', ')}]
+kept     →  [${result.join(', ')}]   <span class="ok">← passes filter</span>
+removed  →  [${skipped.join(', ')}]  <span class="err">← filtered out</span>
+<span class="ok">filter() keeps only elements where function returns True</span>`;
+            track.innerHTML = nums.map(n => {
+                const keep = (type === 'even' ? n % 2 === 0 : n > 5);
+                return `<div class="loop-item ${keep ? '' : 'skip'}">${n}</div>`;
+            }).join('');
+        }
+
+        function s5l3Run() {
+            const func = document.getElementById('s5l3-func').value;
+            const n = parseInt(document.getElementById('s5l3-n').value) || 6;
+            const out = document.getElementById('s5l3-out');
+            const stack = document.getElementById('s5l3-stack');
+            let frames = [], result;
+            if (func === 'factorial') {
+                let r = 1;
+                for (let i = n; i >= 0; i--) {
+                    if (i === 0) frames.push(`factorial(0) → BASE CASE → return 1`);
+                    else frames.push(`factorial(${i}) = ${i} × factorial(${i - 1})`);
+                    if (i > 0) r *= i;
+                }
+                result = r;
+                out.innerHTML =
+                    `<span class="com">>>> def factorial(n):</span>
+        if n == 0: return 1   <span class="ok">← base case</span>
+        return n * factorial(n-1)   <span class="com">← recursive case</span>
+
+factorial(${n})
+<span class="ok">→ ${result}</span>`;
+            } else if (func === 'fibonacci') {
+                function fib(k) { return k <= 1 ? k : fib(k - 1) + fib(k - 2); }
+                result = fib(n);
+                for (let i = 0; i <= n; i++)frames.push(`fib(${i}) → ${fib(i)}`);
+                out.innerHTML =
+                    `<span class="com">>>> def fib(n):</span>
+        if n <= 1: return n       <span class="ok">← base case</span>
+        return fib(n-1)+fib(n-2)  <span class="com">← two recursive calls</span>
+
+fib(${n})  →  <span class="ok">${result}</span>
+<span class="warn">⚠ Exponential time complexity O(2ⁿ) — use memoisation for large n!</span>`;
+            } else {
+                result = n * (n + 1) / 2;
+                for (let i = n; i >= 0; i--)frames.push(`sum(${i}) = ${i} + sum(${i - 1})` + (i === 0 ? ' → BASE CASE → 0' : ''));
+                out.innerHTML =
+                    `<span class="com">>>> def total(n):</span>
+        if n == 0: return 0       <span class="ok">← base case</span>
+        return n + total(n-1)     <span class="com">← recursive case</span>
+
+total(${n})
+<span class="ok">→ ${result}  (= ${n}×(${n}+1)/2 — Gauss formula)</span>`;
+            }
+            stack.innerHTML = frames.slice(0, 8).map((f, i) =>
+                `<div class="rec-frame ${i === 0 ? 'top' : ''}">${f}</div>`
+            ).join('');
+        }
+
+        function s5l4Demo(type) {
+            const outerRaw = document.getElementById('s5l4-outer').value.split(',').map(s => s.trim());
+            const innerRaw = document.getElementById('s5l4-inner').value.split(',').map(s => s.trim());
+            const out = document.getElementById('s5l4-out');
+            if (type === 'assign') {
+                out.innerHTML =
+                    `<span class="com">>>> original = [${JSON.stringify(outerRaw)}, [${innerRaw.join(', ')}]]</span>
+copy = original   <span class="com"># assignment — same object!</span>
+
+copy[1].append("NEW")
+print(original[1])   <span class="err">→ [${innerRaw.join(', ')}, NEW]   ← ALSO CHANGED!</span>
+
+<span class="err">⚠ Assignment copies the REFERENCE, not the data.</span>
+<span class="err">  Modifying copy modifies original too!</span>
+<span class="com">  id(original) == id(copy)  →  True</span>`;
+            } else if (type === 'shallow') {
+                out.innerHTML =
+                    `<span class="com">>>> import copy</span>
+original = [${JSON.stringify(outerRaw)}, [${innerRaw.join(', ')}]]
+shallow = copy.copy(original)
+
+shallow.append("extra")
+print(original)    <span class="ok">→ unchanged (outer list is copied)</span>
+
+shallow[1].append("NEW")
+print(original[1]) <span class="err">→ [${innerRaw.join(', ')}, NEW]   ← inner list STILL SHARED!</span>
+
+<span class="warn">⚠ Shallow copy: outer structure is independent,</span>
+<span class="warn">  but nested objects are still the SAME references.</span>`;
+            } else {
+                out.innerHTML =
+                    `<span class="com">>>> import copy</span>
+original = [${JSON.stringify(outerRaw)}, [${innerRaw.join(', ')}]]
+deep = copy.deepcopy(original)
+
+deep[1].append("NEW")
+print(original[1]) <span class="ok">→ [${innerRaw.join(', ')}]   ← UNCHANGED ✅</span>
+print(deep[1])     <span class="ok">→ [${innerRaw.join(', ')}, NEW]</span>
+
+<span class="ok">✅ Deep copy: ALL levels are fully independent.</span>
+<span class="com">   More memory + slower, but completely safe.</span>
+<span class="com">   Use deepcopy when nested mutable objects exist.</span>`;
+            }
+        }
+
+        function s5l5Run() {
+            const deco = document.getElementById('s5l5-deco').value;
+            const val = parseInt(document.getElementById('s5l5-val').value) || 8;
+            const out = document.getElementById('s5l5-out');
+            const vis = document.getElementById('s5l5-vis');
+            vis.style.display = 'block';
+            if (deco === 'timer') {
+                const fakeTime = (val * 1.23).toFixed(3);
+                out.innerHTML =
+                    `<span class="com">>>> @timer</span>
+def factorial(n):
+    result = 1
+    for i in range(1, n+1):
+        result *= i
+    return result
+
+<span class="com">--- @timer wraps the call ---</span>
+[TIMER] factorial(${val}) called...
+<span class="ok">factorial(${val}) = ${[...Array(val)].reduce((a, b, i) => a * (i + 1), 1)}</span>
+[TIMER] Execution time: ${fakeTime} ms`;
+                vis.innerHTML = `
+<div class="deco-layer outer">@timer — outer wrapper: records start time</div>
+<div class="deco-layer inner">wrapper(*args) — calls original + measures</div>
+<div class="deco-layer core">factorial(${val}) — original function runs here</div>`;
+            } else if (deco === 'logger') {
+                const result = [...Array(val)].reduce((a, b, i) => a * (i + 1), 1);
+                out.innerHTML =
+                    `<span class="com">>>> @logger</span>
+def factorial(n):
+    ...
+
+<span class="com">--- @logger intercepts ---</span>
+[LOG] Calling factorial with args=(${val},) kwargs={}
+<span class="ok">[LOG] factorial returned: ${result}</span>
+<span class="com"># functools.wraps preserves factorial.__name__ and __doc__</span>`;
+                vis.innerHTML = `
+<div class="deco-layer outer">@logger — logs: function name, args, return value</div>
+<div class="deco-layer inner">wrapper(*args, **kwargs) — calls + captures result</div>
+<div class="deco-layer core">factorial(${val}) → ${result}</div>`;
+            } else {
+                if (val <= 0) {
+                    out.innerHTML = `<span class="err">@validate_positive caught: ValueError — Input must be positive, got ${val}</span>`;
+                    vis.innerHTML = `<div class="deco-layer outer">@validate_positive — guard fires! ❌</div><div class="deco-layer inner">raises ValueError before calling original</div>`;
+                } else {
+                    out.innerHTML =
+                        `<span class="com">>>> @validate_positive</span>
+def square(n):
+    return n * n
+
+<span class="com">--- @validate_positive checks input ---</span>
+✅ Input ${val} is positive — proceeding...
+<span class="ok">square(${val}) = ${val * val}</span>
+
+<span class="com"># Try a negative number to see the guard fire!</span>`;
+                    vis.innerHTML = `
+<div class="deco-layer outer">@validate_positive — checks input &gt; 0 ✅</div>
+<div class="deco-layer inner">wrapper(${val}) — validation passed, calling original</div>
+<div class="deco-layer core">square(${val}) → ${val * val}</div>`;
+                }
+            }
+        }
+
+        // Init
+        initDragAndDrop();
+        shufflePools();
+        s5l1Run();
+    </script>
+</body>
+
+</html>

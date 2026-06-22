@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Binary Files &amp; File Exceptions</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --primary: #E63946;
+      --primary-hover: #D62828;
+      --primary-light: #FFF0F1;
+      --bg-page: #F8F9FA;
+      --bg-card: #FFFFFF;
+      --text-main: #1D1D1F;
+      --text-muted: #6E6E73;
+      --border-light: #EBEBEB;
+      --code-bg: #1E1E1E;
+      --code-text: #E6E6E6;
+      --code-ok: #34C759;
+      --code-err: #FF3B30;
+      --code-warn: #FFCC00;
+      --code-com: #8E8E93;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --display: 'Archivo Black', sans-serif;
+      --body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
+      --shadow-float: 0 14px 40px rgba(230,57,70,0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--body);
+      background: var(--bg-page);
+      color: var(--text-main);
+      scroll-behavior: smooth;
+      line-height: 1.5;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #fff;
+      padding: 60px 24px;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      letter-spacing: 3px;
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+    .hero p.sub {
+      margin-top: 16px;
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-inline: auto;
+      opacity: 0.9;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ===== SECTION HEADER ===== */
+    .sec-head { margin-bottom: 32px; text-align: center; }
+    .sec-num { font-family: var(--mono); color: var(--primary); font-weight: 700; letter-spacing: 2px; font-size: 0.85rem; }
+    .sec-head h2 { font-family: var(--display); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-top: 8px; }
+    .sec-head p { margin-top: 12px; color: var(--text-muted); max-width: 600px; margin-inline: auto; }
+
+    /* ===== LEVEL STRIP ===== */
+    .level-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; justify-content: center; }
+    .lvl-pill {
+      font-family: var(--body); font-size: 0.8rem; font-weight: 600;
+      padding: 8px 18px; border-radius: 30px; cursor: pointer;
+      background: var(--bg-card); color: var(--text-muted);
+      border: 1px solid var(--border-light); transition: all .2s;
+    }
+    .lvl-pill:hover { border-color: var(--primary); color: var(--primary); }
+    .lvl-pill.active {
+      background: var(--primary-light); color: var(--primary);
+      border-color: var(--primary); font-weight: 700;
+    }
+    .level-panel { display: none; }
+    .level-panel.active { display: block; animation: fadeIn .35s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      border-radius: 16px; padding: 32px; margin-bottom: 24px;
+      box-shadow: var(--shadow-md); transition: transform 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card h3 {
+      font-family: var(--body); font-size: 1.1rem; color: var(--text-main);
+      margin-bottom: 16px; font-weight: 700; display: flex; align-items: center;
+    }
+    .card h3 .tag, .card h3 .lvl-tag {
+      font-family: var(--mono); background: var(--primary); color: #fff;
+      font-size: 0.7rem; padding: 4px 10px; border-radius: 6px;
+      margin-right: 12px; font-weight: 700;
+    }
+    .level-desc {
+      background: var(--primary-light); border-radius: 8px;
+      padding: 16px 20px; margin-bottom: 24px;
+      color: var(--text-main); font-size: 0.95rem;
+    }
+    .level-desc strong { color: var(--primary); }
+
+    /* ===== INPUTS ===== */
+    label {
+      font-family: var(--body); font-size: 0.85rem; font-weight: 600;
+      color: var(--text-muted); display: block; margin-bottom: 8px;
+    }
+    input[type=text], input[type=number], select, textarea {
+      font-family: var(--mono); width: 100%; padding: 12px 16px;
+      border: 1px solid var(--border-light); border-radius: 10px;
+      font-size: 0.95rem; background: var(--bg-page);
+      color: var(--text-main); outline: none; transition: all .2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary); background: #fff;
+      box-shadow: 0 0 0 3px rgba(230,57,70,0.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .row > div { flex: 1; min-width: 150px; }
+
+    /* ===== BUTTONS ===== */
+    button.action {
+      font-family: var(--body); font-weight: 600;
+      background: var(--primary); color: #fff; border: none;
+      padding: 12px 24px; border-radius: 10px; cursor: pointer;
+      font-size: 0.9rem; transition: all .2s;
+      margin-right: 10px; margin-bottom: 10px;
+    }
+    button.action:hover {
+      background: var(--primary-hover); transform: translateY(-1px);
+      box-shadow: var(--shadow-float);
+    }
+    button.action:active { transform: translateY(1px); box-shadow: none; }
+    button.action.ghost {
+      background: var(--bg-card); color: var(--text-main);
+      border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
+    }
+    button.action.ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== OUTPUT TERMINAL ===== */
+    .output {
+      margin-top: 20px; background: var(--code-bg); color: var(--code-text);
+      font-family: var(--mono); font-size: 0.9rem; border-radius: 12px;
+      padding: 20px; min-height: 60px; white-space: pre-wrap;
+      word-break: break-word; border-left: 4px solid var(--primary);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .output .err { color: var(--code-err); }
+    .output .com { color: var(--code-com); }
+    .output .ok { color: var(--code-ok); }
+    .output .warn { color: var(--code-warn); }
+    .output .lbl { color: #A2A2A2; }
+
+    /* ===== TABLE ===== */
+    table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      font-family: var(--mono); font-size: 0.85rem;
+      border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden;
+    }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
+    th { background: var(--bg-page); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar-wrap {
+      background: var(--border-light); border-radius: 20px;
+      height: 6px; margin-bottom: 32px; overflow: hidden;
+    }
+    .progress-bar { height: 100%; border-radius: 20px; background: var(--primary); transition: width .4s ease; }
+
+    /* ===== CHALLENGE BOX ===== */
+    .challenge-box {
+      background: #FAFAFA; border: 1px solid var(--border-light);
+      border-left: 4px solid var(--text-main);
+      border-radius: 8px; padding: 20px; margin-top: 24px;
+    }
+    .challenge-box .ch-label {
+      font-family: var(--body); font-size: 0.75rem; font-weight: 700;
+      color: var(--text-main); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .challenge-box p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .footer-note {
+      text-align: center; font-family: var(--mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-top: 60px; padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ===== VISUALIZERS ===== */
+    .exc-stack {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
+    }
+    .exc-frame {
+      font-family: var(--mono); font-size: 0.85rem;
+      padding: 12px 16px; border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      background: #fff; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .exc-frame.caught { border-left-color: var(--code-ok); background: #F0FFF4; }
+    .exc-frame.error { border-left-color: var(--code-err); background: #FFF5F5; }
+    .exc-frame.finally { border-left-color: var(--code-warn); background: #FFFDF0; }
+
+    /* ===== FILE MODE VISUALIZER ===== */
+    .file-vis {
+      background: var(--bg-page); border: 1px solid var(--border-light);
+      border-radius: 12px; padding: 20px; margin-top: 16px;
+      font-family: var(--mono); font-size: 0.9rem;
+    }
+    .file-mode-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; margin: 4px;
+    }
+    .file-mode-badge.r  { background: #E3F2FF; color: #1565C0; }
+    .file-mode-badge.w  { background: #FFF3E0; color: #E65100; }
+    .file-mode-badge.a  { background: #F3E5F5; color: #6A1B9A; }
+    .file-mode-badge.rb { background: #E8F5E9; color: #1B5E20; }
+    .file-mode-badge.wb { background: #FCE4EC; color: #880E4F; }
+
+    /* Binary visualizer */
+    .binary-vis {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+    }
+    .byte-block {
+      font-family: var(--mono); font-size: 0.75rem;
+      background: var(--text-main); color: #fff;
+      padding: 6px 10px; border-radius: 6px; text-align: center;
+      min-width: 48px;
+    }
+    .byte-block.sep { background: var(--primary); }
+
+    .indent-demo {
+      background: var(--code-bg); color: var(--code-text);
+      font-family: var(--mono); font-size: 0.9rem; border-radius: 12px;
+      padding: 20px; line-height: 1.8; border-left: 4px solid var(--text-muted);
+      margin-top: 16px;
+    }
+    .indent-demo .lvl0 { display: block; }
+    .indent-demo .lvl1 { display: block; padding-left: 2rem; }
+    .indent-demo .lvl2 { display: block; padding-left: 4rem; }
+    .indent-demo .hl-ok { color: var(--code-ok); }
+    .indent-demo .hl-err { color: var(--code-err); }
+    .indent-demo .hl-warn { color: var(--code-warn); }
+    .indent-demo .hl-com { color: var(--code-com); }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Python Course · Subtopic 3.3</div>
+  <h1>Binary Files &amp; Exceptions</h1>
+  <p class="sub">Binary mode unlocks images, audio, and custom formats. Master file exception handling and context manager with statement blocks.</p>
+</div>
+
+<main>
+  <div class="sec-head">
+    <div class="sec-num">SUBTOPIC 3.3</div>
+    <h2>Binary Files · File Exceptions · with Statement</h2>
+    <p>Work through the 5 progression levels to master binary formats, reading headers (magic bytes), writing binary streams, robust file exception handlers, and context managers.</p>
+  </div>
+  <div class="level-strip" id="s3-levels"></div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="s3-bar" style="width:20%"></div></div>
+
+  <!-- S3 L1 -->
+  <div class="level-panel active" id="s3-l1">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 1</span>Absolute Basics — Text vs Binary Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Text files store characters as human-readable strings with encoding (UTF-8). Binary files store raw bytes — images, audio, executables. Opening a binary file in text mode gives garbled output or errors. Mode "rb"/"wb" is required for binary.</div>
+      <label>Choose a file type to compare</label>
+      <select id="s3l1-type" onchange="s3l1Show()">
+        <option value="text_txt">Text file (.txt) — opened as text</option>
+        <option value="text_bin">Text file (.txt) — opened as binary (bytes)</option>
+        <option value="image">Image file (.png) — binary bytes (header)</option>
+        <option value="audio">Audio file (.mp3) — binary bytes (header)</option>
+        <option value="csv">CSV file — text, comma-separated</option>
+      </select>
+      <div class="output" id="s3l1-out" style="margin-top:16px;">Select a file type above</div>
+      <div class="binary-vis" id="s3l1-bytes" style="margin-top:12px;"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>What do the first bytes of a PNG file represent? Why can't you read an image as text? What encoding does Python use by default when opening text files? Try: open("file.png", "r") in your head — what error would you get?</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="tag">REFERENCE</span>Text vs Binary Mode</h3>
+      <table>
+        <tr><th>Aspect</th><th>Text Mode (r/w)</th><th>Binary Mode (rb/wb)</th></tr>
+        <tr><td>Data type</td><td>str</td><td>bytes</td></tr>
+        <tr><td>Newlines</td><td>Auto-converted (\r\n → \n)</td><td>No conversion</td></tr>
+        <tr><td>Encoding</td><td>UTF-8 (default)</td><td>None (raw bytes)</td></tr>
+        <tr><td>Use for</td><td>.txt, .csv, .json, .html</td><td>.png, .mp3, .exe, .pdf</td></tr>
+        <tr><td>Read returns</td><td>str</td><td>bytes object</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- S3 L2 -->
+  <div class="level-panel" id="s3-l2">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 2</span>Core Application — Reading Binary Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Reading in binary mode ("rb") returns a <code>bytes</code> object. You can inspect individual bytes with indexing. File headers (magic bytes) identify file types — PNG starts with <code>\x89PNG</code>, JPEG with <code>\xFF\xD8</code>.</div>
+      <label>Simulate binary file read</label>
+      <select id="s3l2-file">
+        <option value="png">PNG Image — 8-byte magic header</option>
+        <option value="jpg">JPEG Image — 3-byte SOI marker</option>
+        <option value="pdf">PDF Document — %PDF header</option>
+        <option value="zip">ZIP Archive — PK header</option>
+        <option value="mp3">MP3 Audio — ID3 tag header</option>
+      </select>
+      <br><br>
+      <button class="action" onclick="s3l2Read()">▶ Read Binary Header</button>
+      <div class="output" id="s3l2-out">Select a file type and read its binary header</div>
+      <div class="binary-vis" id="s3l2-vis" style="margin-top:12px;"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>What are "magic bytes"? Why do operating systems use them instead of just relying on the file extension? If you rename "photo.jpg" to "photo.txt" and open it with "rb", what do the first bytes show?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 L3 -->
+  <div class="level-panel" id="s3-l3">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 3</span>Intermediate — Writing Binary Files</h3>
+      <div class="level-desc"><strong>What you learn:</strong> Writing binary means writing <code>bytes</code> objects. You can use <code>b"..."</code> literals or <code>bytes([...])</code>. Binary writing is how programs create images, save custom formats, or copy files byte-by-byte.</div>
+      <label>Choose a binary write scenario</label>
+      <select id="s3l3-scenario">
+        <option value="bytes_literal">Write bytes literal b"Hello"</option>
+        <option value="bytes_from_list">Write bytes from integer list</option>
+        <option value="copy">Binary file copy (read + write)</option>
+        <option value="create_png">Create minimal PNG-like header</option>
+      </select>
+      <br><br>
+      <label>Custom data (for bytes scenarios)</label>
+      <input type="text" id="s3l3-data" value="Python Rocks!" placeholder="Text to encode as bytes">
+      <br><br>
+      <button class="action" onclick="s3l3Run()">▶ Write Binary</button>
+      <div class="output" id="s3l3-out">Select a scenario and run</div>
+      <div class="binary-vis" id="s3l3-vis" style="margin-top:12px;"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>What is the difference between <code>b"ABC"</code> and <code>"ABC".encode()</code>? Try the "bytes from list" scenario with [72,101,108,108,111] — what text does that spell? Why must you use "wb" and not "w" when writing images?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 L4 -->
+  <div class="level-panel" id="s3-l4">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 4</span>Advanced — File Exceptions</h3>
+      <div class="level-desc"><strong>What you learn:</strong> File operations can fail in many ways. <code>FileNotFoundError</code>, <code>PermissionError</code>, <code>IsADirectoryError</code>, and <code>OSError</code> are the key ones. Catching specific file exceptions makes your programs robust instead of fragile.</div>
+      <label>Simulate a file exception scenario</label>
+      <select id="s3l4-exc">
+        <option value="notfound">FileNotFoundError — file doesn't exist</option>
+        <option value="permission">PermissionError — no read access</option>
+        <option value="isdir">IsADirectoryError — path is a folder</option>
+        <option value="exists">FileExistsError — exclusive create fails</option>
+        <option value="decode">UnicodeDecodeError — binary read as text</option>
+        <option value="full">OSError — disk full (write fails)</option>
+      </select>
+      <br><br>
+      <button class="action" onclick="s3l4Run()">▶ Trigger File Exception</button>
+      <button class="action ghost" onclick="s3l4RunSafe()">▶ Same op with try/except</button>
+      <div class="output" id="s3l4-out">Select a scenario and run</div>
+      <div class="exc-stack" id="s3l4-stack"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>Which exception would you catch when opening a config file that might not exist yet? Is <code>FileNotFoundError</code> a subclass of <code>OSError</code>? What's the safest way to check if a file exists before opening it?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 L5 -->
+  <div class="level-panel" id="s3-l5">
+    <div class="card">
+      <h3><span class="lvl-tag">LEVEL 5</span>Expert — with Statement · Context Managers · os.path</h3>
+      <div class="level-desc"><strong>What you learn:</strong> The <code>with</code> statement is a context manager — it guarantees <code>__exit__</code> is called even if an exception occurs. <code>os.path</code> functions let you safely check files before opening. Together, they make file code bulletproof.</div>
+      <label>Scenario to explore</label>
+      <select id="s3l5-scenario">
+        <option value="with_basic">with open() — auto-close guarantee</option>
+        <option value="with_exc">with open() — exception inside with</option>
+        <option value="ospath_exists">os.path.exists() before open</option>
+        <option value="ospath_info">os.path — size, basename, dirname</option>
+        <option value="multi_with">Open two files in one with block</option>
+      </select>
+      <br><br>
+      <label>File path (simulated)</label>
+      <input type="text" id="s3l5-path" value="/home/user/data/scores.txt" placeholder="Enter a file path">
+      <br><br>
+      <button class="action" onclick="s3l5Run()">▶ Run Scenario</button>
+      <div class="output" id="s3l5-out">Select a scenario and run</div>
+      <div class="indent-demo" id="s3l5-code" style="margin-top:16px; display:none;"></div>
+      <div class="challenge-box">
+        <div class="ch-label">🎯 Mini-Challenge</div>
+        <p>What protocol must a class implement to work as a context manager? What's the difference between <code>os.path.exists()</code> and <code>os.path.isfile()</code>? Can you nest two <code>with</code> blocks or use a single <code>with</code> to open two files?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Module 3 · Python Exception &amp; File Handling · 3.3</div>
+</main>
+
+<script>
+  /* ===================== LEVEL PILLS ===================== */
+  const count = 5;
+  const strip = document.getElementById('s3-levels');
+  const labels = ['L1 · Basics', 'L2 · Core', 'L3 · Intermediate', 'L4 · Advanced', 'L5 · Expert'];
+  for (let i = 1; i <= count; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'lvl-pill' + (i === 1 ? ' active' : '');
+    btn.textContent = labels[i - 1];
+    btn.onclick = () => switchLevel('s3', i);
+    strip.appendChild(btn);
+  }
+
+  function switchLevel(sec, lvl) {
+    document.querySelectorAll(`#${sec}-levels .lvl-pill`).forEach((p, i) => {
+      p.classList.toggle('active', i === lvl - 1);
+    });
+    for (let i = 1; i <= count; i++) {
+      const panel = document.getElementById(`${sec}-l${i}`);
+      if (panel) panel.classList.toggle('active', i === lvl);
+    }
+    const bar = document.getElementById(`${sec}-bar`);
+    if (bar) bar.style.width = (lvl / count * 100) + '%';
+  }
+
+  /* ===================== S3 L1 — TEXT VS BINARY ===================== */
+  function s3l1Show() {
+    const type = document.getElementById('s3l1-type').value;
+    const out = document.getElementById('s3l1-out');
+    const bytes = document.getElementById('s3l1-bytes');
+
+    const scenarios = {
+      text_txt: {
+        out: `<span class="com">>>> with open("notes.txt", "r") as f:</span>
+    content = f.read()
+<span class="ok">→ "Hello, Python!\\nLine two here."</span>
+<span class="ok">type(content) → str</span>
+<span class="com"># Python decodes bytes → str using UTF-8 automatically</span>`,
+        bytesData: ['H','e','l','l','o',',','\\n','P','y','t','h','o','n','!']
+      },
+      text_bin: {
+        out: `<span class="com">>>> with open("notes.txt", "rb") as f:</span>
+    content = f.read()
+<span class="ok">→ b'Hello, Python!\\nLine two here.'</span>
+<span class="ok">type(content) → bytes</span>
+<span class="com"># No decoding — raw bytes returned</span>
+<span class="com"># content[0] → 72  (ASCII for 'H')</span>`,
+        bytesData: ['72','65','6C','6C','6F','2C','0A','50','79','74','68','6F','6E','21']
+      },
+      image: {
+        out: `<span class="com">>>> with open("photo.png", "rb") as f:</span>
+    header = f.read(8)
+<span class="ok">→ b'\\x89PNG\\r\\n\\x1a\\n'</span>
+<span class="com"># Magic bytes identify this as a PNG file</span>
+<span class="warn">⚠ Never open image with "r" — UnicodeDecodeError!</span>`,
+        bytesData: ['89','50','4E','47','0D','0A','1A','0A','…','…','…','…','…','…']
+      },
+      audio: {
+        out: `<span class="com">>>> with open("song.mp3", "rb") as f:</span>
+    header = f.read(10)
+<span class="ok">→ b'ID3\\x03\\x00\\x00\\x00\\x00...'</span>
+<span class="com"># ID3 tag — standard MP3 metadata header</span>
+<span class="warn">⚠ Audio files are pure binary — text mode fails.</span>`,
+        bytesData: ['49','44','33','03','00','00','00','00','FF','FB','…','…','…','…']
+      },
+      csv: {
+        out: `<span class="com">>>> with open("data.csv", "r") as f:</span>
+    lines = f.readlines()
+<span class="ok">→ ["name,score\\n", "Alice,92\\n", "Bob,78\\n"]</span>
+<span class="com"># CSV is a text file — commas are just characters</span>
+<span class="com"># Use the csv module for proper parsing</span>`,
+        bytesData: ['n','a','m','e',',','s','c','o','r','e','\\n','A','l','i']
+      }
+    };
+
+    const s = scenarios[type];
+    out.innerHTML = s.out;
+    bytes.innerHTML = s.bytesData.map((b, i) =>
+      `<div class="byte-block ${i === 0 ? 'sep' : ''}" title="byte ${i}">${b}</div>`
+    ).join('');
+  }
+
+  /* ===================== S3 L2 — BINARY READ ===================== */
+  function s3l2Read() {
+    const file = document.getElementById('s3l2-file').value;
+    const out = document.getElementById('s3l2-out');
+    const vis = document.getElementById('s3l2-vis');
+
+    const files = {
+      png: {
+        name: 'photo.png',
+        magic: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A],
+        labels: ['\\x89','P','N','G','\\r','\\n','\\x1a','\\n'],
+        desc: 'PNG magic number — 8 bytes. Universally identifies PNG files regardless of extension.'
+      },
+      jpg: {
+        name: 'photo.jpg',
+        magic: [0xFF, 0xD8, 0xFF],
+        labels: ['\\xFF','\\xD8','\\xFF'],
+        desc: 'JPEG SOI (Start of Image) marker — FF D8 FF. Followed by APP marker bytes.'
+      },
+      pdf: {
+        name: 'report.pdf',
+        magic: [0x25, 0x50, 0x44, 0x46, 0x2D],
+        labels: ['%','P','D','F','-'],
+        desc: 'PDF magic string is literally "%PDF-" — human-readable for a binary format.'
+      },
+      zip: {
+        name: 'archive.zip',
+        magic: [0x50, 0x4B, 0x03, 0x04],
+        labels: ['P','K','\\x03','\\x04'],
+        desc: '"PK" — named after Phil Katz, creator of the ZIP format. Used by .zip, .jar, .docx, .xlsx too!'
+      },
+      mp3: {
+        name: 'song.mp3',
+        magic: [0x49, 0x44, 0x33, 0x03, 0x00],
+        labels: ['I','D','3','\\x03','\\x00'],
+        desc: 'ID3 tag header — identifies MP3 with metadata. "ID3" is ASCII-readable in the binary.'
+      }
+    };
+
+    const f = files[file];
+    const hexStr = f.magic.map(b => '\\x' + b.toString(16).padStart(2,'0')).join('');
+
+    out.innerHTML =
+      `<span class="com">>>> with open("${f.name}", "rb") as f:</span>
+    header = f.read(${f.magic.length})
+    print(header)
+
+<span class="ok">→ b'${hexStr}'</span>
+<span class="ok">type(header) → bytes</span>
+<span class="ok">len(header) → ${f.magic.length}</span>
+
+<span class="com"># Individual byte access:</span>
+<span class="ok">header[0] → ${f.magic[0]} (0x${f.magic[0].toString(16).toUpperCase()})</span>
+
+<span class="com"># ${f.desc}</span>`;
+
+    vis.innerHTML = f.magic.map((b, i) =>
+      `<div class="byte-block sep" title="0x${b.toString(16).toUpperCase()}">${f.labels[i]}<br><span style="font-size:0.65rem;opacity:0.7;">0x${b.toString(16).toUpperCase()}</span></div>`
+    ).join('');
+  }
+
+  /* ===================== S3 L3 — BINARY WRITE ===================== */
+  function s3l3Run() {
+    const scenario = document.getElementById('s3l3-scenario').value;
+    const data = document.getElementById('s3l3-data').value;
+    const out = document.getElementById('s3l3-out');
+    const vis = document.getElementById('s3l3-vis');
+
+    if (scenario === 'bytes_literal') {
+      const encoded = data.split('').map(c => c.charCodeAt(0));
+      out.innerHTML =
+        `<span class="com">>>> with open("binary.bin", "wb") as f:</span>
+    text = "${data}"
+    f.write(text.encode("utf-8"))  <span class="com"># str → bytes</span>
+    <span class="com"># OR: f.write(b"${data.substring(0,10)}...")</span>
+
+<span class="ok">→ ${encoded.length} bytes written</span>
+<span class="ok">Bytes: b'${data}'</span>
+<span class="com"># encode() converts str to bytes using UTF-8</span>
+<span class="com"># "wb" mode writes raw bytes — no newline conversion</span>`;
+      vis.innerHTML = encoded.slice(0,12).map(b =>
+        `<div class="byte-block">${b}<br><span style="font-size:0.6rem;">${String.fromCharCode(b)}</span></div>`
+      ).join('') + (encoded.length > 12 ? '<div class="byte-block">…</div>' : '');
+    } else if (scenario === 'bytes_from_list') {
+      const lst = [72,101,108,108,111,44,32,87,111,114,108,100,33];
+      const text = lst.map(b => String.fromCharCode(b)).join('');
+      out.innerHTML =
+        `<span class="com">>>> byte_list = [72,101,108,108,111,44,32,87,111,114,108,100,33]</span>
+with open("msg.bin", "wb") as f:
+    f.write(bytes(byte_list))
+
+<span class="ok">→ ${lst.length} bytes written</span>
+<span class="ok">bytes([72,101,108,108,111...]) → b'${text}'</span>
+<span class="com"># Each integer 0–255 maps to one byte</span>
+<span class="com"># ASCII: 72=H, 101=e, 108=l, 111=o, 33=!</span>`;
+      vis.innerHTML = lst.map(b =>
+        `<div class="byte-block sep">${b}<br><span style="font-size:0.6rem;">${String.fromCharCode(b)}</span></div>`
+      ).join('');
+    } else if (scenario === 'copy') {
+      out.innerHTML =
+        `<span class="com">>>> # Binary file copy — works for ANY file type</span>
+with open("source.png", "rb") as src:
+    with open("copy.png", "wb") as dst:
+        chunk = src.read(4096)  <span class="com"># read 4KB at a time</span>
+        while chunk:
+            dst.write(chunk)
+            chunk = src.read(4096)
+
+<span class="ok">→ File copied byte-for-byte. Perfect clone. ✅</span>
+<span class="com"># Reading in chunks avoids loading huge files into RAM</span>
+<span class="com"># Works for images, audio, video, executables — anything!</span>
+<span class="warn">⚠ Text mode copy would corrupt binary files (line ending conversion)</span>`;
+      vis.innerHTML = '';
+    } else {
+      const pngHeader = [0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A];
+      out.innerHTML =
+        `<span class="com">>>> # Create a minimal PNG-like binary header</span>
+PNG_SIGNATURE = bytes([${pngHeader.join(',')}])
+
+with open("minimal.png", "wb") as f:
+    f.write(PNG_SIGNATURE)
+
+<span class="ok">→ 8-byte PNG signature written</span>
+<span class="ok">b'\\x89PNG\\r\\n\\x1a\\n'  ← official PNG magic bytes</span>
+<span class="com"># Real PNG files have many more chunks after the signature</span>
+<span class="com"># But the signature alone identifies it as PNG to any reader</span>`;
+      vis.innerHTML = pngHeader.map((b,i) =>
+        `<div class="byte-block sep">0x${b.toString(16).toUpperCase()}<br><span style="font-size:0.6rem;">${['\\x89','P','N','G','\\r','\\n','\\x1a','\\n'][i]}</span></div>`
+      ).join('');
+    }
+  }
+
+  /* ===================== S3 L4 — FILE EXCEPTIONS ===================== */
+  function s3l4Run() {
+    const exc = document.getElementById('s3l4-exc').value;
+    const out = document.getElementById('s3l4-out');
+    const stack = document.getElementById('s3l4-stack');
+    stack.innerHTML = '';
+
+    const scenarios = {
+      notfound: {
+        op: 'open("missing_file.txt", "r")',
+        exc: 'FileNotFoundError',
+        msg: '[Errno 2] No such file or directory: \'missing_file.txt\'',
+        fix: 'Check os.path.exists() first, or use try/except'
+      },
+      permission: {
+        op: 'open("/etc/shadow", "r")',
+        exc: 'PermissionError',
+        msg: '[Errno 13] Permission denied: \'/etc/shadow\'',
+        fix: 'Check file permissions; run with appropriate privileges'
+      },
+      isdir: {
+        op: 'open("/home/user/", "r")',
+        exc: 'IsADirectoryError',
+        msg: '[Errno 21] Is a directory: \'/home/user/\'',
+        fix: 'Check os.path.isfile() before opening'
+      },
+      exists: {
+        op: 'open("existing.txt", "x")',
+        exc: 'FileExistsError',
+        msg: '[Errno 17] File exists: \'existing.txt\'',
+        fix: 'Use "w" to overwrite, or check existence first'
+      },
+      decode: {
+        op: 'open("image.png", "r").read()',
+        exc: 'UnicodeDecodeError',
+        msg: '\'utf-8\' codec can\'t decode byte 0x89 in position 0',
+        fix: 'Use "rb" binary mode for non-text files'
+      },
+      full: {
+        op: 'f.write(large_data)',
+        exc: 'OSError',
+        msg: '[Errno 28] No space left on device',
+        fix: 'Check disk space; handle partial writes in finally'
+      }
+    };
+
+    const s = scenarios[exc];
+    out.innerHTML =
+      `<span class="com">>>> ${s.op}</span>
+
+<span class="err">Traceback (most recent call last):</span>
+<span class="err">  File "script.py", line 1</span>
+<span class="err">    ${s.op}</span>
+<span class="err">${s.exc}: ${s.msg}</span>
+
+<span class="warn">⚠ Program crashed — exception not handled!</span>
+<span class="com"># Fix: ${s.fix}</span>`;
+  }
+
+  function s3l4RunSafe() {
+    const exc = document.getElementById('s3l4-exc').value;
+    const out = document.getElementById('s3l4-out');
+    const stack = document.getElementById('s3l4-stack');
+
+    const excMap = {
+      notfound: 'FileNotFoundError',
+      permission: 'PermissionError',
+      isdir: 'IsADirectoryError',
+      exists: 'FileExistsError',
+      decode: 'UnicodeDecodeError',
+      full: 'OSError'
+    };
+
+    const excType = excMap[exc];
+    const frames = [
+      { label: '1. try block starts', cls: '', text: '→ Attempting file operation...' },
+      { label: `2. ${excType} raised!`, cls: 'error', text: '→ Exception intercepted by except clause' },
+      { label: `3. except ${excType}: handles it`, cls: 'caught', text: `→ Logged error, notified user gracefully` },
+      { label: '4. finally: cleanup', cls: 'finally', text: '→ Resources released, program continues' }
+    ];
+
+    out.innerHTML =
+      `<span class="com">>>> try:</span>
+    <span class="com"># attempt file operation</span>
+    <span class="ok">...</span>
+<span class="err">except ${excType} as e:</span>
+    <span class="ok">print(f"File error: {"{e}"}")</span>
+    <span class="ok">log_error(e)</span>
+<span class="ok">finally:</span>
+    <span class="ok">print("Operation complete (success or not)")</span>
+
+<span class="ok">✅ Exception caught — program continues normally!</span>
+<span class="ok">Output: "File error: [specific message]"</span>`;
+
+    stack.innerHTML = frames.map(f =>
+      `<div class="exc-frame ${f.cls}"><strong>${f.label}</strong><br><code style="font-size:0.8rem;">${f.text}</code></div>`
+    ).join('');
+  }
+
+  /* ===================== S3 L5 — with / os.path ===================== */
+  function s3l5Run() {
+    const scenario = document.getElementById('s3l5-scenario').value;
+    const path = document.getElementById('s3l5-path').value;
+    const out = document.getElementById('s3l5-out');
+    const codeDiv = document.getElementById('s3l5-code');
+
+    const basename = path.split('/').pop();
+    const dirname = path.split('/').slice(0, -1).join('/') || '/';
+    const ext = basename.includes('.') ? '.' + basename.split('.').pop() : '';
+
+    codeDiv.style.display = 'block';
+
+    if (scenario === 'with_basic') {
+      out.innerHTML =
+        `<span class="com"># with open() guarantees file is closed</span>
+with open("${basename}", "r") as f:
+    data = f.read()
+
+<span class="ok">✅ __enter__ called: file opened</span>
+<span class="ok">✅ File operations execute in the block</span>
+<span class="ok">✅ __exit__ called: file closed automatically</span>
+<span class="com"># f.closed → True (outside the with block)</span>
+<span class="com"># Equivalent to: try/finally with f.close()</span>`;
+      codeDiv.innerHTML = `<span class="lvl0">with open("${basename}", "r") as f:</span><span class="lvl1">data = f.read()</span><span class="lvl1 hl-com"># file auto-closes here ↑</span><span class="lvl0 hl-ok">print(f.closed)  # → True</span>`;
+    } else if (scenario === 'with_exc') {
+      out.innerHTML =
+        `<span class="com"># Exception inside with block — file still closes!</span>
+try:
+    with open("${basename}", "r") as f:
+        data = f.read()
+        raise ValueError("Simulated error!")  <span class="err">← error here</span>
+        more = f.read()   <span class="com">← never reached</span>
+except ValueError as e:
+    print(f"Caught: {"{e}"}")
+
+<span class="ok">✅ Despite the exception, f.closed → True</span>
+<span class="ok">✅ __exit__ was called before the exception propagated</span>
+<span class="warn">⚠ Without with, the file would stay open if exception occurred!</span>`;
+      codeDiv.innerHTML = `<span class="lvl0">with open("file", "r") as f:</span><span class="lvl1">data = f.read()</span><span class="lvl1 hl-err">raise ValueError("oops!")</span><span class="lvl0 hl-com"># __exit__ called even now ↑</span>`;
+    } else if (scenario === 'ospath_exists') {
+      out.innerHTML =
+        `<span class="com">>>> import os</span>
+
+path = "${path}"
+if os.path.exists(path):
+    with open(path, "r") as f:
+        data = f.read()
+    print("File read successfully")
+else:
+    print(f"File not found: {"{path}"}")
+
+<span class="ok">→ "File not found: ${path}"   (simulated)</span>
+
+<span class="com"># os.path.exists() returns True/False</span>
+<span class="com"># Prevents FileNotFoundError before it happens</span>
+<span class="com"># os.path.isfile() → True only for files (not dirs)</span>
+<span class="com"># os.path.isdir() → True only for directories</span>`;
+      codeDiv.innerHTML = `<span class="lvl0 hl-com">import os</span><span class="lvl0">if os.path.exists("${basename}"):</span><span class="lvl1">with open("${basename}") as f: ...</span><span class="lvl0">else:</span><span class="lvl1 hl-err">print("Not found!")</span>`;
+    } else if (scenario === 'ospath_info') {
+      out.innerHTML =
+        `<span class="com">>>> import os</span>
+path = "${path}"
+
+os.path.basename(path)   <span class="ok">→ "${basename}"</span>
+os.path.dirname(path)    <span class="ok">→ "${dirname}"</span>
+os.path.splitext(path)   <span class="ok">→ ("${basename.replace(ext,'')}", "${ext}")</span>
+os.path.abspath(".")     <span class="ok">→ "/current/working/directory"</span>
+os.path.join("${dirname}", "${basename}") <span class="ok">→ "${path}"</span>
+
+<span class="com"># os.path.getsize(path) → file size in bytes</span>
+<span class="com"># os.path.getmtime(path) → last modification time</span>
+<span class="com"># os.getcwd() → current working directory</span>`;
+      codeDiv.innerHTML = `<span class="lvl0 hl-com">import os</span><span class="lvl0">os.path.basename("${path}")</span><span class="lvl0 hl-ok"># → "${basename}"</span><span class="lvl0">os.path.dirname("${path}")</span><span class="lvl0 hl-ok"># → "${dirname}"</span>`;
+    } else {
+      out.innerHTML =
+        `<span class="com"># Opening TWO files in a single with block</span>
+
+with open("input.txt", "r") as src, \\
+     open("output.txt", "w") as dst:
+    for line in src:
+        processed = line.strip().upper()
+        dst.write(processed + "\\n")
+
+<span class="ok">✅ Both files opened simultaneously</span>
+<span class="ok">✅ Both auto-close when block exits</span>
+<span class="ok">✅ If one fails to open, the other is closed too</span>
+
+<span class="com"># Equivalent to nested with statements:</span>
+<span class="com"># with open("input") as src:</span>
+<span class="com">#     with open("output") as dst: ...</span>`;
+      codeDiv.innerHTML = `<span class="lvl0">with open("in.txt","r") as src, \\</span><span class="lvl0">     open("out.txt","w") as dst:</span><span class="lvl1">for line in src:</span><span class="lvl2">dst.write(line.upper())</span>`;
+    }
+  }
+
+  /* ===================== INIT ===================== */
+  s3l1Show();
+</script>
+</body>
+</html>

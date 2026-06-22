@@ -1,0 +1,2285 @@
+<!-- Blank Simulation -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Basics — Types, Indentation, Variables &amp; Keywords</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors - high visibility glowing light theme accents */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        /* ===== LEVEL PANEL ===== */
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        .level-desc ul,
+        .level-desc ol {
+            margin-top: 6px;
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== MISC ===== */
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+
+        .pillbtn {
+            border: 1px solid #ffd1d5;
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--ink);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .pillbtn:hover,
+        .pillbtn.sel {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .kw-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .kw {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: default;
+            transition: all 0.2s;
+            color: #374151;
+        }
+
+        .kw:hover {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+        }
+
+        .challenge-box {
+            background: rgba(230, 81, 0, 0.02);
+            border: 1px dashed rgba(230, 81, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 16px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--l3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .err {
+            color: #dc2626;
+            text-decoration: underline wavy;
+        }
+
+        /* swap highlight */
+        .swap-vis {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .swap-box {
+            background: var(--red);
+            color: white;
+            font-family: var(--mono);
+            font-weight: 700;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
+            transition: all 0.4s;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .swap-arrow {
+            font-size: 1.4rem;
+            color: var(--red);
+            text-shadow: 0 0 10px rgba(225, 6, 0, 0.15);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px dashed #ffd1d5;
+        }
+
+        /* =====================================================
+     DRAG AND DROP PREMIUM CUSTOM STYLES
+     ===================================================== */
+        .game-container {
+            background: #fffafa;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            border: 1px solid #ffd1d5;
+            font-family: var(--mono);
+            box-shadow: inset 0 2px 8px rgba(225, 6, 0, 0.03), 6px 6px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #5a4b4b;
+        }
+
+        .game-score {
+            color: var(--red-deep);
+            font-weight: bold;
+        }
+
+        /* Draggable Badges */
+        .items-pool {
+            background: rgba(0, 0, 0, 0.01);
+            padding: 18px;
+            border-radius: 10px;
+            min-height: 80px;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .items-pool.hovered {
+            background: rgba(225, 6, 0, 0.02);
+            border-color: rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item {
+            background: linear-gradient(135deg, var(--red) 0%, #ff5e6d 100%);
+            color: #fff;
+            border: 1px solid var(--red-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(225, 6, 0, 0.25);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(225, 6, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        /* Drop Zones */
+        .drop-zone {
+            border: 2px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            min-height: 44px;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.02);
+            vertical-align: middle;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 10px;
+            padding: 3px;
+            color: var(--red-deep);
+        }
+
+        .drop-zone.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            margin: 0;
+            box-shadow: none;
+            padding: 6px 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Game Feedback blocks */
+        .game-feedback {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .game-feedback.correct {
+            display: block;
+            background: rgba(46, 125, 50, 0.06);
+            border: 1px solid var(--correct);
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.05);
+        }
+
+        .game-feedback.wrong {
+            display: block;
+            background: rgba(183, 28, 28, 0.06);
+            border: 1px solid var(--wrong);
+            color: var(--wrong);
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.05);
+        }
+
+        /* Level 1 layout rules */
+        .type-puzzle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border: 1px solid #ffd1d5;
+        }
+
+        .expr-text {
+            font-family: var(--mono);
+            color: var(--red-deep);
+            font-size: 0.95rem;
+        }
+
+        /* Level 2 Bucket Sorting */
+        .bucket-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        @media(max-width:640px) {
+            .bucket-container {
+                flex-direction: column;
+            }
+        }
+
+        .bucket {
+            flex: 1;
+            min-height: 160px;
+            border: 2px dashed rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bucket.hovered {
+            border-color: var(--red);
+            background: rgba(225, 6, 0, 0.03);
+            box-shadow: 0 0 15px rgba(225, 6, 0, 0.05);
+        }
+
+        .bucket-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #5a4b4b;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            width: 100%;
+            text-align: center;
+            padding-bottom: 8px;
+            margin-bottom: 6px;
+        }
+
+        .bucket.b-pep8 {
+            border-color: var(--l2);
+        }
+
+        .bucket.b-pep8:hover {
+            box-shadow: inset 0 0 12px rgba(46, 125, 50, 0.03);
+        }
+
+        .bucket.b-convention {
+            border-color: var(--l3);
+        }
+
+        .bucket.b-convention:hover {
+            box-shadow: inset 0 0 12px rgba(230, 81, 0, 0.03);
+        }
+
+        .bucket.b-syntax {
+            border-color: var(--l5);
+        }
+
+        .bucket.b-syntax:hover {
+            box-shadow: inset 0 0 12px rgba(183, 28, 28, 0.03);
+        }
+
+        /* Level 3: Animated Cup Swap */
+        .cup-puzzle-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 140px;
+            margin: 30px 0;
+            background: #fff8f8;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            border: 1px solid #ffd1d5;
+        }
+
+        .cup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 80px;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .liquid-cup {
+            width: 70px;
+            height: 70px;
+            border-top: none;
+            border-radius: 0 0 22px 22px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.01);
+            border: 3px solid #1a0808;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06), inset 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .liquid-cup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .liquid-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            transition: background 0.4s;
+            opacity: 0.85;
+        }
+
+        .cup-a .liquid-content {
+            background: linear-gradient(to top, #ff2e43, #ff6b7a);
+            box-shadow: 0 0 15px rgba(255, 74, 90, 0.4);
+        }
+
+        .cup-b .liquid-content {
+            background: linear-gradient(to top, #0076ff, #38bdf8);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .cup-c .liquid-content {
+            background: linear-gradient(to top, #1ea93b, #4ade80);
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+        }
+
+        .cup-label {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--ink);
+        }
+
+        .cup-val {
+            position: absolute;
+            top: 18px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .formula-builder {
+            background: #fffafa;
+            border: 1px solid #ffd1d5;
+            padding: 18px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--ink);
+        }
+
+        /* Level 4: Memory Address Pointer Visualizer */
+        .memory-visualizer {
+            background: #fff8f8;
+            border-radius: 12px;
+            border: 1px solid #ffd1d5;
+            padding: 24px;
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .mem-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .variables-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 150px;
+        }
+
+        .pointer-canvas {
+            flex: 1;
+            height: 180px;
+            border: 1px dashed rgba(225, 6, 0, 0.2);
+            border-radius: 8px;
+            position: relative;
+            background: rgba(225, 6, 0, 0.002);
+        }
+
+        .address-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 240px;
+        }
+
+        .address-block-zone {
+            background: #ffffff;
+            border: 1px solid #ffd1d5;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.75rem;
+            color: var(--ink);
+            min-height: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .address-block-zone.zone-cache {
+            border-color: var(--l2);
+            color: #1b5e20;
+            background: #e8f5e9;
+        }
+
+        .address-block-zone.zone-heap {
+            border-color: var(--l5);
+            color: #b71c1c;
+            background: #ffebee;
+        }
+
+        /* Level 5: Code Editor slots */
+        .code-editor-block {
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: var(--mono);
+            color: #1a0808;
+            line-height: 1.9;
+            font-size: 0.9rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .code-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .kw-ann {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .var-ann {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .type-ann {
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+    </style>e>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Python <span>Basics</span></h1>
+        <p class="sub">Every concept broken into 5 levels — from zero to expert. Work each level, hit the interactive
+            challenges, and climb the ladder one rung at a time.</p>
+    </header>
+
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- SUBTOPIC 1: BASICS -->
+        <!-- ============================================================ -->
+        <section id="s1" class="section active">
+            <div class="sec-head">
+                <div class="sec-num">// SUBTOPIC 1</div>
+                <h2>Basics — Types, Indentation, Variables &amp; Keywords</h2>
+                <p>Five levels from raw primitives all the way to type annotations and scope. Pick a level below — each
+                    one unlocks an interactive playground and a mini-challenge.</p>
+            </div>
+
+            <div class="level-strip" id="s1-levels"></div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" id="s1-bar" style="width:20%"></div>
+            </div>
+
+            <!-- S1 L1 -->
+            <!-- S1 L1 -->
+            <div class="level-panel active" id="s1-l1">
+                <!-- Card 1: THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Dynamic Typing &amp; Implicit Coercion</h3>
+                    <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                        <strong>Core Concepts:</strong>
+                        <p>In Python, types are bound to <em>values</em> (objects), not variables. Variables are just
+                            name references pointing to objects in memory.</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Dynamic vs. Static Typing:</strong> Static typed languages (like Java/C++)
+                                enforce type definitions on variables during compilation. Python is dynamically typed;
+                                it determines object types at runtime by inspection.</li>
+                            <li><strong>Implicit Coercion &amp; Subclasses:</strong> Python values can dynamically
+                                coerce in mixed expressions. For example, <code>True + 42</code> evaluates to
+                                <code>43</code> because <code>bool</code> is implemented as a direct subclass of
+                                <code>int</code> (where <code>True</code> represents <code>1</code>, and
+                                <code>False</code> represents <code>0</code>). Likewise, <code>3 + 4.0</code> evaluates
+                                to the float <code>7.0</code> via implicit widening.</li>
+                            <li><strong>Explicit Conversion Barriers:</strong> Some operations are syntactically
+                                impossible to evaluate dynamically and raise errors. Calling <code>int("3.14")</code>
+                                throws a <code>ValueError</code> because string literal decimal points cannot be
+                                directly converted to integers without first being parsed as a float.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Simulator -->
+                <div class="card">
+                    <h3><span class="lvl-tag l1">LEVEL 1</span>Absolute Basics</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Python's four primitive types (<code>int</code>,
+                        <code>float</code>, <code>str</code>, <code>bool</code>), how to declare a variable, and what
+                        Python figures out automatically. There are no type declarations — Python reads the value and
+                        decides.
+                    </div>
+                    <label>Assign a value — try <code>42</code>, <code>3.14</code>, <code>"hello"</code>,
+                        <code>True</code>, <code>None</code></label>
+                    <div class="row">
+                        <div style="flex:3"><input type="text" id="s1l1-input" placeholder='e.g. 42'></div>
+                        <div style="flex:1"><button class="action" onclick="s1l1Run()">▶ Detect Type</button></div>
+                    </div>
+                    <div class="output" id="s1l1-out">com: type something and hit Detect Type...</div>
+                </div>
+
+                <!-- Card 3: Game -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Python Type Matcher</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct data type badges from the pool and drop them
+                        onto the matching Python expressions!
+                    </div>
+                    <div class="game-container" id="l1-game">
+                        <div class="game-header">
+                            <span>🎯 Drag-and-Drop Matching</span>
+                            <span class="game-score">Score: <span id="l1-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l1-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">True + 42</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l1-zone-0" data-expected="int" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">3 + 4.0</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l1-zone-1" data-expected="float" data-pool-id="l1-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"3.14"</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l1-zone-2" data-expected="str" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">None</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l1-zone-3" data-expected="NoneType" data-pool-id="l1-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">int("3.14")</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l1-zone-4" data-expected="ValueError" data-pool-id="l1-pool">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l1-pool">
+                            <div class="draggable-item" id="badge-int" draggable="true" data-val="int">int</div>
+                            <div class="draggable-item" id="badge-float" draggable="true" data-val="float">float</div>
+                            <div class="draggable-item" id="badge-str" draggable="true" data-val="str">str</div>
+                            <div class="draggable-item" id="badge-bool" draggable="true" data-val="bool">bool</div>
+                            <div class="draggable-item" id="badge-none" draggable="true" data-val="NoneType">NoneType
+                            </div>
+                            <div class="draggable-item" id="badge-valerr" draggable="true" data-val="ValueError">
+                                ValueError</div>
+                        </div>
+
+                        <button class="action" onclick="l1Verify()">Verify Types</button>
+                        <div class="game-feedback" id="l1-feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Reference Sheet -->
+                <div class="card">
+                    <h3><span class="tag">REFERENCE</span>Primitive Types at a Glance</h3>
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Example</th>
+                            <th>Notes</th>
+                        </tr>
+                        <tr>
+                            <td>int</td>
+                            <td><code>42</code></td>
+                            <td>Whole number, no limit in Python</td>
+                        </tr>
+                        <tr>
+                            <td>float</td>
+                            <td><code>3.14</code></td>
+                            <td>Decimal number (64-bit IEEE 754)</td>
+                        </tr>
+                        <tr>
+                            <td>str</td>
+                            <td><code>"hello"</code></td>
+                            <td>Sequence of characters, immutable</td>
+                        </tr>
+                        <tr>
+                            <td>bool</td>
+                            <td><code>True / False</code></td>
+                            <td>Subclass of int — True==1, False==0</td>
+                        </tr>
+                        <tr>
+                            <td>NoneType</td>
+                            <td><code>None</code></td>
+                            <td>Represents absence of value</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- S1 L2 -->
+            <div class="level-panel" id="s1-l2">
+                <!-- Card 1: THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Identifier Constraints &amp; PEP 8 Style Conventions</h3>
+                    <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                        <strong>Core Concepts:</strong>
+                        <p>Identifiers are the names assigned to variables, classes, functions, etc. Python enforces
+                            rigid rules on how identifiers must be structured:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Lexical Rules:</strong> An identifier must begin with a letter (A-Z, a-z) or an
+                                underscore (<code>_</code>), followed by letters, digits (0-9), or underscores. Symbols
+                                like hyphens (<code>-</code>) and periods are lexical errors. Starting with a digit
+                                (e.g., <code>2nd_value</code>) is invalid because the parser expects it to be a numeric
+                                literal.</li>
+                            <li><strong>Parsing Keywords:</strong> Python reserves 35 keywords (like <code>class</code>,
+                                <code>def</code>, <code>if</code>) that serve structural syntax purposes. Attempting to
+                                assign a value to a reserved keyword triggers a <code>SyntaxError</code> at parse time
+                                before any runtime execution.</li>
+                            <li><strong>PEP 8 Conventions:</strong>
+                                <ul>
+                                    <li><code>snake_case</code>: Lowercase words separated by underscores (e.g.
+                                        <code>my_variable</code>). PEP 8 recommends this for variables and function
+                                        names.</li>
+                                    <li><code>UPPER_CASE</code>: Used to convey variables intended to be global
+                                        constants (e.g., <code>PI_CONSTANT</code>).</li>
+                                    <li><code>CamelCase</code>: Capitalized words with no spaces (e.g.,
+                                        <code>MyClass</code>). Standard convention for naming classes.</li>
+                                    <li>Leading Underscores (e.g., <code>_internal</code>): Signals internal use;
+                                        controls import behavior (excluded in <code>from module import *</code>).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Simulator -->
+                <div class="card">
+                    <h3><span class="lvl-tag l2">LEVEL 2</span>Core Application — <code>type()</code>, Keywords &amp;
+                        Naming Rules</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> The <code>type()</code> function, Python's 35 reserved keywords
+                        you can't use as variable names, and the naming conventions — <code>snake_case</code>,
+                        <code>CAPS_CONSTANT</code>, <code>CamelCase</code>.
+                    </div>
+                    <label>Test a variable name</label>
+                    <div class="row">
+                        <div style="flex:3"><input type="text" id="s1l2-varname"
+                                placeholder="e.g. class, 2cool, my_var, TOTAL"></div>
+                        <div style="flex:1"><button class="action" onclick="s1l2Check()">Check Name</button></div>
+                    </div>
+                    <div class="output" id="s1l2-out">com: enter a variable name above</div>
+                </div>
+
+                <!-- Card 3: Game -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Naming Minefield Bucket Sort</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag each variable block from the pool and drop them into the
+                        correct bucket container according to naming grammar rules and style guides.
+                    </div>
+                    <div class="game-container" id="l2-game">
+                        <div class="game-header">
+                            <span>💥 Sorting Station</span>
+                            <span class="game-score" id="l2-score">Cleared: 0/6</span>
+                        </div>
+
+                        <div class="bucket-container">
+                            <div class="bucket b-pep8" id="bucket-pep8">
+                                <div class="bucket-title">PEP 8 Snake Case (Variables)</div>
+                            </div>
+                            <div class="bucket b-convention" id="bucket-convention">
+                                <div class="bucket-title">Valid but Alert / Class / Constant</div>
+                            </div>
+                            <div class="bucket b-syntax" id="bucket-syntax">
+                                <div class="bucket-title">SyntaxError / Reserved Keyword</div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l2-pool">
+                            <div class="draggable-item" id="mine-class" draggable="true" data-expected="bucket-syntax"
+                                data-reason="Reserved Keyword">class</div>
+                            <div class="draggable-item" id="mine-myvar" draggable="true" data-expected="bucket-pep8"
+                                data-reason="Standard Variable">my_variable</div>
+                            <div class="draggable-item" id="mine-2nd" draggable="true" data-expected="bucket-syntax"
+                                data-reason="Starts with Number">2nd_value</div>
+                            <div class="draggable-item" id="mine-pi" draggable="true" data-expected="bucket-convention"
+                                data-reason="Constant (Upper)">PI_CONSTANT</div>
+                            <div class="draggable-item" id="mine-sum" draggable="true" data-expected="bucket-syntax"
+                                data-reason="Contains Hyphen">total-sum</div>
+                            <div class="draggable-item" id="mine-class-camel" draggable="true"
+                                data-expected="bucket-convention" data-reason="CamelCase (Class)">MyClass</div>
+                        </div>
+
+                        <button class="action" onclick="l2Verify()">Defuse Minefield</button>
+                        <div class="game-feedback" id="l2-feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Reference Sheet -->
+                <div class="card">
+                    <h3><span class="tag">REFERENCE</span>Reserved Keywords (hover for meaning)</h3>
+                    <div class="kw-grid" id="s1l2-kwgrid"></div>
+                </div>
+            </div>
+
+            <!-- S1 L3 -->
+            <div class="level-panel" id="s1-l3">
+                <!-- Card 1: THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>RHS Stack Evaluation &amp; The NoneType Singleton</h3>
+                    <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                        <strong>Core Concepts:</strong>
+                        <p>Multiple assignment and variable swapping in Python utilize a structured execution order that
+                            simplifies logic and reduces errors:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>RHS First Evaluation:</strong> In a multiple assignment statement like
+                                <code>a, b = b, a</code>, Python evaluates the entire right-hand side (RHS) before
+                                binding any variables on the left-hand side (LHS). At the bytecode level, it pushes the
+                                references of <code>b</code> and <code>a</code> to the stack, packs them into a
+                                temporary tuple, and then unpacks that tuple into the LHS variables. This prevents value
+                                overriding during reassignment.</li>
+                            <li><strong>Tuple Unpacking:</strong> The comma acts as an implicit tuple builder.
+                                <code>a, b, c = 10, 20, 30</code> assigns matching elements from the tuple to variables
+                                by index. A mismatch in element count triggers a <code>ValueError</code> (too many or
+                                too few values to unpack).</li>
+                            <li><strong>None Singleton:</strong> The object <code>None</code> is the sole instance of
+                                the class <code>NoneType</code>. It is a singleton—meaning only one copy of
+                                <code>None</code> exists in memory. It serves as a placeholder to represent empty states
+                                or the default return value of functions that do not have an explicit
+                                <code>return</code> statement.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Simulator -->
+                <div class="card">
+                    <h3><span class="lvl-tag l3">LEVEL 3</span>Intermediate Tricks — Multiple Assignment, Swap &amp;
+                        None</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Assigning multiple variables in one line
+                        (<code>a, b, c = 1, 2, 3</code>), swapping two variables without a temp variable, and what
+                        <code>None</code> is and when Python uses it.
+                    </div>
+                    <div class="row">
+                        <div><label>Value A</label><input type="text" id="s1l3-a" value="10"></div>
+                        <div><label>Value B</label><input type="text" id="s1l3-b" value="99"></div>
+                    </div>
+                    <button class="action" onclick="s1l3Swap()">▶ Swap Without Temp Variable</button>
+                    <div class="swap-vis" id="s1l3-swapvis">
+                        <div class="swap-box" id="s1l3-box-a">10</div>
+                        <div class="swap-arrow">⇄</div>
+                        <div class="swap-box" id="s1l3-box-b">99</div>
+                    </div>
+                    <div class="output" id="s1l3-out" style="margin-top:14px;">com: set two values and hit Swap</div>
+                </div>
+
+                <!-- Card 3: Game -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Trio-Rotation Cup Swap Constructor</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Construct the right-hand side of a Python tuple-unpacking
+                        formula to rotate elements: A gets B's value, B gets C's value, C gets A's value. Drag the
+                        variables into the slot code blocks!
+                    </div>
+                    <div class="game-container" id="l3-game">
+                        <div class="cup-puzzle-container">
+                            <div class="cup-container" id="p-cup-a">
+                                <div class="liquid-cup cup-a">
+                                    <div class="liquid-content"></div>
+                                    <div class="cup-val" id="p-val-a">Coffee</div>
+                                </div>
+                                <div class="cup-label">cup_a</div>
+                            </div>
+                            <div class="cup-container" id="p-cup-b">
+                                <div class="liquid-cup cup-b">
+                                    <div class="liquid-content"></div>
+                                    <div class="cup-val" id="p-val-b">Tea</div>
+                                </div>
+                                <div class="cup-label">cup_b</div>
+                            </div>
+                            <div class="cup-container" id="p-cup-c">
+                                <div class="liquid-cup cup-c">
+                                    <div class="liquid-content"></div>
+                                    <div class="cup-val" id="p-val-c">Milk</div>
+                                </div>
+                                <div class="cup-label">cup_c</div>
+                            </div>
+                        </div>
+
+                        <div class="formula-builder">
+                            <span>cup_a, cup_b, cup_c = </span>
+                            <div class="drop-zone" id="l3-slot-0" data-expected="cup_b" data-pool-id="l3-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l3-slot-1" data-expected="cup_c" data-pool-id="l3-pool"></div>
+                            <span>,</span>
+                            <div class="drop-zone" id="l3-slot-2" data-expected="cup_a" data-pool-id="l3-pool"></div>
+                        </div>
+
+                        <div class="items-pool" id="l3-pool">
+                            <div class="draggable-item" id="cup-item-a" draggable="true">cup_a</div>
+                            <div class="draggable-item" id="cup-item-b" draggable="true">cup_b</div>
+                            <div class="draggable-item" id="cup-item-c" draggable="true">cup_c</div>
+                        </div>
+
+                        <button class="action" onclick="l3SwapPuzzle()">Run Swap Puzzle</button>
+                        <div class="game-feedback" id="l3-feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Concept -->
+                <div class="card">
+                    <h3><span class="tag">CONCEPT</span>Multi-Assignment &amp; None</h3>
+                    <div class="indent-demo">
+                        <span class="lvl0"># Multiple assignment in one line</span>
+                        <span class="lvl1">a, b, c = 10, 20, 30</span>
+                        <span class="lvl0"># Swap — Python evaluates the right side first</span>
+                        <span class="lvl1">a, b = b, a</span>
+                        <span class="lvl0"># None — Python's "nothing"</span>
+                        <span class="lvl1">result = None</span>
+                        <span class="lvl1">type(result) # &lt;class 'NoneType'&gt;</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S1 L4 -->
+            <div class="level-panel" id="s1-l4">
+                <!-- Card 1: THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>CPython Integer Caching vs Heap Allocation</h3>
+                    <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                        <strong>Core Concepts:</strong>
+                        <p>To optimize execution speed, memory footprint, and garbage collection overhead, CPython
+                            implements optimization boundaries for small integers:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Pre-allocated Integer Cache:</strong> During interpreter startup, CPython
+                                initializes an array of integer objects for values in the range <strong>[-5,
+                                    256]</strong>. Any time an integer in this range is declared (e.g.,
+                                <code>a = 256; b = 256</code>), Python binds the variables to the pre-existing cached
+                                objects rather than allocating new memory on the heap.</li>
+                            <li><strong>Heap Allocation:</strong> Integers outside the cache range (e.g.,
+                                <code>257</code> or <code>-6</code>) are created as separate objects in heap memory.
+                                Even if two variables have the same value (e.g., <code>a = 257; b = 257</code>), they
+                                point to distinct memory addresses.</li>
+                            <li><strong>Identity (is) vs Equality (==):</strong>
+                                <ul>
+                                    <li><code>a == b</code> checks <strong>value equality</strong> (returns True if the
+                                        numeric values are equivalent).</li>
+                                    <li><code>a is b</code> checks <strong>identity</strong> (returns True only if
+                                        <code>id(a) == id(b)</code>, meaning they occupy the exact same address).
+                                        Consequently, <code>256 is 256</code> yields <code>True</code>, but
+                                        <code>257 is 257</code> yields <code>False</code>.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Puzzle/Simulator -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>CPython Integer Cache Address Linker</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag variables <code>a</code> and <code>b</code> onto their
+                        correct CPython memory boxes based on the current variable scenario!
+                    </div>
+                    <div class="game-container" id="l4-game">
+                        <div class="game-header">
+                            <span>🔗 Memory address link puzzle</span>
+                            <span class="game-score">Scenario: <span id="l4-scenario-name">a = 256, b =
+                                    256</span></span>
+                        </div>
+
+                        <div class="memory-visualizer">
+                            <div class="mem-row">
+                                <div class="variables-panel items-pool" id="l4-var-source"
+                                    style="gap: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                    <div class="draggable-item" id="var-a" draggable="true">a</div>
+                                    <div class="draggable-item" id="var-b" draggable="true">b</div>
+                                </div>
+
+                                <div class="pointer-canvas" id="canvas-area">
+                                    <svg id="svg-pointers"
+                                        style="width:100%; height:100%; position:absolute; top:0; left:0; pointer-events:none;">
+                                        <defs>
+                                            <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5"
+                                                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0057b7" />
+                                            </marker>
+                                            <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5"
+                                                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#e65100" />
+                                            </marker>
+                                        </defs>
+                                        <path id="path-pointer-a" d="" fill="none" stroke="#0057b7"
+                                            stroke-dasharray="3,3" stroke-width="2" marker-end="url(#arrow-blue)" />
+                                        <path id="path-pointer-b" d="" fill="none" stroke="#e65100"
+                                            stroke-dasharray="3,3" stroke-width="2" marker-end="url(#arrow-orange)" />
+                                    </svg>
+                                </div>
+
+                                <div class="address-panel">
+                                    <div class="bucket address-block-zone zone-cache" id="zone-cache"
+                                        style="min-height:70px;">
+                                        <div class="bucket-title">Cache Cell (0x7ffd1)</div>
+                                    </div>
+                                    <div class="bucket address-block-zone zone-heap" id="zone-heap1"
+                                        style="min-height:55px;">
+                                        <div class="bucket-title">Heap Block 1</div>
+                                    </div>
+                                    <div class="bucket address-block-zone zone-heap" id="zone-heap2"
+                                        style="min-height:55px;">
+                                        <div class="bucket-title">Heap Block 2</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="action" style="margin-top:14px;" onclick="l4Verify()">Verify Memory Map</button>
+                        <div class="game-feedback" id="l4-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S1 L5 -->
+            <div class="level-panel" id="s1-l5">
+                <!-- Card 1: THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Type Annotations (PEP 526) &amp; Static Type Checking</h3>
+                    <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                        <strong>Core Concepts:</strong>
+                        <p>Type hints provide type declarations for variable declarations, function parameters, and
+                            return types, bringing structure to Python's dynamic core:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>No Runtime Enforcement:</strong> Python is inherently dynamic. The interpreter
+                                ignores type annotations at runtime. Writing <code>x: int = "hello"</code> runs without
+                                raising errors because the annotation is treated as metadata stored inside the module's
+                                <code>__annotations__</code> dictionary.</li>
+                            <li><strong>Static Analysis (Mypy / Pyright):</strong> Static analysis tools run checks on
+                                source code files *before* execution. These tools trace code paths to find type
+                                mismatches (e.g., assigning a string to an integer-annotated variable) and highlight
+                                errors without needing to run the actual scripts.</li>
+                            <li><strong>Code Inspection:</strong> You can access runtime types using
+                                <code>type(variable)</code> or <code>variable.__class__.__name__</code>. In Python,
+                                every class inherits from the root <code>object</code> type, allowing rich runtime
+                                introspection.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Simulator -->
+                <div class="card">
+                    <h3><span class="lvl-tag l5">LEVEL 5</span>Expert Mastery — Type Annotations &amp;
+                        <code>__class__</code> Introspection</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> PEP 526 type annotations (<code>x: int = 5</code>) for
+                        documentation and tooling — Python doesn't enforce them at runtime. Accessing
+                        <code>__class__.__name__</code> for introspection, and a preview of scope (LEGB rule).
+                    </div>
+                    <label>Enter a value — see annotated declaration + introspection</label>
+                    <div class="row">
+                        <div><label>Variable name</label><input type="text" id="s1l5-name" value="speed"></div>
+                        <div><label>Value</label><input type="text" id="s1l5-val" value="9.8"></div>
+                        <div>
+                            <label>Annotation type</label>
+                            <select id="s1l5-ann">
+                                <option value="float">float</option>
+                                <option value="int">int</option>
+                                <option value="str">str</option>
+                                <option value="bool">bool</option>
+                                <option value="None">None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="action" onclick="s1l5Run()">▶ Annotate &amp; Introspect</button>
+                    <div class="output" id="s1l5-out">com: build a type-annotated variable above</div>
+                </div>
+
+                <!-- Card 3: Game -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Type annotation static check fixer</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct values from the pool into the slots to satisfy
+                        Mypy static compiler type annotations!
+                    </div>
+                    <div class="game-container" id="l5-game">
+                        <div class="code-editor-block">
+                            <div class="code-line">
+                                <span class="var-ann">age</span><span class="kw-ann">:</span> <span
+                                    class="type-ann">int</span> <span class="kw-ann">=</span>
+                                <div class="drop-zone" id="l5-slot-0" data-expected="42" data-pool-id="l5-pool"></div>
+                            </div>
+                            <div class="code-line">
+                                <span class="var-ann">price</span><span class="kw-ann">:</span> <span
+                                    class="type-ann">float</span> <span class="kw-ann">=</span>
+                                <div class="drop-zone" id="l5-slot-1" data-expected="19.99" data-pool-id="l5-pool">
+                                </div>
+                            </div>
+                            <div class="code-line">
+                                <span class="var-ann">name</span><span class="kw-ann">:</span> <span
+                                    class="type-ann">str</span> <span class="kw-ann">=</span>
+                                <div class="drop-zone" id="l5-slot-2" data-expected="&quot;Aisha&quot;"
+                                    data-pool-id="l5-pool"></div>
+                            </div>
+                            <div class="code-line">
+                                <span class="var-ann">is_valid</span><span class="kw-ann">:</span> <span
+                                    class="type-ann">bool</span> <span class="kw-ann">=</span>
+                                <div class="drop-zone" id="l5-slot-3" data-expected="True" data-pool-id="l5-pool"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l5-pool">
+                            <div class="draggable-item" id="val-int" draggable="true">42</div>
+                            <div class="draggable-item" id="val-float" draggable="true">19.99</div>
+                            <div class="draggable-item" id="val-str" draggable="true">"Aisha"</div>
+                            <div class="draggable-item" id="val-bool" draggable="true">True</div>
+                            <div class="draggable-item" id="val-wrong-str" draggable="true">"forty-two"</div>
+                            <div class="draggable-item" id="val-wrong-none" draggable="true">None</div>
+                        </div>
+
+                        <button class="action" onclick="l5Verify()">Run Mypy Check</button>
+                        <div class="game-feedback" id="l5-feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Concept -->
+                <div class="card">
+                    <h3><span class="tag">CONCEPT</span>LEGB Scope — Preview</h3>
+                    <div class="indent-demo">
+                        <span class="lvl0">x = "global" <span style="color:#888"># L → local (none here)</span></span>
+                        <span class="lvl0"> <span style="color:#888"># E → enclosing (none here)</span></span>
+                        <span class="lvl0"> <span style="color:#888"># G → global ← Python finds x here</span></span>
+                        <span class="lvl0"> <span style="color:#888"># B → built-ins (last resort)</span></span>
+                        <span class="lvl1">def show():</span>
+                        <span class="lvl2">print(x) <span style="color:#888"># resolves to "global"</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <div class="footer-note">MODULE 1 · LEVELED PROGRESSION · 5 LEVELS · DATA TYPES &amp; VARIABLES IN PYTHON</div>
+
+    <script>
+        /* =====================================================
+           LEVEL SYSTEM — specific to s1
+           ===================================================== */
+        const SUBTOPIC = 's1';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Absolute Basics' },
+            { cls: 'l2', label: 'Level 2 · Core Application' },
+            { cls: 'l3', label: 'Level 3 · Intermediate Tricks' },
+            { cls: 'l4', label: 'Level 4 · Advanced Edge Cases' },
+            { cls: 'l5', label: 'Level 5 · Expert Mastery' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.textContent = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, lv.cls);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, cls) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach((b, i) => {
+                b.classList.toggle('active', i === num - 1);
+            });
+            document.querySelectorAll(`[id^="${st}-l"]`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+
+            // Custom Visualizer hooks
+            if (num === 4) {
+                l4LoadScenario();
+            }
+        }
+
+        /* =====================================================
+           DRAG AND DROP HANDLERS (HTML5)
+           ===================================================== */
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+            if (document.getElementById("s1-l4").classList.contains("active")) {
+                l4DrawLines();
+            }
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add("hovered");
+        }
+
+        function dragLeave(e) {
+            e.currentTarget.classList.remove("hovered");
+        }
+
+        function dropItem(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove("hovered");
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+
+            let target = e.currentTarget;
+            if (target.classList.contains("drop-zone") || target.classList.contains("bucket") || target.classList.contains("items-pool")) {
+                if (target.classList.contains("drop-zone") && target.children.length > 0) {
+                    // return existing child item to pool
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+
+                // Save original pool ID on items when dragged into zones
+                if (target.classList.contains("drop-zone")) {
+                    draggable.dataset.poolId = target.dataset.poolId;
+                }
+            }
+
+            if (document.getElementById("s1-l4").classList.contains("active")) {
+                l4DrawLines();
+            }
+        }
+
+        const keywords = {
+            'False': 'Boolean value representing the false state.',
+            'None': 'Special constant representing the absence of a value (null/void).',
+            'True': 'Boolean value representing the true state.',
+            'and': 'Logical AND operator: returns True if both operands are true.',
+            'as': 'Creates an alias for a module or context manager (e.g., import math as m).',
+            'assert': 'Debugging aid: tests a condition, raises AssertionError if false.',
+            'async': 'Declares a coroutine / asynchronous function.',
+            'await': 'Suspends execution of an async function until the awaited task completes.',
+            'break': 'Terminates the innermost enclosing loop (for/while).',
+            'class': 'Defines a new class (blueprint for creating objects).',
+            'continue': 'Skips the rest of the current iteration and jumps to the next loop cycle.',
+            'def': 'Defines a function or a method.',
+            'del': 'Deletes reference to a variable, list slice, or object attribute.',
+            'elif': 'Else-if condition in a multi-way branch.',
+            'else': 'Fallback conditional branch, or executed if a loop completes without break.',
+            'except': 'Catches specific exceptions raised inside a try block.',
+            'finally': 'Code block inside a try statement that is guaranteed to run at the end.',
+            'for': 'Iterates over elements of a sequence (list, range, generator, etc.).',
+            'from': 'Specifies which module members to import, or chains exceptions.',
+            'global': 'Declares a variable inside a function to belong to the module scope.',
+            'if': 'Executes code block only if the condition evaluates to true.',
+            'import': 'Imports modules or packages into the current scope.',
+            'in': 'Membership test operator, also used in for loops.',
+            'is': 'Identity operator: checks if two variables point to the exact same object.',
+            'lambda': 'Creates anonymous, lightweight, single-expression functions.',
+            'nonlocal': 'Declares a variable to belong to the nearest enclosing non-global scope.',
+            'not': 'Logical NOT operator: negates a boolean expression.',
+            'or': 'Logical OR operator: returns True if at least one operand is true.',
+            'pass': 'Null statement; acts as a syntactical placeholder for empty blocks.',
+            'raise': 'Explicitly triggers/raises an exception.',
+            'return': 'Exits a function, optionally passing back a value.',
+            'try': 'Wraps code that might raise exceptions for handling.',
+            'while': 'Repeatedly executes a block of code as long as a condition is true.',
+            'with': 'Wraps code execution in a context manager (auto resources setup/cleanup).',
+            'yield': 'Yields a value from a generator function, pausing execution state.'
+        };
+
+        function initKeywords() {
+            const grid = document.getElementById('s1l2-kwgrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            Object.keys(keywords).sort().forEach(kw => {
+                const div = document.createElement('div');
+                div.className = 'kw';
+                div.textContent = kw;
+                div.title = keywords[kw];
+                grid.appendChild(div);
+            });
+        }
+
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .bucket, .items-pool").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+            shufflePools();
+        }
+
+        window.addEventListener("load", () => {
+            initDragAndDrop();
+            initKeywords();
+        });
+
+        /* =====================================================
+           SUBTOPIC 1 - BASICS
+           ===================================================== */
+
+        // L1 Detect Type
+        function s1l1Run() {
+            const raw = document.getElementById('s1l1-input').value.trim();
+            const out = document.getElementById('s1l1-out');
+            if (!raw) { out.innerHTML = '<span class="err">com: enter a value first</span>'; return; }
+            let type, repr;
+            if (raw === 'True' || raw === 'False') { type = 'bool'; repr = raw; }
+            else if (raw === 'None') { type = 'NoneType'; repr = 'None'; }
+            else if (/^-?\d+$/.test(raw)) { type = 'int'; repr = raw; }
+            else if (/^-?\d*\.\d+$/.test(raw)) { type = 'float'; repr = raw; }
+            else if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) { type = 'str'; repr = raw; }
+            else { type = 'str'; repr = `'${raw}'  <span class="com"># auto-treated as str</span>`; }
+            out.innerHTML =
+                `<span class="com">>>> x = ${raw}</span>
+<span class="lbl">type(x)</span>  →  &lt;class '${type}'&gt;
+<span class="lbl">repr(x)</span>  →  ${repr}
+<span class="lbl">id(x)</span>    →  0x${Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0')}  <span class="com"># memory address (illustrative)</span>`;
+        }
+
+        // =====================================================
+        // PUZZLE 1: TYPE MATCHING
+        // =====================================================
+        function l1Verify() {
+            let score = 0;
+            const fb = document.getElementById('l1-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 5; i++) {
+                const zone = document.getElementById(`l1-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Expression Row ${i + 1} got type '${child.dataset.val}', but evaluated type is different.`);
+                    // return back to pool
+                    document.getElementById('l1-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l1-score').textContent = score;
+            if (score === 5) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Excellent!</strong> All Python implicit arithmetic types and value errors correctly mapped!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Some matches were incorrect!</strong> Incorrect types were returned to the pool.<br>Hints:<br><ul><li>${errors.join('</li><li>') || 'Some slots were left empty.'}</li></ul>`;
+                document.getElementById('l1-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l1-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        // L2 Check variable name
+        function s1l2Check() {
+            const name = document.getElementById('s1l2-varname').value.trim();
+            const out = document.getElementById('s1l2-out');
+            if (!name) { out.innerHTML = '<span class="err">com: type a name first</span>'; return; }
+            let msgs = [], valid = true;
+            if (/^\d/.test(name)) { msgs.push('✗ Cannot start with a digit'); valid = false; }
+            if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) { msgs.push('✗ Contains invalid characters (only letters, digits, underscore)'); valid = false; }
+            if (keywords.hasOwnProperty(name)) { msgs.push(`✗ '${name}' is a reserved keyword`); valid = false; }
+            if (valid) {
+                msgs.push('✓ Valid identifier!');
+                if (/^[A-Z]/.test(name) && name.includes('_') === false && /[a-z]/.test(name)) msgs.push('ⓘ CamelCase — conventionally used for class names');
+                if (name.toUpperCase() === name && name.length > 1) msgs.push('ⓘ ALL_CAPS — reserved for constants by convention');
+                if (/^_/.test(name)) msgs.push("ⓘ Leading underscore — signals 'internal use'");
+                if (name === name.toLowerCase() && name.includes('_')) msgs.push('ⓘ snake_case — PEP8 recommended for variables ✓');
+                else if (name === name.toLowerCase() && !msgs.some(m => m.startsWith('ⓘ'))) msgs.push('ⓘ snake_case — PEP8 recommended ✓');
+            }
+            out.innerHTML = msgs.map(m => m.startsWith('✗') ? `<span class="err">${m}</span>` : m).join('\n');
+        }
+
+        // =====================================================
+        // PUZZLE 2: VARIABLE BUCKET SORT MINEFIELD
+        // =====================================================
+        function l2Verify() {
+            const fb = document.getElementById('l2-feedback');
+            fb.style.display = "block";
+            let count = 0;
+            let errors = [];
+
+            const pool = document.getElementById('l2-pool');
+
+            const mines = ["mine-class", "mine-myvar", "mine-2nd", "mine-pi", "mine-sum", "mine-class-camel"];
+            mines.forEach(id => {
+                const item = document.getElementById(id);
+                const parent = item.parentElement;
+                const expected = item.dataset.expected;
+
+                if (parent.id === expected) {
+                    count++;
+                } else {
+                    errors.push(`'${item.textContent}' is placed in '${parent.id === 'l2-pool' ? 'The Pool' : parent.children[0].textContent}' which is incorrect.`);
+                    pool.appendChild(item); // return to pool
+                }
+            });
+
+            document.getElementById('l2-score').textContent = `Cleared: ${count}/6`;
+            if (count === 6) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Defused!</strong> You successfully sorted all naming conventions. Remember: Keywords and names starting with digits trigger standard SyntaxErrors!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Boom! Identifier sorting failed!</strong> Incorrect placements returned to the pool.<br><ul><li>${errors.join('</li><li>')}</li></ul>`;
+                document.getElementById('l2-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l2-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        // L3 Swap variables
+        function s1l3Swap() {
+            const a = document.getElementById('s1l3-a').value.trim() || 'a';
+            const b = document.getElementById('s1l3-b').value.trim() || 'b';
+            const bxA = document.getElementById('s1l3-box-a');
+            const bxB = document.getElementById('s1l3-box-b');
+            bxA.textContent = a; bxB.textContent = b;
+            const out = document.getElementById('s1l3-out');
+            out.innerHTML =
+                `<span class="com"># Before swap</span>
+a = ${a},  b = ${b}
+<span class="com"># Python evaluates right side first — no temp needed</span>
+a, b = b, a
+<span class="com"># After swap</span>
+a = ${b},  b = ${a}`;
+            setTimeout(() => { bxA.textContent = b; bxB.textContent = a; }, 400);
+        }
+
+        // =====================================================
+        // PUZZLE 3: TRIO-CUP LIQUID ROTATION PUZZLE
+        // =====================================================
+        function l3SwapPuzzle() {
+            const fb = document.getElementById('l3-feedback');
+            fb.style.display = "block";
+
+            const slot0 = document.getElementById('l3-slot-0');
+            const slot1 = document.getElementById('l3-slot-1');
+            const slot2 = document.getElementById('l3-slot-2');
+
+            const child0 = slot0.children[0];
+            const child1 = slot1.children[0];
+            const child2 = slot2.children[0];
+
+            if (!child0 || !child1 || !child2) {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = "<strong>Error!</strong> Please fill all drop slots to perform the swap assignment.";
+                return;
+            }
+
+            const ok0 = child0.textContent.trim() === slot0.dataset.expected;
+            const ok1 = child1.textContent.trim() === slot1.dataset.expected;
+            const ok2 = child2.textContent.trim() === slot2.dataset.expected;
+
+            if (ok0 && ok1 && ok2) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 CORRECT! cup_a, cup_b, cup_c = cup_b, cup_c, cup_a</strong><br>Values rotated instantly without any temporary buffers!";
+
+                // Liquid translation animation
+                const cupA = document.getElementById('p-cup-a');
+                const cupB = document.getElementById('p-cup-b');
+                const cupC = document.getElementById('p-cup-c');
+
+                cupA.style.transform = "translateX(180px)";
+                cupB.style.transform = "translateX(-90px)";
+                cupC.style.transform = "translateX(-90px)";
+
+                setTimeout(() => {
+                    // Swap liquids contents labels
+                    document.getElementById('p-val-a').textContent = "Tea";
+                    document.getElementById('p-val-b').textContent = "Milk";
+                    document.getElementById('p-val-c').textContent = "Coffee";
+
+                    // Reset layout positions
+                    cupA.style.transform = "none";
+                    cupB.style.transform = "none";
+                    cupC.style.transform = "none";
+                }, 600);
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = "<strong>Incorrect swap code!</strong> Misplaced blocks returned to the pool.";
+
+                const pool = document.getElementById('l3-pool');
+                if (!ok0) pool.appendChild(child0);
+                if (!ok1) pool.appendChild(child1);
+                if (!ok2) pool.appendChild(child2);
+
+                document.getElementById('l3-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l3-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        // =====================================================
+        // PUZZLE 4: CPYTHON INT CACHE LINKER
+        // =====================================================
+        const l4Scenarios = [
+            { name: "a = 256, b = 256", valA: 256, valB: 256, type: "shared" },
+            { name: "a = 257, b = 257", valA: 257, valB: 257, type: "split" },
+            { name: "a = -5, b = -5", valA: -5, valB: -5, type: "shared" },
+            { name: "a = -6, b = -6", valA: -6, valB: -6, type: "split" }
+        ];
+        let l4CurrentScenarioIdx = 0;
+
+        function l4LoadScenario() {
+            const sc = l4Scenarios[l4CurrentScenarioIdx];
+            document.getElementById('l4-scenario-name').textContent = sc.name;
+
+            // Return items to source pool
+            const source = document.getElementById('l4-var-source');
+            source.appendChild(document.getElementById('var-a'));
+            source.appendChild(document.getElementById('var-b'));
+
+            document.getElementById('l4-feedback').style.display = "none";
+            setTimeout(l4DrawLines, 100);
+        }
+
+        function l4Verify() {
+            const sc = l4Scenarios[l4CurrentScenarioIdx];
+            const varA = document.getElementById('var-a');
+            const varB = document.getElementById('var-b');
+
+            const zoneA = varA.parentElement.id;
+            const zoneB = varB.parentElement.id;
+
+            const fb = document.getElementById('l4-feedback');
+            fb.style.display = "block";
+
+            if (zoneA === 'l4-var-source' || zoneB === 'l4-var-source') {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = "Please drag both variables a and b onto address destination slots!";
+                return;
+            }
+
+            let correct = false;
+            if (sc.type === "shared") {
+                // Both variables must point to the Cache block
+                if (zoneA === "zone-cache" && zoneB === "zone-cache") {
+                    correct = true;
+                }
+            } else {
+                // Both variables point to heap but DIFFERENT slots (since they are separate objects in memory!)
+                if (zoneA !== "zone-cache" && zoneB !== "zone-cache" && zoneA !== zoneB) {
+                    correct = true;
+                }
+            }
+
+            if (correct) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = `<strong>🎉 CORRECT MAPPING!</strong><br>For scenario: <code>${sc.name}</code>, identity evaluation <code>a is b</code> yields <code>${sc.type === 'shared' ? 'True' : 'False'}</code>.`;
+
+                l4CurrentScenarioIdx = (l4CurrentScenarioIdx + 1) % l4Scenarios.length;
+                setTimeout(l4LoadScenario, 3500);
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Incorrect Pointer mapping!</strong><br>Hint: ${sc.type === 'shared' ? 'These integers fall inside CPython [-5, 256] caching limit. They must share the exact same object reference.' : 'These integers fall outside CPython caching limits. Dynamic heap allocation assigns them distinct memory addresses.'}`;
+
+                // Return variables back to variables panel
+                const source = document.getElementById('l4-var-source');
+                source.appendChild(varA);
+                source.appendChild(varB);
+                setTimeout(l4DrawLines, 100);
+
+                document.getElementById('l4-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l4-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        function l4DrawLines() {
+            const svg = document.getElementById("svg-pointers");
+            const pathA = document.getElementById("path-pointer-a");
+            const pathB = document.getElementById("path-pointer-b");
+
+            const varA = document.getElementById("var-a");
+            const varB = document.getElementById("var-b");
+
+            if (!varA || !varB) return;
+
+            const rectSvg = svg.getBoundingClientRect();
+            const rectA = varA.getBoundingClientRect();
+            const rectB = varB.getBoundingClientRect();
+
+            const startXA = rectA.right - rectSvg.left;
+            const startYA = rectA.top + rectA.height / 2 - rectSvg.top;
+
+            const startXB = rectB.right - rectSvg.left;
+            const startYB = rectB.top + rectB.height / 2 - rectSvg.top;
+
+            const parentA = varA.parentElement;
+            const parentB = varB.parentElement;
+
+            const inBucketA = parentA.id === 'zone-cache' || parentA.id === 'zone-heap1' || parentA.id === 'zone-heap2';
+            const inBucketB = parentB.id === 'zone-cache' || parentB.id === 'zone-heap1' || parentB.id === 'zone-heap2';
+
+            if (!inBucketA) {
+                pathA.setAttribute("d", "");
+            } else {
+                const rectTargetA = parentA.getBoundingClientRect();
+                const endXA = rectTargetA.left - rectSvg.left;
+                const endYA = rectTargetA.top + rectTargetA.height / 2 - rectSvg.top;
+                pathA.setAttribute("d", `M ${startXA} ${startYA} C ${(startXA + endXA) / 2} ${startYA}, ${(startXA + endXA) / 2} ${endYA}, ${endXA} ${endYA}`);
+            }
+
+            if (!inBucketB) {
+                pathB.setAttribute("d", "");
+            } else {
+                const rectTargetB = parentB.getBoundingClientRect();
+                const endXB = rectTargetB.left - rectSvg.left;
+                const endYB = rectTargetB.top + rectTargetB.height / 2 - rectSvg.top;
+                pathB.setAttribute("d", `M ${startXB} ${startYB} C ${(startXB + endXB) / 2} ${startYB}, ${(startXB + endXB) / 2} ${endYB}, ${endXB} ${endYB}`);
+            }
+        }
+        window.addEventListener("resize", l4DrawLines);
+
+
+        // L5 Annotations
+        function s1l5Run() {
+            const nm = document.getElementById('s1l5-name').value.trim() || 'x';
+            const val = document.getElementById('s1l5-val').value.trim() || '0';
+            const ann = document.getElementById('s1l5-ann').value;
+            let detectedType = 'str';
+            if (/^-?\d+$/.test(val)) detectedType = 'int';
+            else if (/^-?\d*\.\d+$/.test(val)) detectedType = 'float';
+            else if (val === 'True' || val === 'False') detectedType = 'bool';
+            else if (val === 'None') detectedType = 'NoneType';
+            const match = (detectedType === ann);
+            const out = document.getElementById('s1l5-out');
+            out.innerHTML =
+                `<span class="com"># Type-annotated variable (PEP 526)</span>
+${nm}: ${ann} = ${val}
+
+<span class="com"># Introspection — Python doesn't enforce the annotation</span>
+${nm}.__class__.__name__   →  "${detectedType}"
+type(${nm})                →  &lt;class '${detectedType}'&gt;
+
+<span class="lbl">Annotation matches actual type?</span>  ${match ? '<span class="ok">Yes ✓</span>' : '<span class="err">No — Python allows this! Annotations are hints only.</span>'}`;
+        }
+
+        // =====================================================
+        // PUZZLE 5: TYPE ANNOTATION FIXED
+        // =====================================================
+        function l5Verify() {
+            const fb = document.getElementById('l5-feedback');
+            fb.style.display = "block";
+            let correctCount = 0;
+            let errors = [];
+
+            const pool = document.getElementById('l5-pool');
+
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`l5-slot-${i}`);
+                const expected = slot.dataset.expected;
+                const child = slot.children[0];
+
+                if (child && child.textContent.trim() === expected) {
+                    correctCount++;
+                } else if (child) {
+                    errors.push(`Row ${i + 1}: Incompatible assignment (Mypy flags dynamic error matching primitive types).`);
+                    pool.appendChild(child); // return incorrect to pool
+                }
+            }
+
+            if (correctCount === 4) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "$ mypy checker.py<br><span class='ok'>Success: no issues found in 1 source file!</span><br><br><strong>🎉 Code Compilation Defused!</strong> All static type checker annotations resolved successfully.";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `$ mypy checker.py<br><span class='err'>Found ${4 - correctCount} errors in 1 source file.</span><br><br><strong>Errors details:</strong><br><ul><li>${errors.join('</li><li>') || 'Some slots are empty.'}</li></ul>`;
+
+                document.getElementById('l5-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l5-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Operators &amp; Built-in Math Functions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-main: #fffcfc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fffefe;
+            --border-color: #ffd1d5;
+            --border-glow: rgba(225, 6, 0, 0.15);
+            --red: #e10600;
+            --red-dark: #b30500;
+            --red-deep: #7a0000;
+            --white: #ffffff;
+            --off: #fff8f8;
+            --ink: #1a0808;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --display: 'Archivo Black', sans-serif;
+            --body: 'Inter', sans-serif;
+
+            /* Level badge colors */
+            --l1: #0057b7;
+            --l2: #2e7d32;
+            --l3: #e65100;
+            --l4: #6a1b9a;
+            --l5: #b71c1c;
+
+            /* Game Colors */
+            --correct: #2e7d32;
+            --correct-bg: rgba(46, 125, 50, 0.06);
+            --wrong: #b71c1c;
+            --wrong-bg: rgba(183, 28, 28, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--body);
+            background: var(--bg-main);
+            color: var(--ink);
+            scroll-behavior: smooth;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(225, 6, 0, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 87, 183, 0.02) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(225, 6, 0, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: var(--white);
+            padding: 80px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 4px solid var(--red-deep);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #ffccd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            -webkit-text-fill-color: initial;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--white);
+        }
+
+        .hero p.sub {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin-inline: auto;
+            color: #ffeaea;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .sec-head {
+            margin-bottom: 32px;
+        }
+
+        .sec-num {
+            font-family: var(--mono);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+        }
+
+        .sec-head h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            margin-top: 8px;
+            color: var(--red-deep);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .sec-head p {
+            margin-top: 16px;
+            color: #5a4b4b;
+            max-width: 720px;
+            line-height: 1.65;
+            font-size: 1.05rem;
+        }
+
+        /* ===== LEVEL STRIP ===== */
+        .level-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .lvl-pill {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lvl-pill:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111827;
+            transform: translateY(-2px);
+        }
+
+        .lvl-pill.active.l1 {
+            background: var(--l1);
+            color: #fff;
+            border-color: var(--l1);
+            box-shadow: 0 4px 12px rgba(0, 87, 183, 0.25);
+        }
+
+        .lvl-pill.active.l2 {
+            background: var(--l2);
+            color: #fff;
+            border-color: var(--l2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .lvl-pill.active.l3 {
+            background: var(--l3);
+            color: #fff;
+            border-color: var(--l3);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        .lvl-pill.active.l4 {
+            background: var(--l4);
+            color: #fff;
+            border-color: var(--l4);
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.25);
+        }
+
+        .lvl-pill.active.l5 {
+            background: var(--l5);
+            color: #fff;
+            border-color: var(--l5);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        /* ===== LEVEL PANEL ===== */
+        .level-panel {
+            display: none;
+        }
+
+        .level-panel.active {
+            display: block;
+            animation: fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #ffd1d5;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 6px 6px 0 #ffebeb;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0 #ffd1d5;
+        }
+
+        .card h3 {
+            font-family: var(--display);
+            font-size: 1.15rem;
+            color: var(--ink);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 .tag {
+            font-family: var(--mono);
+            background: var(--red);
+            color: white;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+        }
+
+        .card h3 .lvl-tag {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card h3 .lvl-tag.l1 {
+            background: var(--l1);
+        }
+
+        .card h3 .lvl-tag.l2 {
+            background: var(--l2);
+        }
+
+        .card h3 .lvl-tag.l3 {
+            background: var(--l3);
+        }
+
+        .card h3 .lvl-tag.l4 {
+            background: var(--l4);
+        }
+
+        .card h3 .lvl-tag.l5 {
+            background: var(--l5);
+        }
+
+        .level-desc {
+            background: rgba(225, 6, 0, 0.02);
+            border-left: 4px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(225, 6, 0, 0.04);
+            border-right: 1px solid rgba(225, 6, 0, 0.04);
+            border-bottom: 1px solid rgba(225, 6, 0, 0.04);
+        }
+
+        .level-desc strong {
+            color: var(--red-deep);
+        }
+
+        /* ===== INPUTS ===== */
+        label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #5a4b4b;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text],
+        input[type=number],
+        select,
+        textarea {
+            font-family: var(--mono);
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--ink);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button.action {
+            font-family: var(--display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button.action:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 6, 0, 0.3);
+        }
+
+        button.action:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        button.action.ghost {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        button.action.ghost:hover {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-dark);
+            border-color: var(--red-dark);
+        }
+
+        /* ===== OUTPUT ===== */
+        .output {
+            margin-top: 20px;
+            background: #fff8f8;
+            color: #1a0808;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-left: 4px solid var(--red);
+            border: 1px solid #ffd1d5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .output .err {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .output .com {
+            color: #7f8e9f;
+        }
+
+        .output .lbl {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .output .ok {
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        /* ===== MISC ===== */
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+
+        .pillbtn {
+            border: 1px solid #ffd1d5;
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--ink);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .pillbtn:hover,
+        .pillbtn.sel {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ffd1d5;
+            padding: 12px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(225, 6, 0, 0.04);
+            color: var(--red-deep);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(225, 6, 0, 0.01);
+        }
+
+        .progress-bar-wrap {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(to right, var(--red), #ff7b7b);
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .challenge-box {
+            background: #fff8f8;
+            border: 1px dashed #ffd1d5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .challenge-box .ch-label {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* bitwise vis */
+        .bit-vis {
+            font-family: var(--mono);
+            font-size: 0.88rem;
+            margin-top: 16px;
+            background: #fff8f8;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #ffd1d5;
+        }
+
+        .bit-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bit-cell {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .bit-cell.one {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+            box-shadow: 0 2px 6px rgba(225, 6, 0, 0.2);
+        }
+
+        .bit-cell.zero {
+            background: #ffffff;
+            color: #5a4b4b;
+            border-color: #ffd1d5;
+        }
+
+        .bit-label {
+            min-width: 70px;
+            color: var(--red-deep);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .indent-demo {
+            font-family: var(--mono);
+            background: #fff8f8;
+            color: #1a0808;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            overflow: auto;
+            border: 1px solid #ffd1d5;
+        }
+
+        .indent-demo .lvl0 {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl1 {
+            color: #15803d;
+            padding-left: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .lvl2 {
+            color: #b45309;
+            padding-left: 40px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .indent-demo .err {
+            color: #dc2626;
+            text-decoration: underline wavy;
+        }
+
+        /* ===== GAME CONTAINER ===== */
+        .game-container {
+            background: #ffffff;
+            border: 2px solid #ffd1d5;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 18px;
+            box-shadow: 4px 4px 0 #ffebeb;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffebeb;
+            padding-bottom: 12px;
+        }
+
+        .game-header span {
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--red-deep);
+        }
+
+        .game-score {
+            font-family: var(--mono);
+            color: var(--red);
+            font-size: 0.85rem;
+        }
+
+        .type-puzzle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fffafa;
+            border: 1px solid #ffe3e5;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        .type-puzzle-row:hover {
+            border-color: #ffd1d5;
+            background: #fff8f8;
+        }
+
+        .expr-text {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .drop-zone {
+            width: 130px;
+            height: 38px;
+            border: 2px dashed #ffd1d5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .drop-zone.hover {
+            border-color: var(--red);
+            background: #fff8f8;
+            box-shadow: 0 0 10px rgba(225, 6, 0, 0.1);
+        }
+
+        .drop-zone .draggable-item {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .items-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px;
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 70px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .draggable-item {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: grab;
+            background: #ffffff;
+            border: 1px solid #ffd1d5;
+            color: var(--ink);
+            box-shadow: 2px 2px 0 #ffebeb;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--red);
+            box-shadow: 3px 3px 0 #ffd1d5;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+        }
+
+        .game-feedback {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid transparent;
+        }
+
+        .game-feedback.correct {
+            background: var(--correct-bg);
+            color: var(--correct);
+            border-color: rgba(46, 125, 50, 0.2);
+        }
+
+        .game-feedback.wrong {
+            background: var(--wrong-bg);
+            color: var(--wrong);
+            border-color: rgba(183, 28, 28, 0.2);
+        }
+
+        /* Level 3: math pipeline specific drop zones */
+        .pipeline-builder {
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pipeline-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            color: var(--ink);
+        }
+
+        .pipeline-drop-small {
+            width: 140px;
+            height: 38px;
+            border: 2px dashed #ffd1d5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .pipeline-drop-small.hover {
+            border-color: var(--red);
+            background: #fff8f8;
+        }
+
+        /* Level 5: Code Editor slots */
+        .code-editor-block {
+            background: #fff8f8;
+            border: 1px solid #ffd1d5;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: var(--mono);
+            color: #1a0808;
+            line-height: 1.9;
+            font-size: 0.9rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .code-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .kw-ann {
+            color: #b30500;
+            font-weight: bold;
+        }
+
+        .var-ann {
+            color: #0057b7;
+            font-weight: bold;
+        }
+
+        .type-ann {
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #5a4b4b;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 2px dashed #ffd1d5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <h1>Python <span>Operators</span></h1>
+        <p class="sub">Every operator and math built-in broken into 5 levels — from zero to expert. Work each level, hit
+            the
+            interactive challenges, and climb the ladder one rung at a time.</p>
+    </header>
+
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- SUBTOPIC 2: OPERATORS -->
+        <!-- ============================================================ -->
+        <section id="s2" class="section active">
+            <div class="sec-head">
+                <div class="sec-num">// SUBTOPIC 2</div>
+                <h2>Operators &amp; Built-in Math Functions</h2>
+                <p>Arithmetic to bitwise, built-ins to walrus — five levels of operators and math. Each level adds tools
+                    you'll
+                    use in every Python program you ever write.</p>
+            </div>
+
+            <div class="level-strip" id="s2-levels"></div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" id="s2-bar" style="width:20%"></div>
+            </div>
+
+            <!-- S2 L1 -->
+            <!-- S2 L1 -->
+            <div class="level-panel active" id="s2-l1">
+                <!-- LEVEL 1 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Division Mechanics &amp; Modulo Arithmetic</h3>
+                    <div class="level-desc" style="background: rgba(0, 87, 183, 0.02); border-left-color: var(--l1);">
+                        <strong>Core Concepts:</strong>
+                        <p>Python distinguishes between different mathematical divisions and modulo behaviors to
+                            maintain
+                            mathematical consistency:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>True Division (<code>/</code>):</strong> Always returns a floating-point number,
+                                even if the
+                                result divides perfectly (e.g., <code>10 / 2 = 5.0</code>).</li>
+                            <li><strong>Floor Division (<code>//</code>):</strong> Divides the operands and rounds the
+                                result
+                                <em>downward</em> toward negative infinity (floor value). For positive numbers, this
+                                acts as
+                                truncation (e.g., <code>17 // 5 = 3</code>). However, with negative numbers, it rounds
+                                down (e.g.,
+                                <code>-17 // 5 = -4</code>).
+                            </li>
+                            <li><strong>Modulo (<code>%</code>):</strong> Returns the remainder of division. It
+                                satisfies the
+                                relation <code>a = (a // b) * b + (a % b)</code>. When divisors are negative, the result
+                                matches the
+                                sign of the divisor (e.g., <code>5 % -3 = -1</code>). Modulo on negatives (e.g.,
+                                <code>-17 % 5 = 3</code>) is highly useful in cyclic scheduling and modular structures.
+                            </li>
+                            <li><strong>Exponentiation (<code>**</code>):</strong> Computes powers (e.g.,
+                                <code>2 ** 3 = 8</code>).
+                                Floating-point powers compute fractional roots (e.g., <code>9 ** 0.5 = 3.0</code>) and
+                                widen the
+                                resulting type.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l1">LEVEL 1</span>Absolute Basics — Arithmetic Operators</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> <code>+</code> <code>-</code> <code>*</code> <code>/</code>
+                        <code>//</code>
+                        <code>%</code> <code>**</code>. The difference between true division (<code>/</code> always
+                        returns float)
+                        and floor division (<code>//</code> truncates toward negative infinity).
+                    </div>
+                    <div class="row">
+                        <div><label>Value A</label><input type="text" id="s2l1-a" value="17"></div>
+                        <div>
+                            <label>Operator</label>
+                            <select id="s2l1-op">
+                                <option value="+">+ addition</option>
+                                <option value="-">− subtraction</option>
+                                <option value="*">× multiplication</option>
+                                <option value="/">/ division (float)</option>
+                                <option value="//">// floor division</option>
+                                <option value="%">% modulus</option>
+                                <option value="**">** exponent</option>
+                            </select>
+                        </div>
+                        <div><label>Value B</label><input type="text" id="s2l1-b" value="5"></div>
+                    </div>
+                    <button class="action" onclick="s2l1Run()">▶ Run</button>
+                    <div class="output" id="s2l1-out">com: pick an operator and run</div>
+                </div>
+
+                <!-- LEVEL 1 GAME: FLOOR DIVISION VS MODULO -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Floor Division vs Modulus Equation Solver</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct arithmetic operators from the pool and drop
+                        them into the
+                        equations so they evaluate correctly! Be careful with negative values and float limits.
+                    </div>
+                    <div class="game-container" id="l1-game">
+                        <div class="game-header">
+                            <span>🎯 Arithmetic Operator Placement</span>
+                            <span class="game-score">Score: <span id="l1-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l1-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">17 [ drop ] 5</span>
+                                <span>→ 3</span>
+                                <div class="drop-zone" id="l1-zone-0" data-expected="//" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">-17 [ drop ] 5</span>
+                                <span>→ -4</span>
+                                <div class="drop-zone" id="l1-zone-1" data-expected="//" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">-17 [ drop ] 5</span>
+                                <span>→ 3</span>
+                                <div class="drop-zone" id="l1-zone-2" data-expected="%" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">5 [ drop ] -3</span>
+                                <span>→ -1</span>
+                                <div class="drop-zone" id="l1-zone-3" data-expected="%" data-pool-id="l1-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">9 [ drop ] 0.5</span>
+                                <span>→ 3.0</span>
+                                <div class="drop-zone" id="l1-zone-4" data-expected="**" data-pool-id="l1-pool"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l1-pool">
+                            <div class="draggable-item" id="op-floor-1" draggable="true" data-val="//">//</div>
+                            <div class="draggable-item" id="op-floor-2" draggable="true" data-val="//">//</div>
+                            <div class="draggable-item" id="op-mod-1" draggable="true" data-val="%">%</div>
+                            <div class="draggable-item" id="op-mod-2" draggable="true" data-val="%">%</div>
+                            <div class="draggable-item" id="op-pow-1" draggable="true" data-val="**">**</div>
+                        </div>
+
+                        <button class="action" onclick="l1Verify()">Verify Equations</button>
+                        <div class="game-feedback" id="l1-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S2 L2 -->
+            <div class="level-panel" id="s2-l2">
+                <!-- LEVEL 2 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Logical Operators &amp; Short-Circuit Evaluation</h3>
+                    <div class="level-desc" style="background: rgba(46, 125, 50, 0.02); border-left-color: var(--l2);">
+                        <strong>Core Concepts:</strong>
+                        <p>Python's logical operators exhibit distinct behaviors optimized for performance and
+                            expression
+                            evaluation:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Truthy vs. Falsy Values:</strong> In Python, empty collections (e.g.
+                                <code>[]</code>,
+                                <code>{}</code>), the number zero (<code>0</code>, <code>0.0</code>), empty strings
+                                (<code>""</code>), and the singleton <code>None</code> evaluate to <code>False</code> in
+                                a logical
+                                context. All other values evaluate to <code>True</code>.
+                            </li>
+                            <li><strong>Short-Circuiting Rules:</strong>
+                                <ul>
+                                    <li><code>or</code> evaluates expressions left-to-right. The moment it encounters a
+                                        truthy
+                                        operand, it stops evaluating and returns that operand's value immediately.</li>
+                                    <li><code>and</code> evaluates expressions left-to-right. The moment it encounters a
+                                        falsy
+                                        operand, it short-circuits and returns that operand's value. If all operands are
+                                        truthy, it
+                                        returns the final operand.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Non-Boolean Returns:</strong> Unlike many languages where logical operators
+                                return strict
+                                boolean values (True or False), Python's <code>and</code> and <code>or</code> operators
+                                return the
+                                <em>value</em> of the actual operand that resolved the logical operation.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l2">LEVEL 2</span>Core Application — Comparison, Logical &amp; Assignment
+                        Operators
+                    </h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Comparison (<code>==</code> <code>!=</code> <code>&gt;</code>
+                        <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code>), logical (<code>and</code>
+                        <code>or</code>
+                        <code>not</code>), and shorthand assignment (<code>+=</code> <code>-=</code> <code>*=</code>).
+                        Logical
+                        operators return operands, not just True/False.
+                    </div>
+                    <div class="row">
+                        <div><label>Score</label><input type="number" id="s2l2-score" value="75" min="0" max="100">
+                        </div>
+                        <div><label>Add bonus</label><input type="number" id="s2l2-bonus" value="10" min="0" max="50">
+                        </div>
+                    </div>
+                    <button class="action" onclick="s2l2Run()">▶ Apply &amp; Compare</button>
+                    <div class="output" id="s2l2-out">com: enter score and bonus above</div>
+                </div>
+
+                <!-- LEVEL 2 GAME: SHORT-CIRCUIT LOGIC GATEKEEPER -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Short-Circuit Logic Gatekeeper</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct returned values from the pool and drop them
+                        onto the
+                        matching short-circuit Python logical expressions!
+                    </div>
+                    <div class="game-container" id="l2-game">
+                        <div class="game-header">
+                            <span>🎯 Logical Expression Return Values</span>
+                            <span class="game-score">Score: <span id="l2-score">0</span>/5</span>
+                        </div>
+
+                        <div id="l1-pipeline"> <!-- Note: using same layout class row styling -->
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">0 or "Python"</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l2-zone-0" data-expected='"Python"' data-pool-id="l2-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Aisha" and 42</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l2-zone-1" data-expected="42" data-pool-id="l2-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">[] and "Success"</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l2-zone-2" data-expected="[]" data-pool-id="l2-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">"Success" or 99</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l2-zone-3" data-expected='"Success"' data-pool-id="l2-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">False or 0 or None</span>
+                                <span>→</span>
+                                <div class="drop-zone" id="l2-zone-4" data-expected="None" data-pool-id="l2-pool"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l2-pool">
+                            <div class="draggable-item" id="l2-val-python" draggable="true" data-val='"Python"'>"Python"
+                            </div>
+                            <div class="draggable-item" id="l2-val-42" draggable="true" data-val="42">42</div>
+                            <div class="draggable-item" id="l2-val-empty" draggable="true" data-val="[]">[]</div>
+                            <div class="draggable-item" id="l2-val-success" draggable="true" data-val='"Success"'>
+                                "Success"</div>
+                            <div class="draggable-item" id="l2-val-none" draggable="true" data-val="None">None</div>
+                        </div>
+
+                        <button class="action" onclick="l2Verify()">Verify Logic</button>
+                        <div class="game-feedback" id="l2-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S2 L3 -->
+            <div class="level-panel" id="s2-l3">
+                <!-- LEVEL 3 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Rounding Traps &amp; Built-in vs. Module Math</h3>
+                    <div class="level-desc" style="background: rgba(230, 81, 0, 0.02); border-left-color: var(--l3);">
+                        <strong>Core Concepts:</strong>
+                        <p>Python provides math operations at two distinct layers: native global built-in functions, and
+                            the
+                            specialized, optimized standard library <code>math</code> module:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Built-in Rounding Limits:</strong> Python's global
+                                <code>round(number, ndigits)</code>
+                                function utilizes **"Banker's Rounding"** (round-to-even) under IEEE 754. For instance,
+                                <code>round(2.5)</code> and <code>round(1.5)</code> both evaluate to <code>2</code>.
+                                This avoids
+                                statistical bias by rounding halfway cases to the nearest even integer.
+                            </li>
+                            <li><strong>Floor vs. Ceil Boundaries:</strong>
+                                <ul>
+                                    <li><code>math.floor(x)</code>: Rounds down to the nearest integer toward negative
+                                        infinity.
+                                    </li>
+                                    <li><code>math.ceil(x)</code>: Rounds up to the nearest integer toward positive
+                                        infinity.</li>
+                                    <li>For negative values, these shift directions:
+                                        <code>math.floor(-5.67) = -6</code>, whereas
+                                        <code>math.ceil(-5.67) = -5</code>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><strong>Function Performance:</strong> Standard utilities like <code>abs()</code>,
+                                <code>min()</code>, and <code>max()</code> are implemented in optimized C inside
+                                builtins. Special
+                                transcendental operations (trigonometry, factorials, logs) are packed into the
+                                <code>math</code>
+                                module, operating on raw float conversions.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l3">LEVEL 3</span>Intermediate Tricks — Built-in Math Functions</h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> <code>abs()</code> <code>round()</code> <code>pow()</code>
+                        <code>max()</code> <code>min()</code> <code>sum()</code> from builtins, and the
+                        <code>math</code>
+                        module: <code>math.sqrt</code> <code>math.ceil</code> <code>math.floor</code>
+                        <code>math.pi</code>
+                        <code>math.factorial</code>.
+                    </div>
+                    <div class="row">
+                        <div><label>Number x</label><input type="text" id="s2l3-x" value="-7.428"></div>
+                        <div><label>Compare y</label><input type="text" id="s2l3-y" value="3"></div>
+                    </div>
+                    <button class="action" onclick="s2l3Run()">▶ Run Math Functions</button>
+                    <div class="output" id="s2l3-out">com: enter numbers and run</div>
+                </div>
+
+                <!-- LEVEL 3 GAME: CONSTUCT BUILT-IN MATH PIPELINE -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Built-in Math Pipeline Constructor</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag math functions from the pool and drop them into the empty
+                        slots
+                        to construct expression pipelines that yield the expected results!
+                    </div>
+                    <div class="game-container" id="l3-game">
+                        <div class="game-header">
+                            <span>🎯 Nested Math Function Layouts</span>
+                            <span class="game-score">Score: <span id="l3-score">0</span>/5</span>
+                        </div>
+
+                        <div class="pipeline-builder">
+                            <div class="pipeline-row">
+                                <div class="pipeline-drop-small" id="l3-zone-0" data-expected="math.floor"
+                                    data-pool-id="l3-pool">
+                                </div>
+                                <span>(</span>
+                                <div class="pipeline-drop-small" id="l3-zone-1" data-expected="abs"
+                                    data-pool-id="l3-pool"></div>
+                                <span>( -5.67 ) )</span>
+                                <span>→ 5</span>
+                            </div>
+                            <div class="pipeline-row" style="margin-top: 14px;">
+                                <div class="pipeline-drop-small" id="l3-zone-2" data-expected="abs"
+                                    data-pool-id="l3-pool"></div>
+                                <span>(</span>
+                                <div class="pipeline-drop-small" id="l3-zone-3" data-expected="min"
+                                    data-pool-id="l3-pool"></div>
+                                <span>( 3, -4 ) )</span>
+                                <span>→ 4</span>
+                            </div>
+                            <div class="pipeline-row" style="margin-top: 14px;">
+                                <div class="pipeline-drop-small" id="l3-zone-4" data-expected="math.ceil"
+                                    data-pool-id="l3-pool">
+                                </div>
+                                <span>( 2.7 )</span>
+                                <span>→ 3</span>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l3-pool">
+                            <div class="draggable-item" id="math-fn-floor" draggable="true" data-val="math.floor">
+                                math.floor
+                            </div>
+                            <div class="draggable-item" id="math-fn-ceil" draggable="true" data-val="math.ceil">
+                                math.ceil</div>
+                            <div class="draggable-item" id="math-fn-abs1" draggable="true" data-val="abs">abs</div>
+                            <div class="draggable-item" id="math-fn-abs2" draggable="true" data-val="abs">abs</div>
+                            <div class="draggable-item" id="math-fn-min" draggable="true" data-val="min">min</div>
+                        </div>
+
+                        <button class="action" onclick="l3Verify()">Verify Pipeline</button>
+                        <div class="game-feedback" id="l3-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S2 L4 -->
+            <div class="level-panel" id="s2-l4">
+                <!-- LEVEL 4 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Bitwise Manipulation &amp; Floating-Point Limits</h3>
+                    <div class="level-desc" style="background: rgba(106, 27, 154, 0.02); border-left-color: var(--l4);">
+                        <strong>Core Concepts:</strong>
+                        <p>Bitwise operations manipulate numbers at the raw binary bit level. Floating-point arithmetic,
+                            on
+                            the other hand, deals with constraints imposed by physical memory boundaries:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Bitwise AND (<code>&amp;</code>):</strong> Compares bits of two numbers; returns
+                                1
+                                only if both bits are 1. Used to check if specific flags/permissions are active.</li>
+                            <li><strong>Bitwise OR (<code>|</code>):</strong> Returns 1 if at least one corresponding
+                                bit is
+                                1. Used to combine permission sets or toggle flags ON.</li>
+                            <li><strong>Bitwise XOR (<code>^</code>):</strong> Returns 1 if corresponding bits are
+                                different
+                                (one is 1, other is 0). Perfect for toggling state/status flags.</li>
+                            <li><strong>Bit Shifts (<code>&lt;&lt;</code> / <code>&gt;&gt;</code>):</strong>
+                                <ul>
+                                    <li>Left shift (<code>x &lt;&lt; y</code>) shifts bits to the left, filling
+                                        vacancies with 0s.
+                                        This is equivalent to multiplying <code>x</code> by <code>2<sup>y</sup></code>.
+                                    </li>
+                                    <li>Right shift (<code>x &gt;&gt; y</code>) shifts bits to the right. This is
+                                        equivalent to
+                                        integer floor division of <code>x</code> by <code>2<sup>y</sup></code>.</li>
+                                </ul>
+                            </li>
+                            <li><strong>IEEE 754 Floating-Point Precision:</strong> Python represents floats using
+                                64-bit
+                                double-precision binary values. Numbers like <code>0.1</code> and <code>0.2</code> have
+                                infinite
+                                repeating representations in binary, similar to <code>1/3</code> in base-10. This leads
+                                to
+                                subtle rounding offsets (e.g. <code>0.1 + 0.2 = 0.30000000000000004</code>). To bypass
+                                this, we
+                                use <code>round()</code> for display or the standard library
+                                <code>decimal.Decimal</code> for
+                                financial calculations.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="tag">CONCEPT</span>Float Precision Trap</h3>
+                    <div class="indent-demo">
+                        <span class="lvl0">print(0.1 + 0.2)</span>
+                        <span class="lvl1" style="color:var(--red); font-weight:bold;">0.30000000000000004 ← NOT
+                            0.3!</span>
+                        <span class="lvl0"># Fix: use round() for display</span>
+                        <span class="lvl1">print(round(0.1 + 0.2, 2)) # 0.3</span>
+                        <span class="lvl0"># Or: use the decimal module for exact arithmetic</span>
+                        <span class="lvl1">from decimal import Decimal</span>
+                        <span class="lvl1">print(Decimal('0.1') + Decimal('0.2')) # 0.3</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l4">LEVEL 4</span>Advanced Edge Cases — Float Precision &amp; Bitwise
+                        Operators
+                    </h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Floating-point precision traps (<code>0.1 + 0.2 ≠ 0.3</code>),
+                        bitwise operators (<code>&amp;</code> <code>|</code> <code>^</code> <code>&lt;&lt;</code>
+                        <code>&gt;&gt;</code>) and how they manipulate individual bits.
+                    </div>
+                    <div class="row">
+                        <div><label>Integer A</label><input type="number" id="s2l4-a" value="5" min="0" max="255"></div>
+                        <div>
+                            <label>Bitwise op</label>
+                            <select id="s2l4-op">
+                                <option value="&">&amp; AND</option>
+                                <option value="|">| OR</option>
+                                <option value="^">^ XOR</option>
+                                <option value="<<">&lt;&lt; left shift</option>
+                                <option value=">>">&gt;&gt; right shift</option>
+                            </select>
+                        </div>
+                        <div><label>Integer B</label><input type="number" id="s2l4-b" value="3" min="0" max="255"></div>
+                    </div>
+                    <button class="action" onclick="s2l4Run()">▶ Run Bitwise</button>
+                    <div class="output" id="s2l4-out">com: try 5 &amp; 3 or 5 &lt;&lt; 1</div>
+                    <div id="s2l4-bitvis" style="margin-top:14px;display:none;">
+                        <div class="bit-vis" id="s2l4-bitcontent"></div>
+                    </div>
+                </div>
+
+                <!-- LEVEL 4 GAME: BITMASK PERMISSION VALIDATOR -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Bitmask Permission Validator</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the correct bitwise operators (<code>&amp;</code>,
+                        <code>|</code>, <code>^</code>, <code>&lt;&lt;</code>) to check, grant, toggle permissions, or
+                        construct flags!
+                        <br><em>Given permission masks:</em> <code>READ = 4 (0b100)</code>,
+                        <code>WRITE = 2 (0b010)</code>,
+                        <code>EXECUTE = 1 (0b001)</code>.
+                    </div>
+                    <div class="game-container" id="l4-game">
+                        <div class="game-header">
+                            <span>🎯 Bitwise Operations &amp; Permission Masks</span>
+                            <span class="game-score">Score: <span id="l4-score">0</span>/4</span>
+                        </div>
+
+                        <div id="l4-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">(5 [ drop ] 4) == 4</span>
+                                <span>Check if user with permission mask 5 has READ</span>
+                                <div class="drop-zone" id="l4-zone-0" data-expected="&amp;" data-pool-id="l4-pool">
+                                </div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">5 [ drop ] 2</span>
+                                <span>Grant WRITE status to user (yielding mask 7)</span>
+                                <div class="drop-zone" id="l4-zone-1" data-expected="|" data-pool-id="l4-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">5 [ drop ] 1</span>
+                                <span>Toggle EXECUTE status of user (yielding mask 4)</span>
+                                <div class="drop-zone" id="l4-zone-2" data-expected="^" data-pool-id="l4-pool"></div>
+                            </div>
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">1 [ drop ] 2</span>
+                                <span>Shift binary bits of 1 left to create READ mask (4)</span>
+                                <div class="drop-zone" id="l4-zone-3" data-expected="&lt;&lt;" data-pool-id="l4-pool">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l4-pool">
+                            <div class="draggable-item" id="op-bit-and" draggable="true" data-val="&amp;">&amp;</div>
+                            <div class="draggable-item" id="op-bit-or" draggable="true" data-val="|">|</div>
+                            <div class="draggable-item" id="op-bit-xor" draggable="true" data-val="^">^</div>
+                            <div class="draggable-item" id="op-bit-lsh" draggable="true" data-val="&lt;&lt;">&lt;&lt;
+                            </div>
+                        </div>
+
+                        <button class="action" onclick="l4Verify()">Verify Bitwise Flags</button>
+                        <div class="game-feedback" id="l4-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S2 L5 -->
+            <div class="level-panel" id="s2-l5">
+                <!-- LEVEL 5 THEORY -->
+                <div class="card">
+                    <h3><span class="tag">THEORY</span>Operator Precedence &amp; Walrus Binding Mechanics</h3>
+                    <div class="level-desc" style="background: rgba(183, 28, 28, 0.02); border-left-color: var(--l5);">
+                        <strong>Core Concepts:</strong>
+                        <p>Precedence rules control the order in which expressions are resolved in Python. Bypassing
+                            these
+                            rules requires parenthetical overrides:</p>
+                        <ul style="margin-left: 20px; margin-top: 8px; list-style-type: square;">
+                            <li><strong>Precedence hierarchy (High to Low):</strong>
+                                <ol style="margin-left: 20px; margin-top: 4px;">
+                                    <li>Parentheses: <code>( )</code></li>
+                                    <li>Exponentiation: <code>**</code></li>
+                                    <li>Multiplication/Division/Modulus: <code>*</code>, <code>/</code>,
+                                        <code>//</code>,
+                                        <code>%</code>
+                                    </li>
+                                    <li>Addition/Subtraction: <code>+</code>, <code>-</code></li>
+                                    <li>Bitwise Shifts: <code>&lt;&lt;</code>, <code>&gt;&gt;</code></li>
+                                    <li>Comparisons: <code>&lt;</code>, <code>&gt;</code>, <code>==</code>,
+                                        <code>!=</code>,
+                                        etc.</li>
+                                    <li>Logical Not: <code>not</code></li>
+                                    <li>Logical And: <code>and</code></li>
+                                    <li>Logical Or: <code>or</code></li>
+                                </ol>
+                            </li>
+                            <li><strong>Chained Comparisons:</strong> Python allows shorthand mathematical syntax like
+                                <code>1 &lt; x &lt; 10</code>. This is evaluated as
+                                <code>(1 &lt; x) and (x &lt; 10)</code>.
+                                It executes short-circuiting: if the first comparison fails, the second expression is
+                                never
+                                checked.
+                            </li>
+                            <li><strong>The Walrus Operator (<code>:=</code>):</strong> Introduced in PEP 572, this
+                                "assignment expression" operator binds a value to a variable and returns that value
+                                inside a
+                                single expression. Because it has very low precedence, you must wrap it in parentheses
+                                when
+                                used in operations (e.g. <code>if (n := len(x)) &gt; 5:</code>).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="tag">CONCEPT</span>Walrus Operator &amp; Chained Comparisons</h3>
+                    <div class="indent-demo">
+                        <span class="lvl0"># Walrus := assigns AND returns the value</span>
+                        <span class="lvl1">if (n := len("hello")) > 3:</span>
+                        <span class="lvl2">print(f"Length {n} is big enough")</span>
+                        <span class="lvl0"># Chained comparisons — very Pythonic</span>
+                        <span class="lvl1">x = 7</span>
+                        <span class="lvl1">print(1 &lt; x &lt; 10) # True — Python chains these!</span>
+                        <span class="lvl1">print(1 &lt; x &lt; 5) # False</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="lvl-tag l5">LEVEL 5</span>Expert Mastery — Precedence, Chaining &amp; Walrus
+                        Operator
+                    </h3>
+                    <div class="level-desc">
+                        <strong>What you learn:</strong> Operator precedence (BODMAS in Python: <code>**</code> &gt;
+                        <code>*/%</code> &gt; <code>+-</code> &gt; comparisons &gt; <code>not</code> &gt;
+                        <code>and</code>
+                        &gt; <code>or</code>), chained comparisons (<code>1 &lt; x &lt; 10</code>), and the walrus
+                        operator
+                        <code>:=</code> to assign and check in one expression.
+                    </div>
+                    <label>Expression to evaluate (use numbers + arithmetic, e.g.
+                        <code>3 + 4 * 2 ** 3 - 1</code>)</label>
+                    <div class="row">
+                        <div style="flex:3"><input type="text" id="s2l5-expr" value="3 + 4 * 2 ** 3 - 1"></div>
+                        <div style="flex:1"><button class="action" onclick="s2l5Run()">▶ Evaluate</button></div>
+                    </div>
+                    <div class="output" id="s2l5-out">com: enter an arithmetic expression</div>
+                </div>
+
+                <!-- LEVEL 5 GAME: PRECEDENCE BRACKET RESTORER -->
+                <div class="card">
+                    <h3><span class="tag">PUZZLE</span>Precedence Bracket Restorer</h3>
+                    <div class="level-desc">
+                        <strong>The Challenge:</strong> Drag the bracketed components from the pool into the equations
+                        to
+                        satisfy the expected target outcomes!
+                    </div>
+                    <div class="game-container" id="l5-game">
+                        <div class="game-header">
+                            <span>🎯 Parentheses &amp; Operator Precedence Placement</span>
+                            <span class="game-score">Score: <span id="l5-score">0</span>/4</span>
+                        </div>
+
+                        <div id="l5-pipeline">
+                            <div class="type-puzzle-row">
+                                <span class="expr-text">[ drop ] * 2 ** [ drop ]</span>
+                                <span>→ 28</span>
+                                <div class="drop-zone" id="l5-zone-0" data-expected="(3 + 4)" data-pool-id="l5-pool"
+                                    style="width: 100px;"></div>
+                                <div class="drop-zone" id="l5-zone-1" data-expected="(3 - 1)" data-pool-id="l5-pool"
+                                    style="width: 100px;"></div>
+                            </div>
+                            <div class="type-puzzle-row" style="margin-top: 14px;">
+                                <span class="expr-text">[ drop ] ** [ drop ]</span>
+                                <span>→ 121</span>
+                                <div class="drop-zone" id="l5-zone-2" data-expected="(3 + 4 * 2)" data-pool-id="l5-pool"
+                                    style="width: 120px;"></div>
+                                <div class="drop-zone" id="l5-zone-3" data-expected="(3 - 1)" data-pool-id="l5-pool"
+                                    style="width: 100px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="items-pool" id="l5-pool" style="margin-top: 14px;">
+                            <div class="draggable-item" id="bracket-1" draggable="true" data-val="(3 + 4)">(3 + 4)</div>
+                            <div class="draggable-item" id="bracket-2" draggable="true" data-val="(3 - 1)">(3 - 1)</div>
+                            <div class="draggable-item" id="bracket-3" draggable="true" data-val="(3 - 1)">(3 - 1)</div>
+                            <div class="draggable-item" id="bracket-4" draggable="true" data-val="(3 + 4 * 2)">(3 + 4 *
+                                2)
+                            </div>
+                        </div>
+
+                        <button class="action" onclick="l5Verify()">Verify Precedence</button>
+                        <div class="game-feedback" id="l5-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <div class="footer-note">MODULE 1 · LEVELED PROGRESSION · 5 LEVELS · OPERATORS &amp; MATH IN PYTHON</div>
+
+    <script>
+        /* =====================================================
+           LEVEL SYSTEM — specific to s2
+           ===================================================== */
+        const SUBTOPIC = 's2';
+        const LEVEL_LABELS = [
+            { cls: 'l1', label: 'Level 1 · Absolute Basics' },
+            { cls: 'l2', label: 'Level 2 · Core Application' },
+            { cls: 'l3', label: 'Level 3 · Intermediate Tricks' },
+            { cls: 'l4', label: 'Level 4 · Advanced Edge Cases' },
+            { cls: 'l5', label: 'Level 5 · Expert Mastery' },
+        ];
+
+        const strip = document.getElementById(`${SUBTOPIC}-levels`);
+        LEVEL_LABELS.forEach((lv, i) => {
+            const btn = document.createElement('button');
+            btn.className = `lvl-pill ${lv.cls}${i === 0 ? ' active' : ''}`;
+            btn.textContent = lv.label;
+            btn.onclick = () => switchLevel(SUBTOPIC, i + 1, lv.cls);
+            strip.appendChild(btn);
+        });
+
+        function switchLevel(st, num, cls) {
+            document.querySelectorAll(`#${st}-levels .lvl-pill`).forEach((b, i) => {
+                b.classList.toggle('active', i === num - 1);
+            });
+            document.querySelectorAll(`[id^="${st}-l"]`).forEach(p => p.classList.remove('active'));
+            document.getElementById(`${st}-l${num}`).classList.add('active');
+            document.getElementById(`${st}-bar`).style.width = (num * 20) + '%';
+        }
+
+        function pyRepr(v) { if (typeof v === 'boolean') return v ? 'True' : 'False'; return String(v); }
+
+        /* =====================================================
+           SUBTOPIC 2 - OPERATORS
+           ===================================================== */
+
+        // L1
+        function s2l1Run() {
+            const a = document.getElementById('s2l1-a').value.trim();
+            const b = document.getElementById('s2l1-b').value.trim();
+            const op = document.getElementById('s2l1-op').value;
+            const A = Number(a), B = Number(b);
+            const out = document.getElementById('s2l1-out');
+            let res, resType;
+            try {
+                switch (op) {
+                    case '+': res = A + B; resType = (a.includes('.') || b.includes('.')) ? 'float' : 'int'; break;
+                    case '-': res = A - B; resType = (a.includes('.') || b.includes('.')) ? 'float' : 'int'; break;
+                    case '*': res = A * B; resType = (a.includes('.') || b.includes('.')) ? 'float' : 'int'; break;
+                    case '/': if (B === 0) throw new Error('ZeroDivisionError: division by zero'); res = A / B; resType = 'float'; break;
+                    case '//': if (B === 0) throw new Error('ZeroDivisionError'); res = Math.floor(A / B); resType = 'int'; break;
+                    case '%': if (B === 0) throw new Error('ZeroDivisionError'); res = ((A % B) + B) % B; resType = 'int'; break;
+                    case '**': res = Math.pow(A, B); resType = (Number.isInteger(res) && !a.includes('.') && !b.includes('.')) ? 'int' : 'float'; break;
+                }
+                out.innerHTML = `<span class="com">>>> ${a} ${op} ${b}</span>\n${res}\n<span class="lbl">type →</span> ${resType}`;
+            } catch (e) { out.innerHTML = `<span class="err">${e.message}</span>`; }
+        }
+
+        // L2
+        function s2l2Run() {
+            const score = parseFloat(document.getElementById('s2l2-score').value) || 0;
+            const bonus = parseFloat(document.getElementById('s2l2-bonus').value) || 0;
+            const updated = score + bonus;
+            const out = document.getElementById('s2l2-out');
+            out.innerHTML =
+                `<span class="com">>>> score = ${score}</span>
+<span class="com">>>> score += ${bonus}</span>
+score  →  ${updated}
+
+<span class="com"># Comparisons</span>
+score >= 90  →  ${pyRepr(updated >= 90)}    <span class="com"># A grade?</span>
+score >= 80  →  ${pyRepr(updated >= 80)}    <span class="com"># B grade?</span>
+score >  50  →  ${pyRepr(updated > 50)}    <span class="com"># Passing?</span>
+
+<span class="com"># Logical</span>
+score >= 80 and score < 90  →  ${pyRepr(updated >= 80 && updated < 90)}
+score < 50 or score >= 95   →  ${pyRepr(updated < 50 || updated >= 95)}
+not (score == 100)          →  ${pyRepr(!(updated === 100))}`;
+        }
+
+        // L3
+        function s2l3Run() {
+            const x = parseFloat(document.getElementById('s2l3-x').value);
+            const y = parseFloat(document.getElementById('s2l3-y').value);
+            const out = document.getElementById('s2l3-out');
+            if (isNaN(x) || isNaN(y)) { out.innerHTML = '<span class="err">Enter valid numbers</span>'; return; }
+            function fact(n) { if (n < 0 || n > 20) return '(too large)'; let r = 1; for (let i = 2; i <= n; i++)r *= i; return r; }
+            const yn = Math.abs(Math.round(y));
+            out.innerHTML =
+                `<span class="com">x = ${x},  y = ${y}</span>
+
+<span class="com"># Built-ins</span>
+abs(x)            →  ${Math.abs(x)}
+round(x)          →  ${Math.round(x)}
+round(x, 2)       →  ${x.toFixed(2)}
+pow(x, 2)         →  ${Math.pow(x, 2)}
+max(x, y)         →  ${Math.max(x, y)}
+min(x, y)         →  ${Math.min(x, y)}
+
+<span class="com"># math module</span>
+math.floor(x)     →  ${Math.floor(x)}
+math.ceil(x)      →  ${Math.ceil(x)}
+math.sqrt(abs(x)) →  ${Math.sqrt(Math.abs(x)).toFixed(6)}
+math.factorial(${yn})  →  ${fact(yn)}
+math.pi           →  3.141592653589793`;
+        }
+
+        // L4 bitwise
+        function s2l4Run() {
+            const a = parseInt(document.getElementById('s2l4-a').value) || 0;
+            const b = parseInt(document.getElementById('s2l4-b').value) || 0;
+            const op = document.getElementById('s2l4-op').value;
+            const out = document.getElementById('s2l4-out');
+            let res;
+            switch (op) {
+                case '&': res = a & b; break; case '|': res = a | b; break; case '^': res = a ^ b; break;
+                case '<<': res = a << b; break; case '>>': res = a >> b; break;
+            }
+            out.innerHTML =
+                `<span class="com">>>> ${a} ${op} ${b}</span>
+${res}
+<span class="lbl">Binary:</span>  ${a} = ${a.toString(2).padStart(8, '0')}
+         ${b} = ${b.toString(2).padStart(8, '0')}
+         result = ${res.toString(2).padStart(8, '0')}`;
+            // bit visualizer
+            const bv = document.getElementById('s2l4-bitvis');
+            const bc = document.getElementById('s2l4-bitcontent');
+            bv.style.display = 'block';
+            function bitRow(label, n) {
+                const bits = n.toString(2).padStart(8, '0');
+                return `<div class="bit-row"><span class="bit-label">${label}</span>${bits.split('').map(b => `<div class="bit-cell ${b === '1' ? 'one' : 'zero'}">${b}</div>`).join('')}</div>`;
+            }
+            bc.innerHTML = bitRow('a =', a) + bitRow('b =', b) + bitRow('result=', res);
+        }
+
+        // L5
+        function s2l5Run() {
+            const expr = document.getElementById('s2l5-expr').value.trim();
+            const out = document.getElementById('s2l5-out');
+            try {
+                if (!/^[0-9\s\+\-\*\/\%\(\)\.]+$/.test(expr.replace(/\*\*/g, '').replace(/\/\//g, ''))) {
+                    throw new Error('Only numeric arithmetic expressions are supported here');
+                }
+                const safeExpr = expr.replace(/\*\*/g, 'Math.pow_').replace(/\/\//g, 'Math.floor(').replace(/Math\.pow_([0-9.\s]+)/g, 'Math.pow($1,');
+                const result = Function('"use strict";return (' + expr.replace(/\*\*/g, '**') + ')')();
+                out.innerHTML =
+                    `<span class="com">>>> ${expr}</span>
+${result}
+<span class="com"># Precedence: ** first, then * / //, then + −</span>`;
+            } catch (e) {
+                out.innerHTML = `<span class="err">Error: ${e.message}</span>`;
+            }
+        }
+
+        /* =====================================================
+           DRAG AND DROP HANDLERS (HTML5)
+           ===================================================== */
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+            e.target.classList.add("dragging");
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove("dragging");
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            if (e.currentTarget.classList.contains("drop-zone") || e.currentTarget.classList.contains("pipeline-drop-small")) {
+                e.currentTarget.classList.add("hover");
+            }
+        }
+
+        function dragLeave(e) {
+            if (e.currentTarget.classList.contains("drop-zone") || e.currentTarget.classList.contains("pipeline-drop-small")) {
+                e.currentTarget.classList.remove("hover");
+            }
+        }
+
+        function dropItem(e) {
+            e.preventDefault();
+            const target = e.currentTarget;
+            target.classList.remove("hover");
+
+            const id = e.dataTransfer.getData("text/plain");
+            const draggable = document.getElementById(id);
+            if (!draggable) return;
+
+            if (target.classList.contains("items-pool")) {
+                target.appendChild(draggable);
+            } else if (target.classList.contains("drop-zone") || target.classList.contains("pipeline-drop-small")) {
+                if (target.children.length > 0) {
+                    const existing = target.children[0];
+                    document.getElementById(existing.dataset.poolId || target.dataset.poolId).appendChild(existing);
+                }
+                target.appendChild(draggable);
+                draggable.dataset.poolId = target.dataset.poolId;
+            }
+        }
+
+        function shufflePools() {
+            document.querySelectorAll(".items-pool").forEach(pool => {
+                const items = Array.from(pool.children);
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                items.forEach(item => pool.appendChild(item));
+            });
+        }
+
+        function initDragAndDrop() {
+            document.querySelectorAll(".draggable-item").forEach(item => {
+                item.addEventListener("dragstart", dragStart);
+                item.addEventListener("dragend", dragEnd);
+            });
+            document.querySelectorAll(".drop-zone, .pipeline-drop-small, .items-pool").forEach(zone => {
+                zone.addEventListener("dragover", dragOver);
+                zone.addEventListener("dragenter", dragEnter);
+                zone.addEventListener("dragleave", dragLeave);
+                zone.addEventListener("drop", dropItem);
+            });
+            shufflePools();
+        }
+
+        function l1Verify() {
+            let score = 0;
+            const fb = document.getElementById('l1-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 5; i++) {
+                const zone = document.getElementById(`l1-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Row ${i + 1}: got '${child.dataset.val}', but expected different behavior.`);
+                    document.getElementById('l1-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l1-score').textContent = score;
+            if (score === 5) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Correct!</strong> You successfully completed all arithmetic division and modulo equations!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Incorrect operator placements!</strong> Wrong elements returned to the pool.<br>Errors:<br><ul><li>${errors.join('</li><li>') || 'Some zones are empty.'}</li></ul>`;
+                document.getElementById('l1-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l1-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        function l2Verify() {
+            let score = 0;
+            const fb = document.getElementById('l2-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 5; i++) {
+                const zone = document.getElementById(`l2-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Row ${i + 1}: got '${child.dataset.val}', which is incorrect.`);
+                    document.getElementById('l2-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l2-score').textContent = score;
+            if (score === 5) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Correct!</strong> All short-circuit logic values resolved perfectly. Remember, Python returns evaluated operands, not just booleans!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Incorrect logic outputs!</strong> Wrong elements returned to pool.<br>Errors:<br><ul><li>${errors.join('</li><li>') || 'Some zones are empty.'}</li></ul>`;
+                document.getElementById('l2-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l2-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        function l3Verify() {
+            let score = 0;
+            const fb = document.getElementById('l3-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 5; i++) {
+                const zone = document.getElementById(`l3-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Slot ${i + 1}: got '${child.dataset.val}', but expected different function.`);
+                    document.getElementById('l3-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l3-score').textContent = score;
+            if (score === 5) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Correct!</strong> Math pipeline solved. You mapped ceil, floor, abs, and min nested calls flawlessly!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Incorrect function routing!</strong> Misplaced blocks returned to pool.<br>Errors:<br><ul><li>${errors.join('</li><li>') || 'Some pipeline slots are empty.'}</li></ul>`;
+                document.getElementById('l3-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l3-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        function l4Verify() {
+            let score = 0;
+            const fb = document.getElementById('l4-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 4; i++) {
+                const zone = document.getElementById(`l4-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Row ${i + 1}: got '${child.dataset.val}', which is incorrect.`);
+                    document.getElementById('l4-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l4-score').textContent = score;
+            if (score === 4) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Correct!</strong> All bitwise permission operations verified successfully!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Verification failed!</strong> Misplaced bitwise operators returned to pool.<br>Errors:<br><ul><li>${errors.join('</li><li>') || 'Some slots are empty.'}</li></ul>`;
+                document.getElementById('l4-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l4-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        function l5Verify() {
+            let score = 0;
+            const fb = document.getElementById('l5-feedback');
+            fb.style.display = "block";
+            let errors = [];
+
+            for (let i = 0; i < 4; i++) {
+                const zone = document.getElementById(`l5-zone-${i}`);
+                const expected = zone.dataset.expected;
+                const child = zone.children[0];
+
+                if (child && child.dataset.val === expected) {
+                    score++;
+                } else if (child) {
+                    errors.push(`Slot ${i + 1}: got '${child.dataset.val}', but expected different parenthesized layout.`);
+                    document.getElementById('l5-pool').appendChild(child);
+                }
+            }
+
+            document.getElementById('l5-score').textContent = score;
+            if (score === 4) {
+                fb.className = "game-feedback correct";
+                fb.innerHTML = "<strong>🎉 Correct!</strong> Operator precedence brackets matched successfully. Overrides resolve expressions correctly!";
+            } else {
+                fb.className = "game-feedback wrong";
+                fb.innerHTML = `<strong>💥 Verification failed!</strong> Misplaced bracket groups returned to pool.<br>Errors:<br><ul><li>${errors.join('</li><li>') || 'Some expression slots are empty.'}</li></ul>`;
+                document.getElementById('l5-game').classList.add('shake');
+                setTimeout(() => { document.getElementById('l5-game').classList.remove('shake'); }, 450);
+                shufflePools();
+            }
+        }
+
+        window.addEventListener("load", initDragAndDrop);
+    </script>
+</body>
+
+</html>
