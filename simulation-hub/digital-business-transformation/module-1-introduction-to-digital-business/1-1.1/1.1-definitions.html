@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.1 Definitions - Digital Business</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #fef2f2;
+      --bg-panel: #ffffff;
+      --border-color: #fca5a5;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --accent: #ef4444;
+      --accent-hover: #dc2626;
+      
+      --color-trad: #8b5cf6;
+      --color-digi: #10b981;
+      --color-ecom: #3b82f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Layout */
+    .layout { display: flex; width: 100%; height: 100%; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 400px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color);
+      display: flex; flex-direction: column; z-index: 10; box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    }
+
+    .header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); background-color: var(--accent); color: white; }
+    .back-link {
+      color: #fee2e2; text-decoration: none; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: white; }
+    .header h2 { font-size: 1.25rem; font-weight: 700; }
+
+    .levels {
+      padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; border-bottom: 1px solid var(--border-color);
+    }
+    .level-btn {
+      background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
+      padding: 0.75rem 1rem; border-radius: 8px; text-align: left; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .level-btn:hover { background: var(--bg-main); color: var(--text-main); }
+    .level-btn.active { background: #fee2e2; border-color: var(--accent); color: var(--accent-hover); }
+
+    .explanation-box { padding: 1.5rem; flex: 1; overflow-y: auto; }
+    .explanation-box h3 { margin-bottom: 1rem; color: var(--accent); font-size: 1.1rem; }
+    .explanation-box p { color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; font-size: 0.95rem; }
+    .explanation-box strong { color: var(--text-main); }
+
+    /* Main Area */
+    .main-area {
+      flex: 1; position: relative; display: flex; flex-direction: column;
+      background: radial-gradient(circle at center, #ffffff 0%, #fef2f2 100%);
+    }
+
+    /* Simulation Containers */
+    .sim-container {
+      display: none; width: 100%; height: 100%; flex-direction: column;
+      align-items: center; justify-content: center; position: absolute; top: 0; left: 0;
+    }
+    .sim-container.active { display: flex; }
+
+    /* SIM 1: Swipe Cards */
+    .legend { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    .legend span { display: flex; align-items: center; gap: 0.5rem; }
+    .legend-color { width: 12px; height: 12px; border-radius: 50%; }
+    
+    .swipe-container { position: relative; width: 360px; height: 460px; perspective: 1000px; z-index: 5; }
+    .card-stack { position: absolute; width: 100%; height: 100%; }
+    
+    .swipe-card {
+      position: absolute; width: 100%; height: 100%; background: #ffffff;
+      border-radius: 24px; box-shadow: 0 20px 40px -10px rgba(239, 68, 68, 0.2);
+      border: 2px solid var(--border-color); display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 2.5rem; text-align: center;
+      cursor: grab; user-select: none; transform-origin: 50% 100%;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    }
+    .swipe-card.dragging { transition: none; cursor: grabbing; box-shadow: 0 30px 60px -12px rgba(239, 68, 68, 0.4); }
+    .card-icon { width: 80px; height: 80px; margin-bottom: 1.5rem; color: var(--accent); background: #fee2e2; padding: 15px; border-radius: 50%; }
+    .card-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; }
+    .card-desc { font-size: 1.05rem; color: var(--text-muted); line-height: 1.5; font-weight: 500; }
+    
+    .stamp {
+      position: absolute; top: 40px; padding: 0.4rem 1.2rem; border-radius: 8px; font-size: 1.5rem; font-weight: 800;
+      text-transform: uppercase; opacity: 0; transform: scale(0.5); transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+    }
+    .stamp-left { right: 20px; color: var(--color-trad); border: 4px solid var(--color-trad); transform: rotate(15deg) scale(0.5); }
+    .stamp-right { left: 20px; color: var(--color-ecom); border: 4px solid var(--color-ecom); transform: rotate(-15deg) scale(0.5); }
+    .stamp-up { top: auto; bottom: 40px; left: 50%; color: var(--color-digi); border: 4px solid var(--color-digi); transform: translateX(-50%) rotate(-5deg) scale(0.5); }
+    .swipe-card.dragging-left .stamp-left { opacity: 1; transform: rotate(15deg) scale(1); }
+    .swipe-card.dragging-right .stamp-right { opacity: 1; transform: rotate(-15deg) scale(1); }
+    .swipe-card.dragging-up .stamp-up { opacity: 1; transform: translateX(-50%) rotate(-5deg) scale(1); }
+
+    /* SIM 2: Drag & Drop Builder */
+    .builder-area { display: flex; width: 80%; height: 70%; gap: 2rem; }
+    .inventory { width: 30%; background: white; border: 2px dashed var(--border-color); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; }
+    .inventory h4 { text-align: center; color: var(--text-muted); margin-bottom: 1rem; }
+    
+    .draggable-item {
+      background: var(--bg-main); border: 2px solid var(--border-color); padding: 1rem;
+      border-radius: 8px; font-weight: 600; cursor: grab; text-align: center;
+      transition: transform 0.2s;
+    }
+    .draggable-item:active { cursor: grabbing; transform: scale(1.05); }
+    
+    .dropzones { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
+    .dropzone {
+      flex: 1; background: white; border: 3px solid #e5e7eb; border-radius: 12px;
+      padding: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; align-content: flex-start;
+      transition: background 0.3s, border-color 0.3s; position: relative;
+    }
+    .dropzone.drag-over { background: #fee2e2; border-color: var(--accent); }
+    .dropzone h4 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #d1d5db; font-size: 2rem; pointer-events: none; }
+    
+    .dropzone .draggable-item { z-index: 2; }
+    .dz-title { width: 100%; font-size: 1.2rem; font-weight: 800; color: var(--text-main); z-index: 2; margin-bottom: 0.5rem; }
+
+    .validation-msg { position: absolute; bottom: 20px; font-weight: 700; font-size: 1.2rem; }
+
+    /* SIM 3: Scaling Chart */
+    .chart-container { width: 80%; height: 500px; background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 2rem; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    #scaleCanvas { width: 100%; height: 100%; }
+    
+    .chart-controls { width: 80%; margin-top: 2rem; background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid var(--border-color); display: flex; align-items: center; gap: 2rem; }
+    .slider-group { flex: 1; }
+    .slider-group label { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.5rem; }
+    .slider { width: 100%; -webkit-appearance: none; appearance: none; height: 8px; border-radius: 4px; background: #e5e7eb; outline: none; }
+    .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+  </style>
+</head>
+<body>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="header">
+        <a href="../index.html" class="back-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Back to Hub
+        </a>
+        <h2>1.1 Definitions</h2>
+      </div>
+      
+      <div class="levels">
+        <button class="level-btn active" id="btn-lvl-1" onclick="loadLevel(1)">Sim 1: Concept Sorter</button>
+        <button class="level-btn" id="btn-lvl-2" onclick="loadLevel(2)">Sim 2: Supply Chain Builder</button>
+        <button class="level-btn" id="btn-lvl-3" onclick="loadLevel(3)">Sim 3: The Scaling Engine</button>
+      </div>
+
+      <div class="explanation-box" id="explanation"></div>
+    </aside>
+
+    <main class="main-area">
+      <!-- SIMULATION 1: Swipe Cards -->
+      <div class="sim-container active" id="sim-1">
+        <div class="legend">
+          <span><div class="legend-color" style="background: var(--color-trad)"></div> Traditional (Left)</span>
+          <span><div class="legend-color" style="background: var(--color-digi)"></div> Digital Business (Up)</span>
+          <span><div class="legend-color" style="background: var(--color-ecom)"></div> E-Commerce (Right)</span>
+        </div>
+        <div class="swipe-container"><div id="card-stack" class="card-stack"></div></div>
+      </div>
+
+      <!-- SIMULATION 2: Drag and Drop -->
+      <div class="sim-container" id="sim-2">
+        <h2 style="margin-bottom: 2rem; color: var(--text-main);">Build the Business Models</h2>
+        <div class="builder-area">
+          <div class="inventory" id="inventory" ondragover="allowDrop(event)" ondrop="drop(event, 'inventory')">
+            <h4>Components</h4>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-1" data-target="trad">Brick & Mortar Store</div>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-2" data-target="digi">Cloud CRM</div>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-3" data-target="trad">Paper Ledgers</div>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-4" data-target="digi">Automated API</div>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-5" data-target="trad">Manual Filing</div>
+            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item-6" data-target="digi">E-commerce Frontend</div>
+          </div>
+          <div class="dropzones">
+            <div class="dropzone" id="dz-trad" ondragover="allowDrop(event)" ondrop="drop(event, 'trad')">
+              <div class="dz-title">Traditional Model</div>
+              <h4>Drop Here</h4>
+            </div>
+            <div class="dropzone" id="dz-digi" ondragover="allowDrop(event)" ondrop="drop(event, 'digi')">
+              <div class="dz-title">Digital Model</div>
+              <h4>Drop Here</h4>
+            </div>
+          </div>
+        </div>
+        <div class="validation-msg" id="sim-2-msg"></div>
+      </div>
+
+      <!-- SIMULATION 3: Scaling Engine -->
+      <div class="sim-container" id="sim-3">
+        <h2 style="margin-bottom: 1rem; color: var(--text-main);">Cost vs Scale Dynamics</h2>
+        <div class="chart-container">
+          <canvas id="scaleCanvas"></canvas>
+        </div>
+        <div class="chart-controls">
+          <div class="slider-group">
+            <label>Customer Volume <span id="lbl-customers" style="color: var(--accent)">100</span></label>
+            <input type="range" id="sl-customers" class="slider" min="10" max="1000" value="100" oninput="updateChart()">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const levelsData = {
+      1: {
+        title: "Concept Sorter",
+        desc: "<p>Let's define the fundamental difference between traditional and digital models.</p><p><strong>Traditional Business</strong> relies on physical presence and manual processes.</p><p><strong>Digital Business</strong> leverages technology to automate processes.</p><p><strong>E-Commerce</strong> specifically involves buying/selling online.</p><p><em>Swipe the cards to classify them correctly.</em></p>"
+      },
+      2: {
+        title: "Supply Chain Builder",
+        desc: "<p>Now let's look at how these businesses are built structurally.</p><p>Traditional businesses rely on physical assets and manual labor, which are hard to scale.</p><p>Digital businesses replace physical bottlenecks with software and automation.</p><p><em>Drag and drop the components into the correct business model to see if you understand the architecture.</em></p>"
+      },
+      3: {
+        title: "The Scaling Engine",
+        desc: "<p>Why do digital definitions matter? Because of <strong>Scale</strong>.</p><p>In a traditional business, to get 10x more customers, you usually need 10x more staff, physical space, and materials. Costs scale linearly with revenue.</p><p>In a digital business, adding another customer costs almost zero (marginal cost is zero). Software scales infinitely.</p><p><em>Adjust the Customer Volume slider and observe how Costs behave for both models.</em></p>"
+      }
+    };
+
+    function loadLevel(level) {
+      document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('btn-lvl-' + level).classList.add('active');
+      
+      document.querySelectorAll('.sim-container').forEach(c => c.classList.remove('active'));
+      document.getElementById('sim-' + level).classList.add('active');
+      
+      const exp = document.getElementById('explanation');
+      exp.innerHTML = '<h3>' + levelsData[level].title + '</h3>' + levelsData[level].desc;
+      
+      if(level === 1) initSim1();
+      if(level === 3) { setTimeout(initSim3, 100); } // slight delay to ensure canvas is visible for measurements
+    }
+
+    // --- SIMULATION 1: Swipe Cards ---
+    const iconStore = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/></svg>';
+    const iconCart = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>';
+    const iconIntegration = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>';
+
+    const cardsData = [
+      { title: "Local Bakery", desc: "Sells bread to walk-in customers only.", type: "left", icon: iconStore },
+      { title: "Supplier Portal", desc: "A manufacturer sharing real-time inventory with suppliers.", type: "up", icon: iconIntegration },
+      { title: "Amazon Purchase", desc: "Buying a book online from Amazon.", type: "right", icon: iconCart }
+    ];
+    let currentCardIndex = 0;
+    
+    function initSim1() {
+      currentCardIndex = 0;
+      renderCards();
+    }
+
+    function renderCards() {
+      const stack = document.getElementById('card-stack');
+      stack.innerHTML = '';
+      
+      for (let i = cardsData.length - 1; i >= currentCardIndex; i--) {
+        const s = cardsData[i];
+        const offset = i - currentCardIndex;
+
+        const card = document.createElement('div');
+        card.className = 'swipe-card';
+        card.dataset.type = s.type;
+        card.dataset.index = i;
+        card.style.transform = 'scale(' + (1 - offset * 0.05) + ') translateY(' + (offset * 15) + 'px)';
+        card.style.zIndex = cardsData.length - offset;
+        
+        card.innerHTML = 
+          '<div class="stamp stamp-left">Traditional</div>' +
+          '<div class="stamp stamp-up">Digital Bus.</div>' +
+          '<div class="stamp stamp-right">E-Commerce</div>' +
+          '<div class="card-icon">' + s.icon + '</div>' +
+          '<div class="card-title">' + s.title + '</div>' +
+          '<div class="card-desc">' + s.desc + '</div>';
+        
+        if (offset === 0) initDrag(card);
+        stack.appendChild(card);
+      }
+
+      if (currentCardIndex >= cardsData.length) {
+        stack.innerHTML = 
+          '<div class="swipe-card" style="border-color: #10b981; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);">' +
+            '<div class="card-icon" style="color: #10b981; background: #ecfdf5;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>' +
+            '<div class="card-title">Sorter Complete!</div>' +
+            '<div class="card-desc">Move to Simulation 2 from the sidebar.</div>' +
+          '</div>';
+      }
+    }
+
+    function handleSwipe(direction, card) {
+      let x = direction === 'left' ? -800 : direction === 'right' ? 800 : 0;
+      let y = direction === 'up' ? -800 : 0;
+      let rot = direction === 'left' ? -45 : direction === 'right' ? 45 : 0;
+      
+      card.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease';
+      card.style.transform = 'translate(' + x + 'px, ' + y + 'px) rotate(' + rot + 'deg)';
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        currentCardIndex++;
+        renderCards();
+      }, 300);
+    }
+
+    function initDrag(card) {
+      let isDragging = false;
+      let startX, startY;
+
+      const onMove = (e) => {
+        if (!isDragging) return;
+        const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+        const y = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
+        const deltaX = x - startX;
+        const deltaY = y - startY;
+        const rot = deltaX * 0.05;
+        
+        card.style.transform = 'translate(' + deltaX + 'px, ' + deltaY + 'px) rotate(' + rot + 'deg)';
+        card.classList.remove('dragging-left', 'dragging-right', 'dragging-up');
+        if (deltaX < -80) card.classList.add('dragging-left');
+        else if (deltaX > 80) card.classList.add('dragging-right');
+        else if (deltaY < -80) card.classList.add('dragging-up');
+      };
+
+      const onEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.classList.remove('dragging', 'dragging-left', 'dragging-right', 'dragging-up');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onEnd);
+
+        const transformStr = card.style.transform;
+        const matchX = transformStr.match(/translate\(([-\d.]+)px/);
+        const matchY = transformStr.match(/,\s*([-\d.]+)px\)/);
+        const dx = matchX ? parseFloat(matchX[1]) : 0;
+        const dy = matchY ? parseFloat(matchY[1]) : 0;
+
+        if (dx < -100) handleSwipe('left', card);
+        else if (dx > 100) handleSwipe('right', card);
+        else if (dy < -100) handleSwipe('up', card);
+        else card.style.transform = 'translate(0px, 0px) rotate(0deg)';
+      };
+
+      const onStart = (e) => {
+        isDragging = true;
+        card.classList.add('dragging');
+        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+      };
+      card.addEventListener('mousedown', onStart);
+    }
+
+    // --- SIMULATION 2: Drag & Drop ---
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+    
+    function allowDrop(ev) {
+      ev.preventDefault();
+      const dz = ev.target.closest('.dropzone') || ev.target.closest('.inventory');
+      if(dz) dz.classList.add('drag-over');
+    }
+
+    function drop(ev, targetZoneId) {
+      ev.preventDefault();
+      document.querySelectorAll('.dropzone, .inventory').forEach(el => el.classList.remove('drag-over'));
+      
+      var data = ev.dataTransfer.getData("text");
+      var item = document.getElementById(data);
+      
+      const zone = document.getElementById(targetZoneId === 'inventory' ? 'inventory' : 'dz-' + targetZoneId);
+      if(zone) {
+        zone.appendChild(item);
+        checkSim2Completion();
+      }
+    }
+
+    document.addEventListener('dragleave', (ev) => {
+      const dz = ev.target.closest('.dropzone') || ev.target.closest('.inventory');
+      if(dz) dz.classList.remove('drag-over');
+    });
+
+    function checkSim2Completion() {
+      const tradZone = document.getElementById('dz-trad');
+      const digiZone = document.getElementById('dz-digi');
+      
+      let allCorrect = true;
+      let totalPlaced = 0;
+
+      tradZone.querySelectorAll('.draggable-item').forEach(item => {
+        totalPlaced++;
+        if(item.dataset.target !== 'trad') allCorrect = false;
+      });
+      digiZone.querySelectorAll('.draggable-item').forEach(item => {
+        totalPlaced++;
+        if(item.dataset.target !== 'digi') allCorrect = false;
+      });
+
+      const msg = document.getElementById('sim-2-msg');
+      if(totalPlaced === 6) {
+        if(allCorrect) {
+          msg.innerText = "Correct! You successfully architected both models.";
+          msg.style.color = "#10b981";
+        } else {
+          msg.innerText = "Incorrect placement. Review the components.";
+          msg.style.color = "#ef4444";
+        }
+      } else {
+        msg.innerText = "";
+      }
+    }
+
+    // --- SIMULATION 3: Scaling Chart ---
+    let canvas, ctx, cWidth, cHeight;
+    function initSim3() {
+      canvas = document.getElementById('scaleCanvas');
+      ctx = canvas.getContext('2d');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width - 64; // accounting for padding
+      canvas.height = rect.height - 64;
+      cWidth = canvas.width;
+      cHeight = canvas.height;
+      updateChart();
+    }
+
+    function updateChart() {
+      if(!ctx) return;
+      const customers = parseInt(document.getElementById('sl-customers').value);
+      document.getElementById('lbl-customers').innerText = customers;
+
+      ctx.clearRect(0, 0, cWidth, cHeight);
+      
+      // Axes
+      ctx.beginPath();
+      ctx.moveTo(40, 20); ctx.lineTo(40, cHeight - 40); ctx.lineTo(cWidth - 20, cHeight - 40);
+      ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 2; ctx.stroke();
+      
+      ctx.fillStyle = '#6b7280'; ctx.font = '12px Inter';
+      ctx.fillText('Cost', 10, 20);
+      ctx.fillText('Customers', cWidth - 80, cHeight - 10);
+
+      // Math logic for curves (normalized for canvas size)
+      // Max customers = 1000. Max cost for traditional = 1000 * 5 = 5000.
+      const maxCost = 6000; 
+      
+      // Draw Traditional Line (Cost = Customers * 5)
+      ctx.beginPath();
+      ctx.moveTo(40, cHeight - 40);
+      let tradY = cHeight - 40 - ((customers * 5) / maxCost) * (cHeight - 60);
+      let plotX = 40 + (customers / 1000) * (cWidth - 80);
+      ctx.lineTo(plotX, tradY);
+      ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 4; ctx.stroke();
+
+      // Draw Digital Line (Cost = 1000 base + Customers * 0.5)
+      ctx.beginPath();
+      let digiBaseY = cHeight - 40 - (1000 / maxCost) * (cHeight - 60);
+      ctx.moveTo(40, digiBaseY);
+      let digiY = cHeight - 40 - ((1000 + customers * 0.5) / maxCost) * (cHeight - 60);
+      ctx.lineTo(plotX, digiY);
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4; ctx.stroke();
+
+      // Labels at end of lines
+      if(customers > 100) {
+        ctx.fillStyle = '#8b5cf6'; ctx.font = 'bold 14px Inter';
+        ctx.fillText('Traditional', plotX + 10, tradY);
+        
+        ctx.fillStyle = '#10b981';
+        ctx.fillText('Digital', plotX + 10, digiY);
+      }
+    }
+
+    // Window resize handling for canvas
+    window.addEventListener('resize', () => {
+      if(currentLevel === 3) initSim3();
+    });
+
+    window.onload = () => loadLevel(1);
+  </script>
+</body>
+</html>
