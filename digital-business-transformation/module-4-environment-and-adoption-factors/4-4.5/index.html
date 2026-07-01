@@ -1851,31 +1851,20 @@
                 </div>
             </div>
 
-            <!-- Stepper Progress Tracker -->
             <div class="stepper">
                 <div class="step-item unlocked active" id="step-btn-1" onclick="navigateToLevel(1)">
                     <span class="step-badge">1</span>
-                    <span>Route Architect</span>
+                    <span>Payment Flow</span>
                 </div>
                 <div class="step-divider" id="step-div-1"></div>
                 <div class="step-item" id="step-btn-2" onclick="navigateToLevel(2)">
                     <span class="step-badge">🔒</span>
-                    <span>Fraud Analyst</span>
+                    <span>Secure Transactions</span>
                 </div>
                 <div class="step-divider" id="step-div-2"></div>
                 <div class="step-item" id="step-btn-3" onclick="navigateToLevel(3)">
                     <span class="step-badge">🔒</span>
-                    <span>Cyber Defense</span>
-                </div>
-                <div class="step-divider" id="step-div-3"></div>
-                <div class="step-item" id="step-btn-4" onclick="navigateToLevel(4)">
-                    <span class="step-badge">🔒</span>
-                    <span>Legal Advisor</span>
-                </div>
-                <div class="step-divider" id="step-div-4"></div>
-                <div class="step-item" id="step-btn-5" onclick="navigateToLevel(5)">
-                    <span class="step-badge">🔒</span>
-                    <span>FinTech Console</span>
+                    <span>Strategic Decisions</span>
                 </div>
             </div>
         </div>
@@ -1890,28 +1879,28 @@
             <div
                 style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
                 <h3
-                    style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">
+                    style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">
                     📘 Strategic Reference Board: Payment Security & Cyber Laws (Module 4.5)
                 </h3>
                 <button class="btn btn-secondary" id="btn-toggle-theory" onclick="toggleTheorySection()"
                     style="font-size: 0.75rem; padding: 4px 10px; height: auto;">Hide Reference</button>
             </div>
             <div id="theory-content"
-                style="font-size: 0.88rem; line-height: 1.6; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: var(--text-dark);">
+                style="font-size: 0.85rem; line-height: 1.6; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; color: var(--text-dark);">
                 <div>
-                    <p style="margin-bottom: 10px;"><strong>1. Payment Infrastructure:</strong> Secure financial systems
-                        rely on encrypted payment gateways, 3D authentication, bank settlement loops, and direct instant
-                        payment APIs (like UPI).</p>
-                    <p><strong>2. Data Protection (GDPR/DPDP):</strong> Statutory acts require strict user consent
-                        parameters, explicit rights to data erasure, and localized cloud encryption storage to ensure
-                        user privacy.</p>
+                    <h4 style="color: var(--accent-blue); margin-bottom: 6px; font-family: var(--font-display); font-size: 0.95rem;">💳 Digital Payment Systems</h4>
+                    <p style="margin-bottom: 8px;"><strong>Infrastructure:</strong> routes funds via credit/debit cards, digital wallets, and payment gateways.</p>
+                    <p><strong>Payment Gateway:</strong> encrypts card credentials, contacts acquiring networks, and handles settlement clearing loops.</p>
                 </div>
                 <div>
-                    <p style="margin-bottom: 10px;"><strong>3. Cyber Laws & Liabilities:</strong> Laws establish strict
-                        legal liabilities for unauthorized data exposures, identity theft, and lack of transaction
-                        logging.</p>
-                    <p><strong>4. Security Operations:</strong> CDPOs balance speed of payment checkouts against fraud
-                        prevention metrics, firewalls, and tokenized APIs to defend networks against threats.</p>
+                    <h4 style="color: var(--accent-blue); margin-bottom: 6px; font-family: var(--font-display); font-size: 0.95rem;">🛡️ Secure Financial Environments</h4>
+                    <p style="margin-bottom: 8px;"><strong>Protocols:</strong> combine SSL/TLS encryption, digital certificates, OTPs, and 2FA to guarantee non-repudiation and integrity.</p>
+                    <p><strong>Tokenization:</strong> replaces sensitive primary account numbers (PAN) with unique gateway-issued transaction tokens.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--accent-blue); margin-bottom: 6px; font-family: var(--font-display); font-size: 0.95rem;">⚖️ Data Protection, Privacy & Cyber Laws</h4>
+                    <p style="margin-bottom: 8px;"><strong>Privacy & Consent:</strong> Data protection rules require explicit user consent, conspicuous privacy notices, and user opt-in options.</p>
+                    <p><strong>Cyber Laws:</strong> establish statutory civil/criminal liability for negligent data breaches, credentials theft, and fraudulent transactions.</p>
                 </div>
             </div>
         </section>
@@ -1935,15 +1924,12 @@
                         records. Your executive mission is simple but highly challenging:</p>
 
                     <div class="memo-highlight">
-                        Build a frictionless transaction routing system, configure real-time fraud classification rules,
-                        defend our network servers against active cyberattack campaigns, and enforce compliance
-                        parameters to satisfy stringent regulatory cyber laws.
+                        Build a secure digital payment routing system, validate and verify transaction environments, and make compliant strategic privacy and data protection decisions under current cyber laws.
                     </div>
 
-                    <p>The regulatory guidelines require sequential platform validation. You must complete five
-                        technical levels, auditing transactions, applying security tools, and steering PaySphere through
-                        a 30-day corporate simulation. The Board expects maximum Security, Trust, Compliance, and
-                        Transaction Success.</p>
+                    <p>The regulatory guidelines require sequential platform validation. You must complete three
+                        technical levels to satisfy the board's security objectives: <strong>Digital Payment Flow</strong>, 
+                        <strong>Secure Transactions environment validator</strong>, and <strong>Privacy & Legal Decision Making</strong>. The Board expects maximum Security, Customer Trust, and Legal Compliance.</p>
                     <p>Operations begin immediately. Access the command panels below.</p>
                 </div>
                 <div class="btn-group">
@@ -1952,46 +1938,24 @@
             </div>
         </section>
 
-        <!-- LEVEL 1: Payment Route Architect -->
+        <!-- LEVEL 1: Digital Payment Architect -->
         <section id="screen-l1" class="screen">
             <div class="card">
                 <div class="card-header-bar">
-                    <div class="card-title">Level 1: Payment Route Architect</div>
+                    <div class="card-title">Level 1: Digital Payment Architect</div>
                     <span class="l1-slot-label">Digital Transaction Pipelines</span>
                 </div>
 
                 <div class="objective-box">
-                    <strong>Objective</strong>
-                    Digital payment networks move funds securely through a precise sequence of gateway, acquiring, and
-                    issuing interfaces. Select a transaction pathway (UPI, Credit Card, etc.) and arrange the
-                    transaction steps in the correct chronological order on the right. Verify the routing to watch money
-                    flow through the network.
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Active Payment
-                        Instrument:</label>
-                    <div class="l1-selector-bar" id="l1-selector-bar">
-                        <button class="l1-selector-btn active" onclick="selectL1Instrument('upi')">UPI Payment</button>
-                        <button class="l1-selector-btn" onclick="selectL1Instrument('credit-card')">Credit Card
-                            Authorization</button>
-                        <button class="l1-selector-btn" onclick="selectL1Instrument('debit-card')">Debit Card
-                            Clearance</button>
-                        <button class="l1-selector-btn" onclick="selectL1Instrument('mobile-wallet')">Mobile Wallet
-                            Settlement</button>
-                        <button class="l1-selector-btn" onclick="selectL1Instrument('net-banking')">Net Banking
-                            Transfer</button>
-                        <button class="l1-selector-btn" onclick="selectL1Instrument('qr')">QR Scan Payment</button>
-                    </div>
+                    <strong>Objective:</strong>
+                    <p>Digital payment networks move funds securely through a precise sequence of gateway, acquiring, issuing, and verification interfaces. Arrange the electronic transaction steps in the correct chronological order on the right. Verify the routing to watch money flow through the network.</p>
                 </div>
 
                 <div class="l1-container">
                     <!-- Left: Scrambled Steps Pool -->
                     <div class="l1-builder-zone">
-                        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700;">Scrambled
-                            Journey Steps</h3>
-                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -8px;">Click cards below to
-                            move them into the slot builder sequence:</p>
+                        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700;">Scrambled Journey Steps</h3>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -8px;">Click cards below to move them into the slot builder sequence:</p>
                         <div class="l1-cards-pool" id="l1-cards-pool">
                             <!-- Injected by JS -->
                         </div>
@@ -1999,21 +1963,18 @@
 
                     <!-- Right: Slot Builder -->
                     <div class="l1-builder-zone">
-                        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700;">Route Assembly
-                            Board</h3>
-                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -8px;">Chronological
-                            sequence (Click items to remove):</p>
+                        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700;">Route Assembly Board</h3>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -8px;">Chronological sequence (Click items to remove):</p>
                         <div class="l1-slots-container" id="l1-slots-container">
                             <!-- Slots created by JS -->
                         </div>
                     </div>
 
                     <!-- Animation Display (Shown after correct verify) -->
-                    <div class="l1-animation-panel" id="l1-animation-panel">
-                        <h3
-                            style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 8px;">
+                    <div class="l1-animation-panel" id="l1-animation-panel" style="display: none; flex-direction: column; gap: 15px; margin-top: 20px;">
+                        <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
                             <span>⚡ Live Routing Trace:</span>
-                            <span id="l1-anim-instrument" style="color: var(--success);">UPI Flow</span>
+                            <span id="l1-anim-instrument" style="color: var(--success);">Card Payment Flow</span>
                         </h3>
                         <div class="network-map">
                             <div class="network-link-container">
@@ -2024,511 +1985,220 @@
                                 <div class="node-label">Customer</div>
                             </div>
                             <div class="network-node" id="node-2">
-                                <div class="node-icon">📱</div>
-                                <div class="node-label">App Interface</div>
+                                <div class="node-icon">🏪</div>
+                                <div class="node-label">Merchant Website</div>
                             </div>
                             <div class="network-node" id="node-3">
                                 <div class="node-icon">🌐</div>
-                                <div class="node-label">Gateway</div>
+                                <div class="node-label">Payment Gateway</div>
                             </div>
                             <div class="network-node" id="node-4">
-                                <div class="node-icon">🏛️</div>
-                                <div class="node-label">Clearing House</div>
+                                <div class="node-icon">🏦</div>
+                                <div class="node-label">Acquiring Bank</div>
                             </div>
                             <div class="network-node" id="node-5">
+                                <div class="node-icon">⛓️</div>
+                                <div class="node-label">Card Network</div>
+                            </div>
+                            <div class="network-node" id="node-6">
                                 <div class="node-icon">🏦</div>
                                 <div class="node-label">Issuing Bank</div>
                             </div>
-                            <div class="network-node" id="node-6">
-                                <div class="node-icon">🏪</div>
-                                <div class="node-label">Merchant</div>
+                            <div class="network-node" id="node-7">
+                                <div class="node-icon">⚙️</div>
+                                <div class="node-label">Auth Server</div>
+                            </div>
+                            <div class="network-node" id="node-8">
+                                <div class="node-icon">💰</div>
+                                <div class="node-label">Settlement</div>
+                            </div>
+                            <div class="network-node" id="node-9">
+                                <div class="node-icon">✉️</div>
+                                <div class="node-label">Confirmation</div>
                             </div>
                         </div>
-                        <div class="l1-explanation-card" id="l1-explanation-card">
-                            Active Step Trace: Select verify to monitor pipeline latency and bank logs.
+                        <div class="l1-explanation-card" id="l1-explanation-card" style="background-color: #262626; border: 1px solid #333333; border-left: 4px solid var(--success); padding: 16px; border-radius: var(--radius-md); font-size: 0.88rem; color: var(--white);">
+                            Active Step Trace: Click Verify to monitor pipeline latency and bank logs.
                         </div>
                     </div>
                 </div>
 
-                <div class="bottom-nav">
+                <div class="bottom-nav" style="display: flex; gap: 12px; margin-top: 15px;">
                     <button class="btn btn-secondary" onclick="resetLevel1()">Reset Board</button>
-                    <button class="btn" id="l1-submit-btn" onclick="verifyLevel1Routing()">Verify Routing
-                        Sequence</button>
+                    <button class="btn" id="l1-submit-btn" onclick="verifyLevel1Routing()">Verify Routing Sequence</button>
                 </div>
             </div>
         </section>
 
-        <!-- LEVEL 2: Fraud Detection Center -->
+        <!-- LEVEL 2: Secure Transaction Validator -->
         <section id="screen-l2" class="screen">
             <div class="card">
                 <div class="card-header-bar">
-                    <div class="card-title">Level 2: Fraud Detection Center</div>
-                    <span class="l1-slot-label"
-                        style="background-color: var(--warning-light); color: var(--warning);">Security Level:
-                        Elevated</span>
+                    <div class="card-title">Level 2: Secure Transaction Validator</div>
+                    <span class="l1-slot-label" style="background-color: var(--warning-light); color: var(--warning);">Security Level: Elevated</span>
                 </div>
 
                 <div class="objective-box">
-                    <strong>Objective</strong>
-                    Monitor the live PaySphere transaction ledger. Analyze incoming transaction profiles for indicators
-                    of financial crime (such as velocity limits, anomalous IP addresses, card credentials attacks, or
-                    suspicious geolocation splits). Classify all 5 profiles as Safe, Suspicious, or High Risk, and
-                    assign the appropriate operations action.
+                    <strong>Objective:</strong>
+                    <p>Review 5 online payment transaction profiles. Classify each as <strong>Secure</strong>, <strong>Risky</strong>, or <strong>Fraudulent</strong>. For risky profiles, select the appropriate protection response (e.g. enable encryption, verify digital certificates, or require OTP/2FA) to maintain customer trust and transaction integrity.</p>
                 </div>
 
-                <div class="l2-container">
+                <div class="l2-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <!-- Left: Log List -->
-                    <div class="l2-grid" id="l2-log-grid">
-                        <!-- Injected by JS -->
+                    <div>
+                        <h4 style="margin-bottom: 12px; font-family: var(--font-display); color: var(--text-dark);">Transaction Profiles Ledger</h4>
+                        <div class="l2-grid" id="l2-log-grid" style="display: flex; flex-direction: column; gap: 12px;">
+                            <!-- Injected by JS -->
+                        </div>
                     </div>
 
                     <!-- Right: Analysis Panel -->
-                    <div class="l2-sidebar" id="l2-analysis-panel">
-                        <div class="l2-sidebar-title">Select a transaction to inspect</div>
+                    <div class="l2-sidebar" id="l2-analysis-panel" style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-lg);">
+                        <div class="l2-sidebar-title" id="l2-sidebar-title" style="font-family: var(--font-display); font-weight: 700; color: var(--text-dark); margin-bottom: 12px;">Select a profile to validate</div>
                         <div id="l2-sidebar-content" style="display: none; flex-direction: column; gap: 16px;">
-                            <div
-                                style="background-color: var(--bg-light); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                                <table class="tx-details-table">
-                                    <tr>
-                                        <td>ID</td>
-                                        <td id="det-id">TX-101</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Amount</td>
-                                        <td id="det-amount">₹500</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Location</td>
-                                        <td id="det-loc">Mumbai</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Time</td>
-                                        <td id="det-time">2:00 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Device Profile</td>
-                                        <td id="det-dev">Android</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Failed Attempts</td>
-                                        <td id="det-attempts">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Historical Pattern</td>
-                                        <td id="det-pattern">Matches average usage</td>
-                                    </tr>
+                            <div style="background-color: var(--white); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                <table class="tx-details-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                                    <tr style="border-bottom: 1px solid var(--bg-light);"><td style="padding: 6px 0; font-weight: 600; color: var(--text-muted);">ID</td><td id="det-id" style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--primary-red);">TX-101</td></tr>
+                                    <tr style="border-bottom: 1px solid var(--bg-light);"><td style="padding: 6px 0; font-weight: 600; color: var(--text-muted);">Amount</td><td id="det-amount" style="text-align: right; font-weight: 700;">₹500</td></tr>
+                                    <tr style="border-bottom: 1px solid var(--bg-light);"><td style="padding: 6px 0; font-weight: 600; color: var(--text-muted);">Location</td><td id="det-loc" style="text-align: right;">Mumbai</td></tr>
+                                    <tr style="border-bottom: 1px solid var(--bg-light);"><td style="padding: 6px 0; font-weight: 600; color: var(--text-muted);">Time</td><td id="det-time" style="text-align: right;">2:00 PM</td></tr>
+                                    <tr style="border-bottom: 1px solid var(--bg-light);"><td style="padding: 6px 0; font-weight: 600; color: var(--text-muted);">Details</td><td id="det-dev" style="text-align: right; font-size: 0.82rem;">HTTP Checkout</td></tr>
                                 </table>
                             </div>
 
                             <!-- Classification options -->
                             <div class="l2-form-group">
-                                <label>Risk Classification:</label>
-                                <div class="l2-choice-grid">
-                                    <button class="l2-choice-btn" data-type="class" data-val="safe"
-                                        onclick="setL2Classification('safe')">Safe</button>
-                                    <button class="l2-choice-btn" data-type="class" data-val="suspicious"
-                                        onclick="setL2Classification('suspicious')">Suspicious</button>
-                                    <button class="l2-choice-btn" data-type="class" data-val="high-risk"
-                                        onclick="setL2Classification('high-risk')">High Risk</button>
+                                <label style="font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 8px;">Risk Classification:</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-secondary l2-choice-risk" id="btn-l2-risk-secure" onclick="selectL2Risk('secure')" style="flex: 1; padding: 10px; font-size: 0.85rem;">Secure</button>
+                                    <button class="btn btn-secondary l2-choice-risk" id="btn-l2-risk-risky" onclick="selectL2Risk('risky')" style="flex: 1; padding: 10px; font-size: 0.85rem;">Risky</button>
+                                    <button class="btn btn-secondary l2-choice-risk" id="btn-l2-risk-fraudulent" onclick="selectL2Risk('fraudulent')" style="flex: 1; padding: 10px; font-size: 0.85rem;">Fraudulent</button>
                                 </div>
                             </div>
 
                             <!-- Action options -->
-                            <div class="l2-form-group">
-                                <label>Operations Deployment Action:</label>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                    <button class="l2-choice-btn" data-type="action" data-val="approve"
-                                        onclick="setL2Action('approve')">Approve</button>
-                                    <button class="l2-choice-btn" data-type="action" data-val="flag"
-                                        onclick="setL2Action('flag')">Flag & Hold</button>
-                                    <button class="l2-choice-btn" data-type="action" data-val="block"
-                                        onclick="setL2Action('block')">Block Account</button>
-                                    <button class="l2-choice-btn" data-type="action" data-val="investigate"
-                                        onclick="setL2Action('investigate')">Investigate</button>
+                            <div class="l2-form-group" id="l2-action-group" style="display: none;">
+                                <label style="font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 8px;">Recommended Protection / Response:</label>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button class="btn btn-secondary l2-choice-action" id="btn-l2-action-approve" onclick="selectL2Action('approve')">Approve (Valid Secure Checkout)</button>
+                                    <button class="btn btn-secondary l2-choice-action" id="btn-l2-action-encrypt" onclick="selectL2Action('encrypt')">Enable SSL/TLS Encryption</button>
+                                    <button class="btn btn-secondary l2-choice-action" id="btn-l2-action-certificate" onclick="selectL2Action('certificate')">Verify Digital Certificate</button>
+                                    <button class="btn btn-secondary l2-choice-action" id="btn-l2-action-mfa" onclick="selectL2Action('mfa')">Require OTP & Two-Factor Authentication</button>
+                                    <button class="btn btn-secondary l2-choice-action" id="btn-l2-action-reject" onclick="selectL2Action('reject')">Reject Transaction (Fraudulent Attempt)</button>
                                 </div>
                             </div>
 
-                            <button class="btn" style="width: 100%; font-size: 0.85rem;"
-                                onclick="saveL2Decision()">Record Analysis Decision</button>
+                            <button class="btn" style="width: 100%; font-size: 0.88rem; padding: 12px;" onclick="saveL2Decision()">Record Decision</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="bottom-nav">
+                <!-- Live validation dashboard -->
+                <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <h4 style="margin-bottom: 12px; font-family: var(--font-display); color: var(--text-dark);">Validator Performance Dashboard</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                        <div style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Transaction Security</span>
+                            <strong style="font-family: var(--font-display); font-size: 1.35rem; color: var(--primary-red);" id="l2SecurityVal">50%</strong>
+                        </div>
+                        <div style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Customer Trust</span>
+                            <strong style="font-family: var(--font-display); font-size: 1.35rem; color: var(--success);" id="l2TrustVal">50%</strong>
+                        </div>
+                        <div style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Payment Reliability</span>
+                            <strong style="font-family: var(--font-display); font-size: 1.35rem; color: var(--accent-blue);" id="l2ReliabilityVal">50%</strong>
+                        </div>
+                        <div style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Fraud Risk</span>
+                            <strong style="font-family: var(--font-display); font-size: 1.35rem; color: var(--warning);" id="l2FraudRiskVal">50%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification feedback panel -->
+                <div id="l2FeedbackPanel" style="display: none; background: var(--bg-light); border-left: 4px solid var(--primary-red); padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.88rem; line-height: 1.6;">
+                </div>
+
+                <div class="bottom-nav" style="display: flex; gap: 12px; margin-top: 15px;">
                     <button class="btn btn-secondary" onclick="resetLevel2()">Reset Ledger Decisions</button>
-                    <button class="btn" id="l2-submit-btn" onclick="verifyLevel2Decisions()" disabled>Submit Fraud
-                        Audit</button>
+                    <button class="btn" id="l2-submit-btn" onclick="verifyLevel2Decisions()" disabled>Verify Security Audit</button>
                 </div>
             </div>
         </section>
 
-        <!-- LEVEL 3: Cyberattack Defense Room -->
+        <!-- LEVEL 3: Privacy & Secure Payment Decision Simulator -->
         <section id="screen-l3" class="screen">
-            <div class="card">
+            <div class="card" id="l3-main-card">
                 <div class="card-header-bar">
-                    <div class="card-title">Level 3: Cyberattack Defense Room</div>
-                    <span class="l1-slot-label"
-                        style="background-color: var(--danger-light); color: var(--danger);">Intrusion Alerts
-                        Active</span>
+                    <div class="card-title">Level 3: Privacy & Secure Payment Decision Simulator</div>
+                    <span class="l1-slot-label" style="background-color: var(--accent-blue-light); color: var(--accent-blue);">Executive Decision Board</span>
                 </div>
 
                 <div class="objective-box">
-                    <strong>Objective</strong>
-                    Hackers are launching digital attack campaigns against the PaySphere core servers. An threat alert
-                    will trigger detailing the vector (Phishing, SQL Injection, malware payload, DDoS flow). Select the
-                    threatened server node on the map, then select the optimal defense protocol from your security
-                    arsenal. Defend all 5 nodes to secure the network.
+                    <strong>Objective:</strong>
+                    <p>As Digital Business Security Manager, navigate through 5 privacy and data protection scenarios. Keep your governance metrics in alignment: <strong>Customer Trust >= 50%</strong>, <strong>Payment Security >= 50%</strong>, <strong>Data Protection >= 50%</strong>, <strong>Privacy Compliance >= 50%</strong>, and <strong>Legal Compliance >= 50%</strong>.</p>
                 </div>
 
-                <!-- Threat warning bar -->
-                <div class="l3-alert-box" id="l3-threat-alert">
-                    <span class="l3-alert-icon">🚨</span>
-                    <div class="l3-alert-text">
-                        <span class="l3-alert-title" id="alert-title">INCOMING ATTACK VECTOR</span>
-                        <span class="l3-alert-desc" id="alert-desc">Monitor infrastructure for signals.</span>
-                    </div>
-                </div>
-
-                <div class="l3-container">
-                    <!-- Left: Interactive Server Map -->
-                    <div class="l3-infra-map" id="l3-network-map">
-                        <div class="infra-grid-bg"></div>
-
-                        <!-- Core Nodes -->
-                        <div class="infra-node" id="node-user" onclick="selectInfraNode('user')">
-                            <span class="infra-node-icon">👤</span>
-                            <span class="infra-node-name">User Accounts</span>
-                            <div class="infra-health-bar">
-                                <div class="infra-health-fill" id="health-user"></div>
+                <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 24px;">
+                    <!-- Left: Current Threat & Strategy Choices -->
+                    <div style="width: 100%;">
+                        <h4 style="margin-bottom: 12px; font-family: var(--font-display); color: var(--text-dark);" id="l3LeftTitle">Strategic Scenario Board</h4>
+                        <div id="l3StrategicArea">
+                            <!-- Threat / Situation Alert Box -->
+                            <div class="competitor-alert" id="l3ThreatBox" style="background: var(--bg-light); border-left: 4px solid var(--primary-red); padding: 15px; border-radius: 8px; margin-bottom: 20px; line-height: 1.5; font-size: 0.92rem;">
+                                <!-- Populated by JS -->
                             </div>
-                            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: #888;"
-                                id="status-label-user">Protected</span>
-                        </div>
 
-                        <div class="infra-node" id="node-db" onclick="selectInfraNode('db')">
-                            <span class="infra-node-icon">🗄️</span>
-                            <span class="infra-node-name">Payment Database</span>
-                            <div class="infra-health-bar">
-                                <div class="infra-health-fill" id="health-db"></div>
+                            <!-- Choice options container -->
+                            <div id="l3ResponseOptions" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                                <!-- Populated by JS -->
                             </div>
-                            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: #888;"
-                                id="status-label-db">Protected</span>
-                        </div>
 
-                        <div class="infra-node" id="node-server" onclick="selectInfraNode('server')">
-                            <span class="infra-node-icon">⚙️</span>
-                            <span class="infra-node-name">Transaction Server</span>
-                            <div class="infra-health-bar">
-                                <div class="infra-health-fill" id="health-server"></div>
-                            </div>
-                            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: #888;"
-                                id="status-label-server">Protected</span>
-                        </div>
+                            <!-- Feedback Panel -->
+                            <div class="feedback-box" id="l3FeedbackPanel" style="display: none; padding: 15px; border-radius: 6px; font-size: 0.88rem; line-height: 1.5; border-left: 4px solid var(--border-color); background: var(--bg-light); margin-bottom: 15px;"></div>
 
-                        <div class="infra-node" id="node-gateway" onclick="selectInfraNode('gateway')">
-                            <span class="infra-node-icon">💳</span>
-                            <span class="infra-node-name">Mobile Application</span>
-                            <div class="infra-health-bar">
-                                <div class="infra-health-fill" id="health-gateway"></div>
+                            <!-- Button group for scenarios -->
+                            <div class="btn-group" style="margin-top: 20px;">
+                                <button class="btn" id="l3ConfirmBtn" onclick="confirmL3Choice()" disabled>Confirm Response</button>
+                                <button class="btn" id="l3NextBtn" style="display: none;" onclick="nextL3Scenario()">Next Situation →</button>
                             </div>
-                            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: #888;"
-                                id="status-label-gateway">Protected</span>
-                        </div>
-
-                        <div class="infra-node" id="node-merchant" onclick="selectInfraNode('merchant')">
-                            <span class="infra-node-icon">🏬</span>
-                            <span class="infra-node-name">Merchant Portal</span>
-                            <div class="infra-health-bar">
-                                <div class="infra-health-fill" id="health-merchant"></div>
-                            </div>
-                            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: #888;"
-                                id="status-label-merchant">Protected</span>
                         </div>
                     </div>
 
-                    <!-- Right: Defenses Arsenal -->
-                    <div class="l3-arsenal">
-                        <div class="arsenal-title">Security Arsenal Protocols</div>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: -8px;">Select a tool to
-                            apply to the active node:</p>
-
-                        <div class="arsenal-grid">
-                            <div class="defense-weapon" id="def-mfa" onclick="selectDefenseTool('mfa')">
-                                <div class="weapon-icon">📱</div>
-                                <div class="weapon-meta">
-                                    <span class="weapon-name">Multi-factor Authentication (MFA)</span>
-                                    <span class="weapon-desc">Adds validation factor (OTP/Biometrics)</span>
-                                </div>
+                    <!-- Right: Dashboard Metrics -->
+                    <div>
+                        <h4 style="margin-bottom: 12px; font-family: var(--font-display); color: var(--text-dark);">Live Strategic Dashboard</h4>
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div style="background: var(--white); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Customer Trust</span>
+                                <strong style="font-family: var(--font-display); font-size: 1.35rem;" id="l3TrustVal">50%</strong>
                             </div>
-
-                            <div class="defense-weapon" id="def-updates" onclick="selectDefenseTool('updates')">
-                                <div class="weapon-icon">🔄</div>
-                                <div class="weapon-meta">
-                                    <span class="weapon-name">Continuous Security patches</span>
-                                    <span class="weapon-desc">Closes systems software backdoors</span>
-                                </div>
+                            <div style="background: var(--white); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Payment Security</span>
+                                <strong style="font-family: var(--font-display); font-size: 1.35rem;" id="l3SecurityVal">50%</strong>
                             </div>
-
-                            <div class="defense-weapon" id="def-encryption" onclick="selectDefenseTool('encryption')">
-                                <div class="weapon-icon">🔒</div>
-                                <div class="weapon-meta">
-                                    <span class="weapon-name">AES-256 Data Encryption</span>
-                                    <span class="weapon-desc">Protects database tables data columns</span>
-                                </div>
+                            <div style="background: var(--white); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Data Protection</span>
+                                <strong style="font-family: var(--font-display); font-size: 1.35rem;" id="l3ProtectionVal">50%</strong>
                             </div>
-
-                            <div class="defense-weapon" id="def-access" onclick="selectDefenseTool('access')">
-                                <div class="weapon-icon">🔑</div>
-                                <div class="weapon-meta">
-                                    <span class="weapon-name">Access Control Lists (RBAC)</span>
-                                    <span class="weapon-desc">Restricts user system admin privileges</span>
-                                </div>
+                            <div style="background: var(--white); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Privacy Compliance</span>
+                                <strong style="font-family: var(--font-display); font-size: 1.35rem;" id="l3PrivacyVal">50%</strong>
                             </div>
-
-                            <div class="defense-weapon" id="def-firewall" onclick="selectDefenseTool('firewall')">
-                                <div class="weapon-icon">🛡️</div>
-                                <div class="weapon-meta">
-                                    <span class="weapon-name">Network Firewall (WAF)</span>
-                                    <span class="weapon-desc">Blocks malicious incoming IP network load</span>
-                                </div>
+                            <div style="background: var(--white); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Legal Compliance</span>
+                                <strong style="font-family: var(--font-display); font-size: 1.35rem;" id="l3LegalVal">50%</strong>
                             </div>
-                        </div>
-
-                        <div style="background-color: var(--white); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; margin-top: 10px; font-size: 0.82rem;"
-                            id="l3-feedback-text">
-                            Security logs: Map state stable. Select "Initialize Threat Cycle" to engage.
+                            <div id="l3RoundTracker" style="font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; text-align: center; color: var(--primary-red); margin-top: 10px;">
+                                Situation 1 of 5
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="bottom-nav">
-                    <button class="btn btn-secondary" onclick="resetLevel3()">Reset Network Nodes</button>
-                    <button class="btn" id="l3-action-btn" onclick="startL3ThreatCycle()">Initialize Threat
-                        Cycle</button>
                 </div>
             </div>
         </section>
-
-        <!-- LEVEL 4: Privacy & Cyber Law Advisor -->
-        <section id="screen-l4" class="screen">
-            <div class="card">
-                <div class="card-header-bar">
-                    <div class="card-title">Level 4: Privacy & Cyber Law Advisor</div>
-                    <span class="l1-slot-label"
-                        style="background-color: var(--accent-blue-light); color: var(--accent-blue);">Compliance
-                        Review</span>
-                </div>
-
-                <div class="objective-box">
-                    <strong>Objective</strong>
-                    PaySphere must comply with global cyber laws (such as GDPR, IT Act 2000, and IT Rules 2011). Audit
-                    the five corporate practices listed in the pool. Drag or click cards to sort them into **Legal /
-                    Compliant**, **Illegal / Non-compliant**, or **Needs Modification**. For illegal or modifiable
-                    entries, select the compliant corrective action.
-                </div>
-
-                <div class="l4-container">
-                    <!-- Left: Practices pool -->
-                    <div class="l4-pool-container">
-                        <h3
-                            style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 8px;">
-                            Available Practices Deck</h3>
-                        <div class="l4-pool" id="l4-practice-pool">
-                            <!-- Cards injected by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Right: Sorting Buckets -->
-                    <div class="l4-zone-group">
-                        <div class="l4-zone l4-zone-legal" id="zone-legal" ondragover="allowL4Drop(event)"
-                            ondrop="handleL4Drop(event, 'legal')">
-                            <div class="l4-zone-header">Legal / Compliant (Transparency & Consent)</div>
-                            <!-- Card targets drop here -->
-                        </div>
-
-                        <div class="l4-zone l4-zone-illegal" id="zone-illegal" ondragover="allowL4Drop(event)"
-                            ondrop="handleL4Drop(event, 'illegal')">
-                            <div class="l4-zone-header">Illegal / Non-compliant (Fines & Breaches)</div>
-                            <!-- Card targets drop here -->
-                        </div>
-
-                        <div class="l4-zone l4-zone-modify" id="zone-modify" ondragover="allowL4Drop(event)"
-                            ondrop="handleL4Drop(event, 'modify')">
-                            <div class="l4-zone-header">Needs Modification (Policy Overhaul)</div>
-                            <!-- Card targets drop here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Remediation select fields (Triggered after correct sorting) -->
-                <div class="l4-remediation-container" id="l4-remediation-panel">
-                    <h3
-                        style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--primary-red); border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-                        Compliance Remediation Actions Plan</h3>
-                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: -8px;">Correct non-compliant
-                        practices to meet regulatory guidelines:</p>
-
-                    <div class="remediation-row" id="rem-row-location">
-                        <label>Practices P1: Location Tracking Without Consent</label>
-                        <select class="remediation-select" id="sel-rem-location">
-                            <option value="none">-- Select Remediation Strategy --</option>
-                            <option value="allow">Log the tracking and ignore notifications to protect marketing
-                                analytics data.</option>
-                            <option value="opt-in">Require explicit user opt-in prompt with granular consent toggles (IT
-                                Act 43A compliant).</option>
-                            <option value="obfuscate">Obfuscate location collection in a 20-page legal terms of service
-                                document.</option>
-                        </select>
-                    </div>
-
-                    <div class="remediation-row" id="rem-row-retention">
-                        <label>Practices P2: Indefinite Storage of Customer Account Logs</label>
-                        <select class="remediation-select" id="sel-rem-retention">
-                            <option value="none">-- Select Remediation Strategy --</option>
-                            <option value="purge">Implement data retention schedule purging sensitive card logs 90 days
-                                after inactivity (GDPR Storage Limit).</option>
-                            <option value="encrypt-all">Store backups on external cloud networks without delete triggers
-                                to maintain recovery archives.</option>
-                            <option value="terms">Charge users a secondary administration fee to opt-in to early log
-                                deletions.</option>
-                        </select>
-                    </div>
-
-                    <div class="remediation-row" id="rem-row-deletion">
-                        <label>Practices P3: Restricting User Profile Erasure</label>
-                        <select class="remediation-select" id="sel-rem-deletion">
-                            <option value="none">-- Select Remediation Strategy --</option>
-                            <option value="email">Force users to mail physical letters to PaySphere legal office for
-                                deletion approval.</option>
-                            <option value="ignore">Retain profiles but hide them from active portal query lists to
-                                preserve databases metrics.</option>
-                            <option value="erasure">Develop an automated portal dashboard providing clean profile
-                                deletions within 30 days (GDPR Art. 17 Erasure).</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="bottom-nav">
-                    <button class="btn btn-secondary" onclick="resetLevel4()">Reset Board</button>
-                    <button class="btn" id="l4-submit-btn" onclick="verifyLevel4Compliance()">Verify Compliance
-                        Plan</button>
-                </div>
-            </div>
         </section>
-
-        <!-- LEVEL 5: FinTech Command Center -->
-        <section id="screen-l5" class="screen">
-            <div class="l5-layout">
-                <!-- Left: Dashboard Side panels -->
-                <div class="l5-kpi-sidebar">
-                    <div class="l5-sidebar-header">KPI Dashboard</div>
-
-                    <!-- Security Score -->
-                    <div class="l5-kpi-card">
-                        <div class="l5-kpi-meta">
-                            <span class="kpi-title">Security Score</span>
-                            <span class="kpi-val" id="kpi-security">70</span>
-                        </div>
-                        <div class="kpi-meter-container">
-                            <div class="kpi-meter-fill" id="meter-security"
-                                style="width: 70%; background-color: var(--primary-red);"></div>
-                        </div>
-                        <div class="kpi-target-indicator">Target: > 85</div>
-                    </div>
-
-                    <!-- Success Rate -->
-                    <div class="l5-kpi-card">
-                        <div class="l5-kpi-meta">
-                            <span class="kpi-title">Success Rate</span>
-                            <span class="kpi-val" id="kpi-success">90%</span>
-                        </div>
-                        <div class="kpi-meter-container">
-                            <div class="kpi-meter-fill" id="meter-success"
-                                style="width: 90%; background-color: var(--warning);"></div>
-                        </div>
-                        <div class="kpi-target-indicator">Target: > 95%</div>
-                    </div>
-
-                    <!-- Customer Trust -->
-                    <div class="l5-kpi-card">
-                        <div class="l5-kpi-meta">
-                            <span class="kpi-title">Customer Trust</span>
-                            <span class="kpi-val" id="kpi-trust">75</span>
-                        </div>
-                        <div class="kpi-meter-container">
-                            <div class="kpi-meter-fill" id="meter-trust"
-                                style="width: 75%; background-color: var(--warning);"></div>
-                        </div>
-                        <div class="kpi-target-indicator">Target: > 80</div>
-                    </div>
-
-                    <!-- Compliance -->
-                    <div class="l5-kpi-card">
-                        <div class="l5-kpi-meta">
-                            <span class="kpi-title">Compliance</span>
-                            <span class="kpi-val" id="kpi-compliance">80</span>
-                        </div>
-                        <div class="kpi-meter-container">
-                            <div class="kpi-meter-fill" id="meter-compliance"
-                                style="width: 80%; background-color: var(--success);"></div>
-                        </div>
-                        <div class="kpi-target-indicator">Target: > 90</div>
-                    </div>
-
-                    <!-- Revenue -->
-                    <div class="l5-kpi-card">
-                        <div class="l5-kpi-meta">
-                            <span class="kpi-title">Rev. Index</span>
-                            <span class="kpi-val" id="kpi-revenue">60</span>
-                        </div>
-                        <div class="kpi-meter-container">
-                            <div class="kpi-meter-fill" id="meter-revenue"
-                                style="width: 60%; background-color: var(--success);"></div>
-                        </div>
-                        <div class="kpi-target-indicator">Target: > 75</div>
-                    </div>
-                </div>
-
-                <!-- Right: Console terminal -->
-                <div class="l5-simulator-console">
-                    <!-- Console Header -->
-                    <div class="l5-console-header">
-                        <div class="console-status">
-                            <div class="console-status-dot" id="console-status-dot"></div>
-                            <span class="console-status-text" id="console-status-text">INITIALIZED // STANDBY</span>
-                        </div>
-                        <div class="console-day-ticker" id="console-day-ticker">DAY 1 OF 30</div>
-                    </div>
-
-                    <!-- Interactive logs readout -->
-                    <div class="l5-terminal-ticker" id="l5-terminal-ticker">
-                        <div class="terminal-row">[SYSTEM] PaySphere terminal systems connected.</div>
-                        <div class="terminal-row">[SYSTEM] CDPO credentials validated. Security score baseline
-                            established.</div>
-                        <div class="terminal-row">[SYSTEM] Select "Launch 30-Day Cycle" to start operations ticker.
-                        </div>
-                    </div>
-
-                    <!-- Action Controls -->
-                    <div class="btn-group" style="margin-top: auto;">
-                        <button class="btn" id="l5-start-btn" onclick="startL5Ticker()">Launch 30-Day Cycle</button>
-                        <button class="btn btn-secondary" id="l5-pause-btn" onclick="pauseL5Ticker()" disabled>Pause
-                            Cycle</button>
-                    </div>
-
-                    <!-- Overlay incident cards -->
-                    <div class="l5-incident-overlay" id="l5-incident-overlay">
-                        <div class="incident-card" id="l5-incident-card">
-                            <div class="incident-header">
-                                <span class="incident-badge">CRITICAL WARNING</span>
-                                <h4 class="incident-title" id="inc-title">DATA BREACH ATTEMPT</h4>
-                            </div>
-                            <p class="incident-desc" id="inc-desc">Hackers have targeted merchant portal server APIs.
-                                Action required to mitigate legal risk.</p>
-                            <div class="incident-options" id="inc-options">
-                                <!-- Options dynamically loaded -->
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -2628,7 +2298,7 @@
             <button class="btn btn-secondary" id="footerPrevBtn" onclick="prevLevel()">Previous Level</button>
             <div style="font-family: var(--font-display); font-weight: 700; color: var(--primary-red); font-size: 0.95rem;"
                 id="footerLevelText">
-                Level 1 of 5
+                Level 1 of 3
             </div>
             <button class="btn" id="footerNextBtn" onclick="nextLevel()">Next Level</button>
         </div>
@@ -2638,397 +2308,329 @@
         // System State
         const state = {
             currentLevel: 1,
-            unlockedLevels: [true, true, true, true, true],
-            completedLevels: [false, false, false, false, false],
+            unlockedLevels: [true, true, true],
+            completedLevels: [false, false, false],
 
-            // Level 1 variables
+            // Level 1: Digital Payment Flow
             l1: {
-                instrument: 'upi',
+                instrument: 'card',
                 steps: [
-                    { id: 'step-1', text: 'Customer Initiates Payment' },
-                    { id: 'step-2', text: 'Authentication' },
-                    { id: 'step-3', text: 'Payment Gateway Processing' },
-                    { id: 'step-4', text: 'Bank Verification' },
-                    { id: 'step-5', text: 'Transaction Approval' },
-                    { id: 'step-6', text: 'Merchant Receives Money' },
-                    { id: 'step-7', text: 'Confirmation Message' }
+                    { id: 'step-1', text: 'Customer (Initiates online checkout)' },
+                    { id: 'step-2', text: 'Merchant Website (Transmits transaction amount)' },
+                    { id: 'step-3', text: 'Payment Gateway (Secures credentials & decrypts payload)' },
+                    { id: 'step-4', text: 'Acquiring Bank (Requests transaction auth)' },
+                    { id: 'step-5', text: 'Card Network (Routes clearing requests between banks)' },
+                    { id: 'step-6', text: 'Issuing Bank (Authenticates buyer credit/debit limits)' },
+                    { id: 'step-7', text: 'Authorization Server (Approves transaction limits)' },
+                    { id: 'step-8', text: 'Settlement (Transfers funds to merchant account)' },
+                    { id: 'step-9', text: 'Transaction Confirmation (Sends confirmation receipts)' }
                 ],
                 scrambled: [],
                 ordered: []
             },
 
-            // Level 2 variables
+            // Level 2: Secure Transaction Validator
             l2: {
                 selectedTx: null,
+                selectedRisk: null,
+                selectedAction: null,
+                metrics: {
+                    security: 50,
+                    trust: 50,
+                    reliability: 50,
+                    fraudRisk: 50
+                },
                 txs: [
                     {
-                        id: 'TX-101',
-                        amount: '₹500',
+                        id: 'TX-201',
+                        amount: '₹4,500',
                         loc: 'Mumbai, India',
                         time: '2:00 PM',
-                        device: 'Android Mobile (Known IP)',
-                        attempts: 1,
-                        pattern: 'Consistent with weekly food delivery records.',
-                        risk: null,      // Student classification
-                        action: null,    // Student action
-                        correctRisk: 'safe',
+                        dev: 'HTTPS Secure Payment Gateway with SSL encryption active.',
+                        correctRisk: 'secure',
                         correctAction: 'approve',
-                        rationale: 'Normal amount, matching recurring profile, local coordinates.'
-                    },
-                    {
-                        id: 'TX-102',
-                        amount: '₹2,00,000',
-                        loc: 'Paris, France',
-                        time: '3:15 AM (Local)',
-                        device: 'Unknown Windows Terminal',
-                        attempts: 1,
-                        pattern: 'Anomalous large transfer, first international activity.',
                         risk: null,
                         action: null,
-                        correctRisk: 'high-risk',
-                        correctAction: 'block',
-                        rationale: 'High value transfer, anomalous late hours, foreign IP address.'
+                        rationale: 'SSL/TLS guarantees secure communications, and gateway tokenization prevents plaintext storage of credentials.'
                     },
                     {
-                        id: 'TX-103',
-                        amount: '₹12,000',
-                        loc: 'Bangalore, India',
-                        time: '11:45 AM',
-                        device: 'Simulated Device Emulator',
-                        attempts: 10,
-                        pattern: 'Ten consecutive failed authentication logs on credentials.',
-                        risk: null,
-                        action: null,
-                        correctRisk: 'suspicious',
-                        correctAction: 'investigate',
-                        rationale: 'Multiple authentication failures suggest credential brute force.'
-                    },
-                    {
-                        id: 'TX-104',
-                        amount: '₹1,800',
+                        id: 'TX-202',
+                        amount: '₹12,500',
                         loc: 'Delhi, India',
-                        time: '9:00 AM',
-                        device: 'Known iPad',
-                        attempts: 1,
-                        pattern: 'Matches recurring monthly payment profile.',
+                        time: '11:15 AM',
+                        dev: 'Unencrypted payment form over HTTP protocol.',
+                        correctRisk: 'risky',
+                        correctAction: 'encrypt',
                         risk: null,
                         action: null,
-                        correctRisk: 'safe',
-                        correctAction: 'approve',
-                        rationale: 'Matches regular pre-authorized monthly subscription profile.'
+                        rationale: 'HTTP connections lack authentication and confidentiality, leaving inputs exposed to interception.'
                     },
                     {
-                        id: 'TX-105',
-                        amount: '₹45,000',
-                        loc: 'Delhi & Bangalore',
-                        time: '4:32 PM',
-                        device: 'Generic Mobile Phone',
-                        attempts: 2,
-                        pattern: 'Same card logged in Delhi and Bangalore in 2 minutes.',
+                        id: 'TX-203',
+                        amount: '₹750',
+                        loc: 'Bangalore, India',
+                        time: '4:30 PM',
+                        dev: 'Browser warns of invalid digital certificate mismatch.',
+                        correctRisk: 'risky',
+                        correctAction: 'certificate',
                         risk: null,
                         action: null,
-                        correctRisk: 'high-risk',
-                        correctAction: 'block',
-                        rationale: 'Geographical velocity error (Impossible Travel). Suggests credentials theft.'
+                        rationale: 'Invalid digital certificates indicate spoofed website domains harvesting details.'
+                    },
+                    {
+                        id: 'TX-204',
+                        amount: '₹50,000',
+                        loc: 'Unknown IP Address',
+                        time: '11:45 PM',
+                        dev: 'User redirected to external portal (paysphere-verify.com) requesting password.',
+                        correctRisk: 'fraudulent',
+                        correctAction: 'reject',
+                        risk: null,
+                        action: null,
+                        rationale: 'Phishing websites mimic official portals to harvest credentials. These must be rejected.'
+                    },
+                    {
+                        id: 'TX-205',
+                        amount: '₹15,000',
+                        loc: 'Chennai, India',
+                        time: '9:20 AM',
+                        dev: 'Weak password login on new device. Two-factor authentication is disabled.',
+                        correctRisk: 'risky',
+                        correctAction: 'mfa',
+                        risk: null,
+                        action: null,
+                        rationale: 'Weak authentication is vulnerable to brute-forcing. MFA ensures valid identity.'
                     }
                 ]
             },
 
-            // Level 3 variables
+            // Level 3: Privacy & Secure Payment Decision Simulator
             l3: {
                 activeThreatIndex: 0,
-                selectedNode: null,
-                selectedTool: null,
-                damageApplied: false,
-                nodes: {
-                    user: { label: 'User Accounts', health: 100, originalHealth: 100 },
-                    db: { label: 'Payment Database', health: 100, originalHealth: 100 },
-                    server: { label: 'Transaction Server', health: 100, originalHealth: 100 },
-                    gateway: { label: 'Mobile Application', health: 100, originalHealth: 100 },
-                    merchant: { label: 'Merchant Portal', health: 100, originalHealth: 100 }
-                },
-                threats: [
+                customerTrust: 50,
+                paymentSecurity: 50,
+                dataProtection: 50,
+                privacyCompliance: 50,
+                legalCompliance: 50,
+                confirmedChoiceIdx: null,
+                tempSelectedChoiceIdx: null,
+                scenarios: [
                     {
-                        id: 'phishing',
-                        title: 'Phishing Campaign Launch',
-                        desc: 'Fraudsters send spoofed login links targeting user credentials on User Accounts portal.',
-                        targetNode: 'user',
-                        correctTool: 'mfa',
-                        rationale: 'MFA requires verification details, protecting accounts even if logins are stolen.'
-                    },
-                    {
-                        id: 'sql',
-                        title: 'Database SQL Injection Scan',
-                        desc: 'SQL commands injected into query forms attempting to steal records from Payment Database.',
-                        targetNode: 'db',
-                        correctTool: 'encryption',
-                        rationale: 'Encryption renders stored table columns unreadable to database intruders.'
-                    },
-                    {
-                        id: 'malware',
-                        title: 'Malware Exploit Sweep',
-                        desc: 'Trojans scanning Merchant Portal system ports to exploit older browser backdoors.',
-                        targetNode: 'merchant',
-                        correctTool: 'updates',
-                        rationale: 'Regular updates and hotfixes secure backdoors and patch software leaks.'
-                    },
-                    {
-                        id: 'hijack',
-                        title: 'Administrator Privilege Hijack',
-                        desc: 'Compromised admin portal logins attempting to access Transaction Server routing tables.',
-                        targetNode: 'server',
-                        correctTool: 'access',
-                        rationale: 'Strict role access controls prevent compromised accounts from getting master keys.'
-                    },
-                    {
-                        id: 'ddos',
-                        title: 'Distributed Denial of Service (DDoS)',
-                        desc: 'Botnets overloading Mobile Application server gateways to cause platform timeouts.',
-                        targetNode: 'gateway',
-                        correctTool: 'firewall',
-                        rationale: 'Firewall (WAF) filters and rate-limits bad traffic, preserving platform operations.'
-                    }
-                ]
-            },
-
-            // Level 4 variables
-            l4: {
-                pool: [
-                    { id: 'p1', code: 'P1', text: 'Collect and store customer GPS location continuously in background without explicit permission.', correctZone: 'illegal' },
-                    { id: 'p2', code: 'P2', text: 'Retain complete customer database logs and transaction records indefinitely for secondary analytics.', correctZone: 'modify' },
-                    { id: 'p3', code: 'P3', text: 'Remove the "Delete My Account" button to maximize user retention and database size.', correctZone: 'illegal' },
-                    { id: 'p4', code: 'P4', text: 'Provide an easily accessible privacy policy outlining third-party data processing agreements.', correctZone: 'legal' },
-                    { id: 'p5', code: 'P5', text: 'Require active user opt-in and consent banners before tracking marketing cookies.', correctZone: 'legal' }
-                ],
-                placements: {
-                    legal: [],
-                    illegal: [],
-                    modify: []
-                },
-                selectedCard: null
-            },
-
-            // Level 5 variables
-            l5: {
-                day: 1,
-                status: 'idle', // 'running', 'paused', 'ended'
-                timerId: null,
-                kpis: {
-                    security: 70,
-                    success: 90,
-                    trust: 75,
-                    compliance: 80,
-                    revenue: 60
-                },
-                logs: [],
-                activeEvent: null,
-                historyChoices: [],
-                events: {
-                    5: {
-                        badge: 'Security Breach Warning',
-                        title: 'Security Breach Warning',
-                        desc: 'A vulnerability in our gateway code is identified. Rogue logs indicate API key scanning is active.',
-                        options: [
+                        title: 'Scenario 1: Customer Account Erasure Request',
+                        desc: 'A user submits an official request under data protection laws requesting the complete deletion of their profile records and transaction histories.',
+                        choices: [
                             {
-                                text: 'Disclose breach transparently to customers and regulators, applying immediate security hotfix.',
-                                impact: { security: 15, compliance: 15, trust: 10, revenue: -15 },
-                                log: 'Day 5 Choice: Transparently disclosed breach. Fixed vulnerabilities, though revenue decreased due to audit fees.'
+                                text: 'A: Archive the records indefinitely in a public backup folder.',
+                                feedback: 'Incorrect. Storing data on unsecured public folders breaches confidentiality regulations.',
+                                correct: false,
+                                impact: { trust: -15, security: -20, protection: -15, privacy: -20, legal: -20 }
                             },
                             {
-                                text: 'Quietly patch the vulnerability and defer public disclosure.',
-                                impact: { security: 10, compliance: -25, trust: -20, revenue: 10 },
-                                log: 'Day 5 Choice: Deferred breach disclosure. Regulators issued warnings, causing customer trust to crash.'
+                                text: 'B: Process deletion request across primary servers and archives within 30 days.',
+                                feedback: 'Excellent. GDPR Article 17 requires platforms to facilitate the Right to Erasure.',
+                                correct: true,
+                                impact: { trust: 20, security: 5, protection: 20, privacy: 25, legal: 25 }
+                            },
+                            {
+                                text: 'C: Share user metadata with advertisers before executing the deletion.',
+                                feedback: 'Incorrect. Sharing data without explicit consent violates statutory privacy standards.',
+                                correct: false,
+                                impact: { trust: -30, security: -10, protection: -25, privacy: -30, legal: -30 }
+                            },
+                            {
+                                text: 'D: Ignore request to keep database volumes high for corporate statistics.',
+                                feedback: 'Incorrect. Bypassing account deletion violates compliance, triggering regulatory warnings.',
+                                correct: false,
+                                impact: { trust: -20, security: 0, protection: -20, privacy: -25, legal: -25 }
                             }
                         ]
                     },
-                    10: {
-                        badge: 'Database Outage',
-                        title: 'Database Outage Alert',
-                        desc: 'The primary clearing database server has crashed due to memory leaks. Transaction flow is interrupted.',
-                        options: [
+                    {
+                        title: 'Scenario 2: Secure Payment Card Storage',
+                        desc: 'Your development team asks how to store transaction credentials (PAN) for recurring subscriptions.',
+                        choices: [
                             {
-                                text: 'Redirect traffic to redundant cloud failover cluster.',
-                                impact: { revenue: -10, success: 10, trust: 5, security: 5 },
-                                log: 'Day 10 Choice: Failed over to backup server. Preserved payment rate but operational overhead increased.'
+                                text: 'A: Save card numbers in plaintext to ensure fast transaction checkout speeds.',
+                                feedback: 'Incorrect. Plaintext PAN storage violates PCI-DSS rules and risks huge theft exposures.',
+                                correct: false,
+                                impact: { trust: -35, security: -35, protection: -30, privacy: -20, legal: -35 }
                             },
                             {
-                                text: 'Wait for primary database node to reboot natively.',
-                                impact: { revenue: -5, success: -20, trust: -15, security: -5 },
-                                log: 'Day 10 Choice: Decided to wait on server reboot. Transaction success plummeted and clients churned.'
+                                text: 'B: Encrypt credentials locally but keep decryption keys in plaintext.',
+                                feedback: 'Incorrect. Storing keys near ciphertext makes encryption useless if nodes are breached.',
+                                correct: false,
+                                impact: { trust: -10, security: -15, protection: -10, privacy: -5, legal: -15 }
+                            },
+                            {
+                                text: 'C: Replace card credentials with gateway-issued secure tokenized indices.',
+                                feedback: 'Correct. Tokenization replaces primary account numbers with random tags, conforming to PCI-DSS standards.',
+                                correct: true,
+                                impact: { trust: 20, security: 25, protection: 20, privacy: 15, legal: 20 }
+                            },
+                            {
+                                text: 'D: Share credentials with clearing agencies over unencrypted HTTP requests.',
+                                feedback: 'Incorrect. Transmitting card details without encryption leaves passwords vulnerable to interception.',
+                                correct: false,
+                                impact: { trust: -25, security: -25, protection: -20, privacy: -15, legal: -25 }
                             }
                         ]
                     },
-                    15: {
-                        badge: 'Regulatory Compliance',
-                        title: 'Regulatory Cyber Law Mandate',
-                        desc: 'Regulators issue strict encryption compliance guidelines on mobile wallet transactions.',
-                        options: [
+                    {
+                        title: 'Scenario 3: Biometric Logins Integration',
+                        desc: 'The product designer wants to enable biometric authentication on the mobile application to ease checkout friction.',
+                        choices: [
                             {
-                                text: 'Upgrade transaction encryption systems immediately.',
-                                impact: { compliance: 20, revenue: -15, security: 5 },
-                                log: 'Day 15 Choice: Complied with rules. Security upgraded, but engineering costs reduced revenues.'
+                                text: 'A: Activate biometrics silently without notifying customers.',
+                                feedback: 'Incorrect. Capturing biometrics without explicit notice violates standard cyber laws.',
+                                correct: false,
+                                impact: { trust: -15, security: -5, protection: -10, privacy: -20, legal: -15 }
                             },
                             {
-                                text: 'Delay compliance upgrades until next quarter.',
-                                impact: { compliance: -25, revenue: 10, security: -5 },
-                                log: 'Day 15 Choice: Postponed upgrades. Operating margins saved, but compliance penalties applied.'
+                                text: 'B: Store raw biological features in unencrypted cookies files.',
+                                feedback: 'Incorrect. Biometric data must be securely cryptographed on client chipsets, never in plain cookies.',
+                                correct: false,
+                                impact: { trust: -25, security: -30, protection: -25, privacy: -25, legal: -25 }
+                            },
+                            {
+                                text: 'C: Bundle biometric records with third-party verification credit engines.',
+                                feedback: 'Incorrect. Sharing biological markers with external credit scorers violates data protection laws.',
+                                correct: false,
+                                impact: { trust: -30, security: -10, protection: -30, privacy: -30, legal: -30 }
+                            },
+                            {
+                                text: 'D: Obtain explicit consent and publish a transparent biometric privacy notice.',
+                                feedback: 'Correct. Personal identifiers require granular user consent, keeping platforms compliant.',
+                                correct: true,
+                                impact: { trust: 25, security: 20, protection: 15, privacy: 20, legal: 20 }
                             }
                         ]
                     },
-                    20: {
-                        badge: 'Fraud Wave Warning',
-                        title: 'Suspicious Transaction Surge',
-                        desc: 'An automated security scan flags a spike in velocity card logs across international clearing hubs.',
-                        options: [
+                    {
+                        title: 'Scenario 4: Implementing New Cyber Law Guidelines',
+                        desc: 'Regulatory updates mandate major security patches to digital transaction channels within 90 days.',
+                        choices: [
                             {
-                                text: 'Enable strict Multi-Factor Authentication (MFA) on all credit card transactions.',
-                                impact: { security: 20, trust: 10, success: -5, revenue: -5 },
-                                log: 'Day 20 Choice: Enabled strict MFA. Fraud halted, though transaction success took minor friction hits.'
+                                text: 'A: Conduct audits immediately and deploy payment pipeline system patches.',
+                                feedback: 'Correct. Prompt compliance updates protect systems from legal liability and security breaches.',
+                                correct: true,
+                                impact: { trust: 20, security: 20, protection: 20, privacy: 20, legal: 25 }
                             },
                             {
-                                text: 'Log transaction warnings but allow checkouts to continue.',
-                                impact: { security: -20, trust: -15, success: 5, revenue: 15 },
-                                log: 'Day 20 Choice: Bypassed checks. Preserved processing rates but high chargebacks reduced customer trust.'
+                                text: 'B: Delay updates until next year to allocate engineering hours to marketing features.',
+                                feedback: 'Incorrect. Delaying patches leaves the gateway vulnerable and triggers legal fines.',
+                                correct: false,
+                                impact: { trust: -15, security: -20, protection: -15, privacy: -10, legal: -25 }
+                            },
+                            {
+                                text: 'C: Train employees but leave server codes unpatched to save budgets.',
+                                feedback: 'Incorrect. Training is necessary, but skipping technical upgrades leaves nodes exposed.',
+                                correct: false,
+                                impact: { trust: -5, security: -15, protection: -10, privacy: -5, legal: -15 }
+                            },
+                            {
+                                text: 'D: Refuse to comply until enforcement warnings are officially delivered.',
+                                feedback: 'Incorrect. Failure to monitor legal rules is high-risk corporate negligence.',
+                                correct: false,
+                                impact: { trust: -25, security: -25, protection: -20, privacy: -15, legal: -30 }
                             }
                         ]
                     },
-                    25: {
-                        badge: 'Integration Choice',
-                        title: 'Mobile Wallet Integration Request',
-                        desc: 'A major international merchant requests fast wallet integrations. Vulnerability scanning is incomplete.',
-                        options: [
+                    {
+                        title: 'Scenario 5: Customer Security Education',
+                        desc: 'Customer service reports multiple phishing campaigns trying to steal client online banking logins.',
+                        choices: [
                             {
-                                text: 'Execute third-party security audits prior to wallet launch.',
-                                impact: { revenue: 20, compliance: 10, security: 5, trust: 5 },
-                                log: 'Day 25 Choice: Conducted audit before integration. Platform is secure and regulatory compliant.'
+                                text: 'A: Ignore alerts since phishing resides outside company firewalls.',
+                                feedback: 'Incorrect. Neglecting customer protection hurts trust and causes higher payment fraud rates.',
+                                correct: false,
+                                impact: { trust: -25, security: -15, protection: -10, privacy: -5, legal: -10 }
                             },
                             {
-                                text: 'Fast-track wallet launch directly to capture early market share.',
-                                impact: { revenue: 30, security: -20, compliance: -15, trust: -10 },
-                                log: 'Day 25 Choice: Fast-tracked wallet integration. Vulnerabilities in partner code leaked API keys.'
-                            }
-                        ]
-                    },
-                    28: {
-                        badge: 'Traffic Influx',
-                        title: 'Platform Volume Spikes',
-                        desc: 'Annual seasonal marketing sales double incoming transaction requests.',
-                        options: [
-                            {
-                                text: 'Dynamically scale server capacity with high-availability load balancing.',
-                                impact: { revenue: -15, success: 10, trust: 10, security: 5 },
-                                log: 'Day 28 Choice: Scaled infrastructure. Transaction pipeline remained stable under load.'
+                                text: 'B: Disable customer email services entirely to restrict links.',
+                                feedback: 'Incorrect. Halting transaction notifications ruins platform checkout transparency.',
+                                correct: false,
+                                impact: { trust: -30, security: -5, protection: -5, privacy: -10, legal: -5 }
                             },
                             {
-                                text: 'Maintain default hardware architecture to save operational overhead.',
-                                impact: { success: -25, trust: -20, security: -10, revenue: -5 },
-                                log: 'Day 28 Choice: Kept standard hardware. Systems overloaded, causing payment timeout drops.'
+                                text: 'C: Launch email safety campaigns and actively trace spoofed domains.',
+                                feedback: 'Correct. Raising security awareness empowers users to avoid phishing traps.',
+                                correct: true,
+                                impact: { trust: 25, security: 20, protection: 15, privacy: 15, legal: 20 }
+                            },
+                            {
+                                text: 'D: Issue cookie banners but take no direct tracking actions on domains.',
+                                feedback: 'Incorrect. Cookie warnings do not prevent credentials harvesting on spoofed web sites.',
+                                correct: false,
+                                impact: { trust: -10, security: -10, protection: -5, privacy: -5, legal: -5 }
                             }
                         ]
                     }
-                },
+                ]
             }
         };
 
         // Initialize Onboarding Page
         window.addEventListener('DOMContentLoaded', () => {
             initLevel1();
-            initLevel2();
-            initLevel4();
-            updateNavigationPills();
         });
 
-        // Toast Helper
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            let icon = 'ℹ️';
-            if (type === 'success') icon = '✓';
-            if (type === 'warning') icon = '⚠️';
-            if (type === 'danger') icon = '🚨';
-
-            toast.innerHTML = `<span>${icon}</span><div>${message}</div>`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        function startSimulation() {
+            document.getElementById('screen-onboarding').classList.remove('active');
+            document.getElementById('navigationFooter').style.display = 'block';
+            document.getElementById('theory-dashboard-card').style.display = 'block';
+            navigateToLevel(1);
         }
 
-        // Stepper Navigation
+        function navigateToLevel(level) {
+            state.currentLevel = level;
+
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => s.classList.remove('active'));
+
+            // Show current level screen
+            document.getElementById(`screen-l${level}`).classList.add('active');
+
+            // Update footer UI
+            document.getElementById('footerLevelText').innerText = `Level ${level} of 3`;
+            
+            // Stepper Navigation Highlight
+            updateNavigationPills();
+            
+            // Call specific level rendering/initializations
+            if (level === 1) {
+                if (state.l1.scrambled.length === 0 && state.l1.ordered.length === 0) {
+                    initLevel1();
+                } else {
+                    renderLevel1();
+                }
+            } else if (level === 2) {
+                initLevel2();
+            } else if (level === 3) {
+                initLevel3();
+            }
+        }
+
         function updateNavigationPills() {
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 3; i++) {
                 const btn = document.getElementById(`step-btn-${i}`);
-                const divider = document.getElementById(`step-div-${i}`);
                 const badge = btn.querySelector('.step-badge');
 
-                // Reset classes
-                btn.className = 'step-item';
-                if (divider) divider.className = 'step-divider';
+                // Reset states
+                btn.className = 'step-item unlocked';
+                if (badge) badge.innerText = i;
 
-                if (state.unlockedLevels[i - 1]) {
-                    btn.classList.add('unlocked');
-                    badge.innerText = i;
-                } else {
-                    badge.innerText = '🔒';
-                }
-
-                if (state.currentLevel === i) {
+                if (i === state.currentLevel) {
                     btn.classList.add('active');
                 }
-
-                if (state.completedLevels[i - 1]) {
-                    btn.classList.add('completed');
-                    if (divider) divider.classList.add('completed');
-                } else {
-                    if (divider && state.currentLevel > i) {
-                        divider.classList.add('active');
-                    }
-                }
-            }
-
-            // Update bottom nav footer details
-            const prevBtn = document.getElementById('footerPrevBtn');
-            const nextBtn = document.getElementById('footerNextBtn');
-            const levelText = document.getElementById('footerLevelText');
-
-            if (prevBtn && nextBtn && levelText) {
-                levelText.innerText = `Level ${state.currentLevel} of 5`;
-                prevBtn.disabled = (state.currentLevel === 1);
-                nextBtn.disabled = (state.currentLevel === 5);
-            }
-        }
-
-        function navigateToLevel(levelIndex) {
-            if (state.unlockedLevels[levelIndex - 1]) {
-                // Deactivate current
-                document.querySelector('.screen.active').classList.remove('active');
-                state.currentLevel = levelIndex;
-
-                let targetId = `screen-l${levelIndex}`;
-                document.getElementById(targetId).classList.add('active');
-
-                // Show footer
-                document.getElementById('navigationFooter').style.display = 'flex';
-
-                updateNavigationPills();
-                showToast(`Switched to Command Panel Level ${levelIndex}`, 'info');
-
-                // Trigger any level start hooks if needed
-                if (levelIndex === 3) {
-                    resetLevel3();
-                }
-            } else {
-                showToast("Level locked. Complete previous operations to unlock.", "warning");
             }
         }
 
         function nextLevel() {
-            if (state.currentLevel < 5) {
+            if (state.currentLevel < 3) {
                 navigateToLevel(state.currentLevel + 1);
+            } else {
+                showL5Scorecard();
             }
         }
 
@@ -3038,57 +2640,12 @@
             }
         }
 
-        function startSimulation() {
-            document.getElementById('theory-dashboard-card').style.display = 'block';
-            document.getElementById('navigationFooter').style.display = 'flex';
-            navigateToLevel(1);
-        }
-
-        function toggleTheorySection() {
-            const content = document.getElementById('theory-content');
-            const btn = document.getElementById('btn-toggle-theory');
-            if (content.style.display === 'none') {
-                content.style.display = 'grid';
-                btn.textContent = "Hide Reference";
-            } else {
-                content.style.display = 'none';
-                btn.textContent = "Show Reference";
-            }
-        }
-
-        // Help Manual Controls
-        const helpDialog = document.getElementById('help-manual-dialog');
-        function showHelpManual() { helpDialog.showModal(); }
-        function closeHelpManual() { helpDialog.close(); }
-
-        // LEVEL 1 LOGIC
-        const l1Explanations = {
-            'step-1': 'The customer chooses an instrument (e.g. UPI app scan) and inputs the payment details.',
-            'step-2': 'Credentials check (such as MPIN, card CVV, or 3D-secure OTP) is entered to authenticate the identity of the cardholder.',
-            'step-3': 'Payment Gateway tokenizes and encrypts payload, sending the secure auth request to Acquirer banks.',
-            'step-4': 'Clearing networks route to the Issuing Bank to check fund availability and account limitations.',
-            'step-5': 'Authorization codes are issued back to gateway nodes signaling confirmation of routing paths.',
-            'step-6': 'Cleared operational funds are routed to Merchant ledger accounts (Settlement queues active).',
-            'step-7': 'Gateway pushes live status triggers, updating interface views showing successful payment confirmations.'
-        };
-
+        // LEVEL 1: DIGITAL PAYMENT ARCHITECT LOGIC
         function initLevel1() {
-            // Shuffle steps
             state.l1.scrambled = [...state.l1.steps].sort(() => Math.random() - 0.5);
-            state.l1.ordered = [];
-            renderLevel1();
-        }
-
-        function selectL1Instrument(ins) {
-            state.l1.instrument = ins;
-            const buttons = document.querySelectorAll('.l1-selector-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Render specific context updates
-            document.getElementById('l1-explanation-card').innerText = `Instrument changed to ${ins.toUpperCase()}. Arrange pipeline to simulate.`;
+            state.l1.ordered = Array(9).fill(null);
             document.getElementById('l1-animation-panel').style.display = 'none';
-            initLevel1();
+            renderLevel1();
         }
 
         function renderLevel1() {
@@ -3098,7 +2655,7 @@
             pool.innerHTML = '';
             slots.innerHTML = '';
 
-            // Scrambled cards
+            // Render scrambled cards in left pool
             state.l1.scrambled.forEach((card) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = 'l1-card';
@@ -3109,8 +2666,8 @@
                 pool.appendChild(cardEl);
             });
 
-            // Slots 1 to 7
-            for (let i = 0; i < 7; i++) {
+            // Render 9 slots in right area
+            for (let i = 0; i < 9; i++) {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'l1-slot';
 
@@ -3120,9 +2677,6 @@
 
                 const box = document.createElement('div');
                 box.className = 'l1-slot-box';
-                box.setAttribute('data-index', i);
-
-                // Allow drops
                 box.addEventListener('dragover', (e) => e.preventDefault());
                 box.addEventListener('drop', (e) => {
                     e.preventDefault();
@@ -3130,11 +2684,10 @@
                     placeCardInSlot(cardId, i);
                 });
 
-                // Render placed cards
                 if (state.l1.ordered[i]) {
                     const card = state.l1.ordered[i];
                     box.className = 'l1-slot-box occupied';
-                    box.innerHTML = `<span style="font-size:0.85rem; font-weight:600;">${card.text}</span>`;
+                    box.innerHTML = `<span style="font-size:0.8rem; font-weight:600;">${card.text}</span>`;
                     box.addEventListener('click', () => removeCardFromRoute(i));
                 } else {
                     box.innerHTML = '<span style="color:#B0BEC5; font-size:0.75rem;">Drop Step Here</span>';
@@ -3147,22 +2700,45 @@
         }
 
         function addCardToRoute(cardId) {
-            if (state.l1.ordered.length < 7) {
-                const card = state.l1.scrambled.find(c => c.id === cardId);
-                state.l1.ordered.push(card);
-                state.l1.scrambled = state.l1.scrambled.filter(c => c.id !== cardId);
-                renderLevel1();
+            const cardIndex = state.l1.scrambled.findIndex(c => c.id === cardId);
+            if (cardIndex !== -1) {
+                const card = state.l1.scrambled[cardIndex];
+                // Find first empty index
+                let emptyIndex = state.l1.ordered.findIndex(c => !c);
+                if (emptyIndex !== -1) {
+                    state.l1.ordered[emptyIndex] = card;
+                    state.l1.scrambled.splice(cardIndex, 1);
+                    renderLevel1();
+                } else {
+                    showToast("No empty slots remaining on the Route Board.", "warning");
+                }
             }
         }
 
         function placeCardInSlot(cardId, index) {
-            const card = state.l1.scrambled.find(c => c.id === cardId) || state.l1.ordered.find(c => c && c.id === cardId);
+            // Find card in scrambled or ordered lists
+            let card = state.l1.scrambled.find(c => c.id === cardId);
+            let fromScrambled = true;
+            if (!card) {
+                card = state.l1.ordered.find(c => c && c.id === cardId);
+                fromScrambled = false;
+            }
 
-            // Clean from current spots
-            state.l1.scrambled = state.l1.scrambled.filter(c => c.id !== cardId);
-            state.l1.ordered = state.l1.ordered.filter(c => c && c.id !== cardId);
+            if (!card) return;
 
-            // Put in slot
+            // Remove card from original position
+            if (fromScrambled) {
+                state.l1.scrambled = state.l1.scrambled.filter(c => c.id !== cardId);
+            } else {
+                state.l1.ordered = state.l1.ordered.map(c => (c && c.id === cardId) ? null : c);
+            }
+
+            // If target slot is already occupied, send occupant back to scrambled
+            const occupant = state.l1.ordered[index];
+            if (occupant) {
+                state.l1.scrambled.push(occupant);
+            }
+
             state.l1.ordered[index] = card;
             renderLevel1();
         }
@@ -3172,47 +2748,80 @@
             if (card) {
                 state.l1.scrambled.push(card);
                 state.l1.ordered[index] = null;
-                // Compact or leave gap
-                state.l1.ordered = state.l1.ordered.filter(c => c !== null);
                 renderLevel1();
             }
         }
 
         function resetLevel1() {
             initLevel1();
-            document.getElementById('l1-animation-panel').style.display = 'none';
         }
 
+        const l1Explanations = {
+            'step-1': 'Customer logs card numbers and security details in checkout form.',
+            'step-2': 'Merchant website securely sends authorization requests containing total amount to gateway channels.',
+            'step-3': 'Payment Gateway verifies transaction authenticity, encrypts billing parameters, and manages failover routes.',
+            'step-4': 'Acquiring bank (merchant\'s financial portal) accepts request tokens and coordinates authorization clears.',
+            'step-5': 'Card network (e.g. Visa, Mastercard) routes digital clearance tokens to client credit banks.',
+            'step-6': 'Issuing bank processes account balances to verify sufficient funds and valid credit.',
+            'step-7': 'Authorization server logs transactional tokens, confirming credentials matching.',
+            'step-8': 'Settlement clearances are batched, transferring card balances into merchant ledger accounts.',
+            'step-9': 'Transaction confirmation results are transmitted back to merchant checkouts and customer profiles.'
+        };
+
         function verifyLevel1Routing() {
-            // Check if 7 items are placed
-            const filled = state.l1.ordered.filter(Boolean);
-            if (filled.length < 7) {
-                showToast("Assemble all 7 route steps to authorize pipeline verification.", "warning");
+            let filledCount = 0;
+            state.l1.ordered.forEach(c => { if (c) filledCount++; });
+            if (filledCount < 9) {
+                showToast("Assemble all 9 route steps to authorize pipeline verification.", "warning");
                 return;
             }
 
-            let isCorrect = true;
-            for (let i = 0; i < 7; i++) {
-                if (state.l1.ordered[i].id !== `step-${i + 1}`) {
-                    isCorrect = false;
-                    break;
+            let incorrectIndices = [];
+            for (let i = 0; i < 9; i++) {
+                if (!state.l1.ordered[i] || state.l1.ordered[i].id !== `step-${i + 1}`) {
+                    incorrectIndices.push(i + 1);
                 }
             }
+
+            const isCorrect = incorrectIndices.length === 0;
 
             if (isCorrect) {
                 showToast("Transaction pipeline verification successful!", "success");
                 animateL1Routing();
             } else {
-                showToast("Transaction failed. System reports out-of-sequence clearance error.", "danger");
-                document.getElementById('l1-explanation-card').innerHTML = `<span style="color:var(--danger); font-weight:700;">Pipeline Error:</span> Routing verification failed. Ensure Authentication occurs immediately after Customer Initiation, followed by Gateway processing and Bank verification loops.`;
+                showToast("Routing validation failed. System reports sequence clearance errors.", "danger");
+                
+                let feedbackHTML = `
+                    <span style="color:var(--danger); font-weight:700;">Pipeline Error:</span> Verification failed. 
+                    Incorrect steps in your sequence: <strong>Step ${incorrectIndices.join(', Step ')}</strong>.<br><br>
+                    <strong>Correct Textbook Routing Sequence:</strong><br>
+                    <ol style="padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; text-align: left;">
+                        <li><strong>Customer</strong> (Initiates checkout form)</li>
+                        <li><strong>Merchant Website</strong> (Transmits transaction details)</li>
+                        <li><strong>Payment Gateway</strong> (Tokenizes/encrypts card parameters)</li>
+                        <li><strong>Acquiring Bank</strong> (Merchant's bank, processes auth requests)</li>
+                        <li><strong>Card Network</strong> (Visa/Mastercard, routes requests between bank networks)</li>
+                        <li><strong>Issuing Bank</strong> (Customer's bank, processes account limits)</li>
+                        <li><strong>Authorization Server</strong> (Confirms matching security tokens)</li>
+                        <li><strong>Settlement</strong> (Clears funds transfer to merchant accounts)</li>
+                        <li><strong>Confirmation</strong> (Pushes status update receipts to buyer & merchant)</li>
+                    </ol>
+                `;
+                document.getElementById('l1-explanation-card').innerHTML = feedbackHTML;
+                document.getElementById('l1-animation-panel').style.display = 'flex';
+                document.getElementById('l1-anim-instrument').innerText = "Clearance Error Detected";
+                document.getElementById('l1-anim-instrument').style.color = "var(--primary-red)";
+                
+                const progress = document.getElementById('network-link-progress');
+                const nodes = document.querySelectorAll('.network-node');
+                progress.style.width = '0%';
+                nodes.forEach(node => node.className = 'network-node');
             }
         }
 
-        // L1 Route Tracer Animation
         function animateL1Routing() {
             const panel = document.getElementById('l1-animation-panel');
             panel.style.display = 'flex';
-            document.getElementById('l1-anim-instrument').innerText = `${state.l1.instrument.toUpperCase()} Flow Active`;
 
             const progress = document.getElementById('network-link-progress');
             const nodes = document.querySelectorAll('.network-node');
@@ -3223,19 +2832,16 @@
 
             let currentStep = 0;
             const animateStep = () => {
-                if (currentStep < 7) {
-                    // Update nodes lighting
-                    if (currentStep < 6) {
+                if (currentStep < 9) {
+                    if (currentStep < 8) {
                         nodes[currentStep].className = 'network-node active';
                         if (currentStep > 0) nodes[currentStep - 1].className = 'network-node success';
                     } else {
-                        nodes[5].className = 'network-node success';
+                        nodes[8].className = 'network-node success';
                     }
 
-                    // Increment link line
-                    progress.style.width = `${(currentStep / 6) * 100}%`;
+                    progress.style.width = `${(currentStep / 8) * 100}%`;
 
-                    // Show explanation
                     const stepId = `step-${currentStep + 1}`;
                     explanation.innerHTML = `<strong>Step ${currentStep + 1}: ${state.l1.steps[currentStep].text}</strong><br>${l1Explanations[stepId]}`;
 
@@ -3245,12 +2851,7 @@
                     nodes.forEach(node => node.className = 'network-node success');
                     explanation.innerHTML = `<strong>Clearance Verification Complete</strong><br>Money successfully moved through secure API nodes. The PaySphere gateway has authorized Level 1 clearance.`;
 
-                    // Unlock Level 2
                     state.completedLevels[0] = true;
-                    state.unlockedLevels[1] = true;
-                    updateNavigationPills();
-
-                    // Show summary dialog
                     setTimeout(() => showSummaryDialog(1), 1000);
                 }
             };
@@ -3258,162 +2859,243 @@
             animateStep();
         }
 
-        // LEVEL 2 LOGIC
+        // LEVEL 2: SECURE TRANSACTION VALIDATOR LOGIC
         function initLevel2() {
             renderLevel2();
+            updateL2Metrics();
         }
 
         function renderLevel2() {
             const grid = document.getElementById('l2-log-grid');
             grid.innerHTML = '';
 
-            let allClassified = true;
-
             state.l2.txs.forEach((tx, idx) => {
                 const row = document.createElement('div');
                 row.className = `l2-tx-row ${state.l2.selectedTx === idx ? 'selected' : ''}`;
+                
+                // Styling active row and status
+                row.style.background = state.l2.selectedTx === idx ? 'var(--white)' : 'var(--bg-light)';
+                row.style.border = '1px solid var(--border-color)';
+                row.style.borderLeft = state.l2.selectedTx === idx ? '4px solid var(--primary-red)' : '4px solid #888';
+                row.style.padding = '12px';
+                row.style.borderRadius = '6px';
+                row.style.cursor = 'pointer';
+                row.style.display = 'flex';
+                row.style.justifyContent = 'space-between';
+                row.style.alignItems = 'center';
 
-                // If evaluations done, show feedback colors
                 if (state.completedLevels[1]) {
                     const correctClass = (tx.risk === tx.correctRisk && tx.action === tx.correctAction);
-                    row.classList.add(correctClass ? 'classified-correct' : 'classified-incorrect');
+                    row.style.borderLeft = correctClass ? '4px solid var(--success)' : '4px solid var(--primary-red)';
                 }
 
-                let badgeClass = 'pending';
-                let badgeText = 'Audit Pending';
-
-                if (tx.risk) {
-                    badgeClass = tx.risk === 'high-risk' ? 'risk' : tx.risk;
-                    badgeText = tx.risk;
-                } else {
-                    allClassified = false;
-                }
+                let badgeText = tx.risk ? tx.risk.toUpperCase() : 'PENDING';
+                let badgeColor = 'var(--text-muted)';
+                if (tx.risk === 'secure') badgeColor = 'var(--success)';
+                if (tx.risk === 'risky') badgeColor = 'var(--warning)';
+                if (tx.risk === 'fraudulent') badgeColor = 'var(--primary-red)';
 
                 row.innerHTML = `
-                    <div class="l2-tx-meta">
-                        <span class="tx-id">${tx.id} // ${tx.time}</span>
-                        <span class="tx-desc">${tx.amount} (${tx.loc})</span>
-                    </div>
                     <div>
-                        <span class="tx-badge ${badgeClass}">${badgeText}</span>
+                        <strong style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-dark);">${tx.id}</strong>
+                        <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">${tx.time}</span>
+                        <div style="font-size:0.8rem; color:var(--text-dark); margin-top:4px;">${tx.amount} (${tx.loc})</div>
                     </div>
+                    <span style="font-size:0.7rem; font-weight:700; color:${badgeColor}; background:var(--white); border:1px solid ${badgeColor}; padding:3px 8px; border-radius:12px;">${badgeText}</span>
                 `;
 
                 row.addEventListener('click', () => selectL2Tx(idx));
                 grid.appendChild(row);
             });
 
-            // Enable submit if all classifications recorded
-            document.getElementById('l2-submit-btn').disabled = !allClassified;
+            // Toggle submission verification button
+            const allAudited = state.l2.txs.every(tx => tx.risk !== null && tx.action !== null);
+            document.getElementById('l2-submit-btn').disabled = !allAudited;
         }
 
         function selectL2Tx(idx) {
             state.l2.selectedTx = idx;
-            renderLevel2();
-
-            const sidebar = document.getElementById('l2-sidebar-content');
-            sidebar.style.display = 'flex';
-
             const tx = state.l2.txs[idx];
+
+            document.getElementById('l2-sidebar-title').innerText = `Auditing ${tx.id}`;
             document.getElementById('det-id').innerText = tx.id;
             document.getElementById('det-amount').innerText = tx.amount;
             document.getElementById('det-loc').innerText = tx.loc;
             document.getElementById('det-time').innerText = tx.time;
-            document.getElementById('det-dev').innerText = tx.device;
-            document.getElementById('det-attempts').innerText = tx.attempts;
-            document.getElementById('det-pattern').innerText = tx.pattern;
+            document.getElementById('det-dev').innerText = tx.dev;
 
-            // Set active buttons
-            resetL2ChoiceUI();
+            // Pre-fill selections
+            state.l2.selectedRisk = tx.risk;
+            state.l2.selectedAction = tx.action;
 
-            if (tx.risk) {
-                const btn = document.querySelector(`.l2-choice-btn[data-val="${tx.risk}"]`);
-                if (btn) btn.classList.add('active');
+            highlightL2SelectionButtons();
+
+            document.getElementById('l2-sidebar-content').style.display = 'flex';
+            document.getElementById('l2-action-group').style.display = tx.risk ? 'block' : 'none';
+
+            renderLevel2();
+        }
+
+        function selectL2Risk(riskVal) {
+            state.l2.selectedRisk = riskVal;
+            highlightL2SelectionButtons();
+
+            // Auto display matching action group
+            document.getElementById('l2-action-group').style.display = 'block';
+
+            // Suggest initial action or clean
+            if (riskVal === 'secure') {
+                state.l2.selectedAction = 'approve';
+            } else if (riskVal === 'fraudulent') {
+                state.l2.selectedAction = 'reject';
+            } else {
+                state.l2.selectedAction = null;
             }
-            if (tx.action) {
-                const btn = document.querySelector(`.l2-choice-btn[data-val="${tx.action}"]`);
-                if (btn) btn.classList.add('active-action');
-            }
+            highlightL2SelectionButtons();
         }
 
-        function resetL2ChoiceUI() {
-            document.querySelectorAll('.l2-choice-btn').forEach(btn => {
-                btn.classList.remove('active', 'active-action');
-            });
+        function selectL2Action(actionVal) {
+            state.l2.selectedAction = actionVal;
+            highlightL2SelectionButtons();
         }
 
-        function setL2Classification(val) {
-            if (state.l2.selectedTx === null) return;
-            const tx = state.l2.txs[state.l2.selectedTx];
-            tx.risk = val;
-
-            // Toggle visual class active state
-            document.querySelectorAll('.l2-choice-btn[data-type="class"]').forEach(btn => {
-                btn.classList.remove('active');
+        function highlightL2SelectionButtons() {
+            // Risk buttons
+            ['secure', 'risky', 'fraudulent'].forEach(r => {
+                const btn = document.getElementById(`btn-l2-risk-${r}`);
+                if (state.l2.selectedRisk === r) {
+                    btn.style.background = 'var(--accent-blue)';
+                    btn.style.color = 'var(--white)';
+                } else {
+                    btn.style.background = 'none';
+                    btn.style.color = 'var(--accent-blue)';
+                }
             });
-            event.target.classList.add('active');
-        }
 
-        function setL2Action(val) {
-            if (state.l2.selectedTx === null) return;
-            const tx = state.l2.txs[state.l2.selectedTx];
-            tx.action = val;
-
-            document.querySelectorAll('.l2-choice-btn[data-type="action"]').forEach(btn => {
-                btn.classList.remove('active-action');
+            // Action buttons
+            ['approve', 'encrypt', 'certificate', 'mfa', 'reject'].forEach(a => {
+                const btn = document.getElementById(`btn-l2-action-${a}`);
+                if (state.l2.selectedAction === a) {
+                    btn.style.background = 'var(--primary-red)';
+                    btn.style.color = 'var(--white)';
+                } else {
+                    btn.style.background = 'none';
+                    btn.style.color = 'var(--primary-red)';
+                }
             });
-            event.target.classList.add('active-action');
         }
 
         function saveL2Decision() {
-            if (state.l2.selectedTx === null) return;
-            const tx = state.l2.txs[state.l2.selectedTx];
-            if (!tx.risk || !tx.action) {
-                showToast("Select both classification and operations action before saving.", "warning");
+            if (!state.l2.selectedRisk || !state.l2.selectedAction) {
+                showToast("Please classify the risk and choose a protection action first.", "warning");
                 return;
             }
 
-            showToast(`Recorded decisions for ${tx.id}`, "success");
-            renderLevel2();
+            const tx = state.l2.txs[state.l2.selectedTx];
+            tx.risk = state.l2.selectedRisk;
+            tx.action = state.l2.selectedAction;
+
+            showToast(`Decisions recorded for ${tx.id}.`, "success");
+            
+            // Auto select next pending tx
+            const nextIdx = state.l2.txs.findIndex(t => t.risk === null);
+            if (nextIdx !== -1) {
+                selectL2Tx(nextIdx);
+            } else {
+                renderLevel2();
+            }
+
+            updateL2Metrics();
+        }
+
+        function updateL2Metrics() {
+            let correctCount = 0;
+            let totalDecisions = 0;
+
+            state.l2.txs.forEach(tx => {
+                if (tx.risk !== null) {
+                    totalDecisions++;
+                    if (tx.risk === tx.correctRisk && tx.action === tx.correctAction) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            const ratio = totalDecisions > 0 ? (correctCount / 5) : 0;
+
+            state.l2.metrics.security = Math.round(50 + (ratio * 40));
+            state.l2.metrics.trust = Math.round(50 + (ratio * 40));
+            state.l2.metrics.reliability = Math.round(50 + (ratio * 30) - ((totalDecisions - correctCount) * 5));
+            state.l2.metrics.fraudRisk = Math.round(50 - (ratio * 30));
+
+            // Inject into dashboard
+            document.getElementById('l2SecurityVal').innerText = `${state.l2.metrics.security}%`;
+            document.getElementById('l2TrustVal').innerText = `${state.l2.metrics.trust}%`;
+            document.getElementById('l2ReliabilityVal').innerText = `${state.l2.metrics.reliability}%`;
+            document.getElementById('l2FraudRiskVal').innerText = `${state.l2.metrics.fraudRisk}%`;
         }
 
         function verifyLevel2Decisions() {
             let correctCount = 0;
+            let feedbackRows = [];
+
             state.l2.txs.forEach((tx) => {
-                if (tx.risk === tx.correctRisk && tx.action === tx.correctAction) {
+                const actionTexts = {
+                    approve: 'Approve (Valid Secure Checkout)',
+                    encrypt: 'Enable SSL/TLS Encryption',
+                    certificate: 'Verify Digital Certificate',
+                    mfa: 'Require OTP & Two-Factor Authentication',
+                    reject: 'Reject Transaction (Fraudulent Attempt)'
+                };
+
+                const userRiskText = tx.risk ? tx.risk.toUpperCase() : 'PENDING';
+                const userActionText = tx.action ? actionTexts[tx.action] : 'PENDING';
+                const correctActionText = actionTexts[tx.correctAction];
+
+                const isTxCorrect = (tx.risk === tx.correctRisk && tx.action === tx.correctAction);
+
+                if (isTxCorrect) {
                     correctCount++;
+                    feedbackRows.push(`
+                        <div style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                            <span style="color: var(--success); font-weight: 700;">✓ Correct: ${tx.id}</span><br>
+                            Your decision: <strong>${userRiskText}</strong> classification with action <strong>${userActionText}</strong>.<br>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${tx.rationale}</span>
+                        </div>
+                    `);
+                } else {
+                    feedbackRows.push(`
+                        <div style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                            <span style="color: var(--primary-red); font-weight: 700;">✗ Discrepancy: ${tx.id}</span><br>
+                            Your decision: <strong>${userRiskText}</strong> (${userActionText}).<br>
+                            <span style="color: var(--success); font-weight: 600;">Correct answer:</span> <strong>${tx.correctRisk.toUpperCase()}</strong> classification with action <strong>${correctActionText}</strong>.<br>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${tx.rationale}</span>
+                        </div>
+                    `);
                 }
             });
 
-            state.completedLevels[1] = true;
-            renderLevel2();
+            const panel = document.getElementById('l2FeedbackPanel');
+            panel.style.display = 'block';
 
             if (correctCount === 5) {
-                showToast("Perfect security audit score! All logs correctly classified.", "success");
-
-                // Unlock Level 3
-                state.unlockedLevels[2] = true;
-                updateNavigationPills();
-
-                setTimeout(() => showSummaryDialog(2), 1000);
-            } else {
-                showToast(`Audit complete. Classifications graded: ${correctCount}/5 correct.`, "warning");
-                state.unlockedLevels[2] = true; // Still allow navigation but show highlights
-                updateNavigationPills();
-
-                // Expand panel explanation showing rationales
-                const reportContent = state.l2.txs.map(tx => {
-                    const isCorrect = (tx.risk === tx.correctRisk && tx.action === tx.correctAction);
-                    const mark = isCorrect ? '🟢' : '🔴';
-                    return `<div><strong>${mark} ${tx.id} (${tx.amount})</strong>: ${tx.rationale} <br><em>Correct: Classify ${tx.correctRisk.toUpperCase()}, Action: ${tx.correctAction.toUpperCase()}</em></div>`;
-                }).join('<hr style="margin:8px 0; border-color:#EEE;">');
-
-                document.getElementById('l2-analysis-panel').innerHTML = `
-                    <h3 style="font-family:var(--font-display); font-size:1.1rem; color:var(--primary-red);">Security Audit Report</h3>
-                    <div style="font-size:0.82rem; display:flex; flex-direction:column; gap:8px;">
-                        ${reportContent}
-                    </div>
+                showToast("All transaction environments audited successfully!", "success");
+                panel.style.borderLeft = '4px solid var(--success)';
+                panel.innerHTML = `
+                    <h5 style="color: var(--success); font-family: var(--font-display); font-size: 0.95rem; margin-bottom: 10px; text-align: left;">Audit Successful</h5>
+                    ${feedbackRows.join('')}
                 `;
+                state.completedLevels[1] = true;
+                setTimeout(() => showSummaryDialog(2), 1500);
+            } else {
+                showToast("Audit failed. Regulatory controls show classification mismatch errors.", "danger");
+                panel.style.borderLeft = '4px solid var(--primary-red)';
+                panel.innerHTML = `
+                    <h5 style="color: var(--primary-red); font-family: var(--font-display); font-size: 0.95rem; margin-bottom: 10px; text-align: left;">Audit Discrepancies Detected</h5>
+                    <p style="margin-bottom: 12px; font-weight: 500; text-align: left;">Please review the correct environments and classifications below:</p>
+                    ${feedbackRows.join('')}
+                `;
+                renderLevel2();
             }
         }
 
@@ -3423,552 +3105,212 @@
                 tx.action = null;
             });
             state.l2.selectedTx = null;
-            state.completedLevels[1] = false;
+            state.l2.selectedRisk = null;
+            state.l2.selectedAction = null;
             document.getElementById('l2-sidebar-content').style.display = 'none';
-            document.getElementById('l2-submit-btn').disabled = true;
-            initLevel2();
+            document.getElementById('l2-sidebar-title').innerText = 'Select a profile to validate';
+            document.getElementById('l2FeedbackPanel').style.display = 'none';
+            document.getElementById('l2FeedbackPanel').innerHTML = '';
+            
+            renderLevel2();
+            updateL2Metrics();
         }
 
-        // LEVEL 3 LOGIC
-        function resetLevel3() {
-            state.l3.activeThreatIndex = 0;
-            state.l3.selectedNode = null;
-            state.l3.selectedTool = null;
-            state.l3.damageApplied = false;
-
-            // Restore health
-            for (let key in state.l3.nodes) {
-                state.l3.nodes[key].health = 100;
-                updateNodeHealthUI(key);
-                const el = document.getElementById(`node-${key}`);
-                el.className = 'infra-node';
-                document.getElementById(`status-label-${key}`).innerText = 'Protected';
-            }
-
-            document.getElementById('l3-threat-alert').style.display = 'none';
-            document.getElementById('l3-action-btn').disabled = false;
-            document.getElementById('l3-action-btn').innerText = 'Initialize Threat Cycle';
-            document.getElementById('l3-feedback-text').innerText = 'Security logs: Map state stable. Select "Initialize Threat Cycle" to engage.';
-            resetArsenalHighlight();
+        // LEVEL 3: PRIVACY & SECURE PAYMENT DECISION SIMULATOR LOGIC
+        function initLevel3() {
+            renderLevel3Scenario();
+            updateL3MetricsDisplay();
         }
 
-        function updateNodeHealthUI(nodeKey) {
-            const fill = document.getElementById(`health-${nodeKey}`);
-            const node = state.l3.nodes[nodeKey];
-            fill.style.width = `${node.health}%`;
-
-            if (node.health > 60) fill.style.backgroundColor = 'var(--success)';
-            else if (node.health > 30) fill.style.backgroundColor = 'var(--warning)';
-            else fill.style.backgroundColor = 'var(--danger)';
-        }
-
-        function startL3ThreatCycle() {
-            document.getElementById('l3-action-btn').disabled = true;
-            triggerL3NextThreat();
-        }
-
-        function triggerL3NextThreat() {
-            if (state.l3.activeThreatIndex >= state.l3.threats.length) {
-                // Check map health integrity
-                let avgHealth = 0;
-                for (let key in state.l3.nodes) avgHealth += state.l3.nodes[key].health;
-                avgHealth /= 5;
-
-                if (avgHealth >= 70) {
-                    showToast("Cyberattack campaign successfully mitigated!", "success");
+        function renderLevel3Scenario() {
+            const idx = state.l3.activeThreatIndex;
+            if (idx >= 5) {
+                // All scenarios finished! Evaluate metrics
+                const allMet = (
+                    state.l3.customerTrust >= 50 &&
+                    state.l3.paymentSecurity >= 50 &&
+                    state.l3.dataProtection >= 50 &&
+                    state.l3.privacyCompliance >= 50 &&
+                    state.l3.legalCompliance >= 50
+                );
+                
+                if (allMet) {
+                    showToast("Simulation Complete: All governance indicators satisfied!", "success");
                     state.completedLevels[2] = true;
-                    state.unlockedLevels[3] = true;
-                    updateNavigationPills();
                     setTimeout(() => showSummaryDialog(3), 1000);
                 } else {
-                    showToast("Intrusion mitigation failed. Infrastructure offline.", "danger");
-                    document.getElementById('l3-feedback-text').innerText = 'System Status: Severely compromised. Average node integrity fell below 70%. Reset panel and adapt defenses.';
-                    document.getElementById('l3-action-btn').disabled = false;
-                    document.getElementById('l3-action-btn').innerText = 'Retry Defenses Cycle';
+                    showToast("Governance failures detected. Adjust strategic decisions.", "danger");
+                    showL5Scorecard();
                 }
                 return;
             }
 
-            const threat = state.l3.threats[state.l3.activeThreatIndex];
-
-            // Display Alert
-            document.getElementById('l3-threat-alert').style.display = 'flex';
-            document.getElementById('alert-title').innerText = `CRITICAL ATTACK: ${threat.title}`;
-            document.getElementById('alert-desc').innerText = threat.desc;
-
-            // Red Pulsing target node
-            const nodeEl = document.getElementById(`node-${threat.targetNode}`);
-            nodeEl.className = 'infra-node active-target';
-            document.getElementById(`status-label-${threat.targetNode}`).innerText = '⚠️ BREACHING';
-
-            document.getElementById('l3-feedback-text').innerText = `Alert: Server ${threat.targetNode.toUpperCase()} is under attack. Select the correct tool and deploy defense.`;
-            state.l3.damageApplied = false;
-
-            // Clear current selections
-            state.l3.selectedNode = null;
-            state.l3.selectedTool = null;
-            resetArsenalHighlight();
-        }
-
-        function selectInfraNode(nodeKey) {
-            const threat = state.l3.threats[state.l3.activeThreatIndex];
-            if (!threat || state.l3.activeThreatIndex >= state.l3.threats.length) return;
-
-            // Can only select node if it is currently active target
-            if (threat.targetNode !== nodeKey) {
-                showToast("System reports routing load stable on this asset. Concentrate on targeted nodes.", "warning");
-                return;
-            }
-
-            state.l3.selectedNode = nodeKey;
-
-            // Highlight node selection
-            document.querySelectorAll('.infra-node').forEach(el => {
-                if (el.id !== `node-${nodeKey}`) el.classList.remove('selected-outline');
-            });
-
-            document.getElementById(`node-${nodeKey}`).classList.add('selected-outline');
-
-            checkL3Match();
-        }
-
-        function selectDefenseTool(toolKey) {
-            const threat = state.l3.threats[state.l3.activeThreatIndex];
-            if (!threat || state.l3.activeThreatIndex >= state.l3.threats.length) return;
-
-            state.l3.selectedTool = toolKey;
-
-            // Highlight tool selection
-            resetArsenalHighlight();
-            document.getElementById(`def-${toolKey}`).classList.add('selected');
-
-            // Auto target the active node
-            state.l3.selectedNode = threat.targetNode;
-
-            checkL3Match();
-        }
-
-        function resetArsenalHighlight() {
-            document.querySelectorAll('.defense-weapon').forEach(w => w.classList.remove('selected'));
-        }
-
-        function checkL3Match() {
-            if (!state.l3.selectedNode || !state.l3.selectedTool) return;
-
-            const threat = state.l3.threats[state.l3.activeThreatIndex];
-            const node = state.l3.nodes[state.l3.selectedNode];
-
-            if (state.l3.selectedTool === threat.correctTool) {
-                // Mitigated!
-                showToast("Threat mitigated successfully!", "success");
-
-                const el = document.getElementById(`node-${state.l3.selectedNode}`);
-                el.className = 'infra-node defended';
-                document.getElementById(`status-label-${state.l3.selectedNode}`).innerText = '🟢 SECURE';
-
-                document.getElementById('l3-feedback-text').innerText = `Defense Success: Deployed ${state.l3.selectedTool.toUpperCase()}. ${threat.rationale}`;
-
-                // Advanced
-                state.l3.activeThreatIndex++;
-                setTimeout(triggerL3NextThreat, 2500);
-            } else {
-                // Wrong defense!
-                if (!state.l3.damageApplied) {
-                    showToast("Ineffective defense! Node is taking operational damage.", "danger");
-                    node.health -= 40;
-                    if (node.health < 0) node.health = 0;
-                    updateNodeHealthUI(state.l3.selectedNode);
-                    state.l3.damageApplied = true;
-
-                    document.getElementById('l3-feedback-text').innerText = `Breach Warning: Applied ${state.l3.selectedTool.toUpperCase()} failed to deflect ${threat.id.toUpperCase()}. Node health decreased.`;
-                } else {
-                    showToast("Vulnerability active. Select another protocol.", "warning");
-                }
-            }
-        }
-
-
-        // LEVEL 4 LOGIC
-        function initLevel4() {
-            renderLevel4();
-        }
-
-        function renderLevel4() {
-            const pool = document.getElementById('l4-practice-pool');
-            pool.innerHTML = '';
-
-            state.l4.pool.forEach((card) => {
-                const cardEl = document.createElement('div');
-                cardEl.className = 'l4-card';
-                cardEl.draggable = true;
-                cardEl.innerHTML = `
-                    <div class="l4-card-meta">
-                        <span class="l4-card-badge">${card.code}</span>
-                        <span style="font-size:0.75rem; color:var(--text-muted);">Drag or Click</span>
-                    </div>
-                    <div>${card.text}</div>
-                `;
-
-                cardEl.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', card.id);
-                });
-
-                cardEl.addEventListener('click', () => selectL4Card(card.id));
-                pool.appendChild(cardEl);
-            });
-
-            // Render zones contents if clicked
-            renderZonePlacements();
-        }
-
-        function selectL4Card(cardId) {
-            // Interactive click placement fallback
-            state.l4.selectedCard = cardId;
-            const card = state.l4.pool.find(c => c.id === cardId);
-
-            // Ask user where to place using a simple inline button set in sidebar
-            const choiceHTML = `
-                <div style="margin-top:8px; display:flex; gap:6px;">
-                    <button class="btn btn-outline" style="padding:4px 8px; font-size:0.72rem;" onclick="moveL4Card('${cardId}', 'legal')">+ Legal</button>
-                    <button class="btn btn-outline" style="padding:4px 8px; font-size:0.72rem;" onclick="moveL4Card('${cardId}', 'illegal')">+ Illegal</button>
-                    <button class="btn btn-outline" style="padding:4px 8px; font-size:0.72rem;" onclick="moveL4Card('${cardId}', 'modify')">+ Modify</button>
-                </div>
+            const scenario = state.l3.scenarios[idx];
+            document.getElementById('l3LeftTitle').innerText = scenario.title;
+            
+            // Set scenario description text
+            document.getElementById('l3ThreatBox').innerHTML = `
+                <div style="font-weight: 700; color: var(--primary-red); margin-bottom: 8px;">BUSINESS SITUATION ALERT:</div>
+                <div>${scenario.desc}</div>
             `;
 
-            // Inject options into targeted card directly
-            const cards = document.querySelectorAll('.l4-card');
-            renderLevel4(); // reset first
-
-            const cardIndex = state.l4.pool.findIndex(c => c.id === cardId);
-            const cardEls = document.getElementById('l4-practice-pool').children;
-            if (cardEls[cardIndex]) {
-                const optDiv = document.createElement('div');
-                optDiv.innerHTML = choiceHTML;
-                cardEls[cardIndex].appendChild(optDiv);
-            }
-        }
-
-        function moveL4Card(cardId, zone) {
-            const card = state.l4.pool.find(c => c.id === cardId);
-
-            // Remove from pool
-            state.l4.pool = state.l4.pool.filter(c => c.id !== cardId);
-
-            // Clean from other zones
-            for (let z in state.l4.placements) {
-                state.l4.placements[z] = state.l4.placements[z].filter(c => c.id !== cardId);
-            }
-
-            state.l4.placements[zone].push(card);
-            state.l4.selectedCard = null;
-
-            renderLevel4();
-            checkL4RemediationRequirement();
-        }
-
-        function allowL4Drop(e) { e.preventDefault(); }
-
-        function handleL4Drop(e, zone) {
-            e.preventDefault();
-            const cardId = e.dataTransfer.getData('text/plain');
-            moveL4Card(cardId, zone);
-        }
-
-        function renderZonePlacements() {
-            for (let zone in state.l4.placements) {
-                const zoneContainer = document.getElementById(`zone-${zone}`);
-
-                // Clear old nodes but keep header
-                const header = zoneContainer.querySelector('.l4-zone-header');
-                zoneContainer.innerHTML = '';
-                zoneContainer.appendChild(header);
-
-                state.l4.placements[zone].forEach((card) => {
-                    const el = document.createElement('div');
-                    el.className = 'l4-card placed';
-                    el.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
-                            <span>${card.code}</span>
-                            <span style="cursor:pointer;" onclick="removeL4Card('${card.id}', '${zone}')">✕</span>
-                        </div>
-                        <div>${card.text}</div>
-                    `;
-                    zoneContainer.appendChild(el);
-                });
-            }
-        }
-
-        function removeL4Card(cardId, zone) {
-            const card = state.l4.placements[zone].find(c => c.id === cardId);
-            state.l4.placements[zone] = state.l4.placements[zone].filter(c => c.id !== cardId);
-            state.l4.pool.push(card);
-            renderLevel4();
-            checkL4RemediationRequirement();
-        }
-
-        function checkL4RemediationRequirement() {
-            // Show remediation form if P1, P2, P3 are placed correctly in illegal/modify zones
-            const p1Placed = state.l4.placements.illegal.some(c => c.id === 'p1');
-            const p2Placed = state.l4.placements.modify.some(c => c.id === 'p2');
-            const p3Placed = state.l4.placements.illegal.some(c => c.id === 'p3');
-
-            const panel = document.getElementById('l4-remediation-panel');
-            if (p1Placed || p2Placed || p3Placed) {
-                panel.style.display = 'flex';
-                // Show rows selectively
-                document.getElementById('rem-row-location').style.display = p1Placed ? 'flex' : 'none';
-                document.getElementById('rem-row-retention').style.display = p2Placed ? 'flex' : 'none';
-                document.getElementById('rem-row-deletion').style.display = p3Placed ? 'flex' : 'none';
-            } else {
-                panel.style.display = 'none';
-            }
-        }
-
-        function verifyLevel4Compliance() {
-            if (state.l4.pool.length > 0) {
-                showToast("Audit all practices on the board to confirm compliance clearances.", "warning");
-                return;
-            }
-
-            let sortedCorrectly = true;
-            for (let zone in state.l4.placements) {
-                state.l4.placements[zone].forEach((card) => {
-                    if (card.correctZone !== zone) sortedCorrectly = false;
-                });
-            }
-
-            if (!sortedCorrectly) {
-                showToast("Compliance mismatch! Systems auditing logs show sorting errors.", "danger");
-                return;
-            }
-
-            // Check Remediations
-            const p1Placed = state.l4.placements.illegal.some(c => c.id === 'p1');
-            const p2Placed = state.l4.placements.modify.some(c => c.id === 'p2');
-            const p3Placed = state.l4.placements.illegal.some(c => c.id === 'p3');
-
-            if (p1Placed && document.getElementById('sel-rem-location').value !== 'opt-in') {
-                showToast("P1 Remediation selection is insufficient under IT Act Section 43A guidelines.", "warning");
-                return;
-            }
-            if (p2Placed && document.getElementById('sel-rem-retention').value !== 'purge') {
-                showToast("P2 Remediation selection fails to enforce GDPR storage limitation principles.", "warning");
-                return;
-            }
-            if (p3Placed && document.getElementById('sel-rem-deletion').value !== 'erasure') {
-                showToast("P3 Remediation selection violates right to erasure mandate rules.", "warning");
-                return;
-            }
-
-            showToast("Legal audit and remediation plan successfully authorized!", "success");
-            state.completedLevels[3] = true;
-            state.unlockedLevels[4] = true;
-            updateNavigationPills();
-
-            setTimeout(() => showSummaryDialog(4), 1000);
-        }
-
-        function resetLevel4() {
-            state.l4.pool = [
-                { id: 'p1', code: 'P1', text: 'Collect and store customer GPS location continuously in background without explicit permission.', correctZone: 'illegal' },
-                { id: 'p2', code: 'P2', text: 'Retain complete customer database logs and transaction records indefinitely for secondary analytics.', correctZone: 'modify' },
-                { id: 'p3', code: 'P3', text: 'Remove the "Delete My Account" button to maximize user retention and database size.', correctZone: 'illegal' },
-                { id: 'p4', code: 'P4', text: 'Provide an easily accessible privacy policy outlining third-party data processing agreements.', correctZone: 'legal' },
-                { id: 'p5', code: 'P5', text: 'Require active user opt-in and consent banners before tracking marketing cookies.', correctZone: 'legal' }
-            ];
-            state.l4.placements = { legal: [], illegal: [], modify: [] };
-            state.l4.selectedCard = null;
-            state.completedLevels[3] = false;
-            document.getElementById('l4-remediation-panel').style.display = 'none';
-            document.getElementById('sel-rem-location').value = 'none';
-            document.getElementById('sel-rem-retention').value = 'none';
-            document.getElementById('sel-rem-deletion').value = 'none';
-            initLevel4();
-        }
-
-        // LEVEL 5: FinTech Command Center
-        function updateL5KPIs() {
-            const kpis = state.l5.kpis;
-            document.getElementById('kpi-security').innerText = kpis.security;
-            document.getElementById('kpi-success').innerText = `${kpis.success}%`;
-            document.getElementById('kpi-trust').innerText = kpis.trust;
-            document.getElementById('kpi-compliance').innerText = kpis.compliance;
-            document.getElementById('kpi-revenue').innerText = kpis.revenue;
-
-            // Adjust meters
-            updateMeter('security', kpis.security);
-            updateMeter('success', kpis.success);
-            updateMeter('trust', kpis.trust);
-            updateMeter('compliance', kpis.compliance);
-            updateMeter('revenue', kpis.revenue);
-        }
-
-        function updateMeter(id, val) {
-            const fill = document.getElementById(`meter-${id}`);
-            fill.style.width = `${val}%`;
-
-            // Targets check colors
-            let target = 75;
-            if (id === 'security') target = 85;
-            if (id === 'success') target = 95;
-            if (id === 'trust') target = 80;
-            if (id === 'compliance') target = 90;
-
-            if (val >= target) {
-                fill.style.backgroundColor = 'var(--success)';
-            } else if (val >= target - 15) {
-                fill.style.backgroundColor = 'var(--warning)';
-            } else {
-                fill.style.backgroundColor = 'var(--danger)';
-            }
-        }
-
-        function startL5Ticker() {
-            if (state.l5.status === 'running') return;
-
-            state.l5.status = 'running';
-            document.getElementById('console-status-dot').className = 'console-status-dot';
-            document.getElementById('console-status-text').innerText = 'OPERATIONAL // NETWORK ONLINE';
-            document.getElementById('l5-start-btn').disabled = true;
-            document.getElementById('l5-pause-btn').disabled = false;
-
-            logToTerminal(`[SYSTEM] Starting 30-Day PaySphere operations ticker...`, 'success');
-
-            state.l5.timerId = setInterval(() => {
-                if (state.l5.day < 30) {
-                    state.l5.day++;
-                    document.getElementById('console-day-ticker').innerText = `DAY ${state.l5.day} OF 30`;
-
-                    // Daily natural fluctuations
-                    applyDailyFriction();
-
-                    // Trigger Event Check
-                    if (state.l5.events[state.l5.day]) {
-                        triggerL5Incident(state.l5.day);
-                    } else {
-                        logToTerminal(`Day ${state.l5.day}: Processing node logs... Success Rate at ${state.l5.kpis.success}%.`);
-                    }
-                } else {
-                    endL5Simulation();
-                }
-            }, 1000);
-        }
-
-        function pauseL5Ticker() {
-            if (state.l5.status !== 'running') return;
-
-            clearInterval(state.l5.timerId);
-            state.l5.status = 'paused';
-            document.getElementById('console-status-dot').className = 'console-status-dot paused';
-            document.getElementById('console-status-text').innerText = 'OPERATIONAL // TICKER PAUSED';
-            document.getElementById('l5-start-btn').disabled = false;
-            document.getElementById('l5-start-btn').innerText = 'Resume Simulator';
-            document.getElementById('l5-pause-btn').disabled = true;
-
-            logToTerminal(`[SYSTEM] Operations ticker manually paused by CDPO.`, 'alert');
-        }
-
-        function applyDailyFriction() {
-            // Minor fluctuations to keep parameters dynamic
-            const k = state.l5.kpis;
-            k.success = Math.min(100, Math.max(0, k.success + (Math.random() > 0.6 ? 1 : -1)));
-            k.trust = Math.min(100, Math.max(0, k.trust + (Math.random() > 0.5 ? 0 : -1)));
-            updateL5KPIs();
-        }
-
-        function logToTerminal(text, type = '') {
-            const terminal = document.getElementById('l5-terminal-ticker');
-            const row = document.createElement('div');
-            row.className = `terminal-row ${type}`;
-            row.innerText = text;
-            terminal.appendChild(row);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function triggerL5Incident(day) {
-            pauseL5Ticker();
-
-            const event = state.l5.events[day];
-            state.l5.activeEvent = event;
-
-            // Show overlay incident card
-            const overlay = document.getElementById('l5-incident-overlay');
-            overlay.style.display = 'flex';
-
-            document.getElementById('inc-title').innerText = event.title;
-            document.getElementById('inc-desc').innerText = event.desc;
-
-            const optionsBox = document.getElementById('inc-options');
+            // Render choice buttons
+            const optionsBox = document.getElementById('l3ResponseOptions');
             optionsBox.innerHTML = '';
-
-            event.options.forEach((opt, idx) => {
+            
+            scenario.choices.forEach((choice, choiceIdx) => {
                 const btn = document.createElement('button');
-                btn.className = 'incident-opt-btn';
+                btn.className = 'btn btn-secondary';
+                btn.style.width = '100%';
+                btn.style.textAlign = 'left';
+                btn.style.padding = '14px';
+                btn.style.fontSize = '0.88rem';
+                btn.style.lineHeight = '1.4';
+                btn.style.border = '1px solid var(--border-color)';
+                btn.style.borderRadius = '8px';
+                btn.style.background = state.l3.tempSelectedChoiceIdx === choiceIdx ? 'var(--white)' : 'var(--bg-light)';
+                btn.style.borderLeft = state.l3.tempSelectedChoiceIdx === choiceIdx ? '4px solid var(--accent-blue)' : '1px solid var(--border-color)';
 
-                // Construct impact string
-                let impacts = [];
-                for (let k in opt.impact) {
-                    let sign = opt.impact[k] >= 0 ? '+' : '';
-                    impacts.push(`${k.toUpperCase()} ${sign}${opt.impact[k]}`);
-                }
-
-                btn.innerHTML = `
-                    <span class="incident-opt-title">${idx === 0 ? 'Option A' : 'Option B'}: ${opt.text}</span>
-                    <span class="incident-opt-impact">Estimated Projections: ${impacts.join(', ')}</span>
-                `;
-
-                btn.addEventListener('click', () => makeL5Decision(idx));
+                btn.innerText = choice.text;
+                btn.addEventListener('click', () => selectL3Choice(choiceIdx));
                 optionsBox.appendChild(btn);
             });
-        }
 
-        function makeL5Decision(optIndex) {
-            const event = state.l5.activeEvent;
-            const option = event.options[optIndex];
-
-            // Apply impacts
-            for (let key in option.impact) {
-                state.l5.kpis[key] = Math.min(100, Math.max(0, state.l5.kpis[key] + option.impact[key]));
+            // Adjust buttons display
+            if (state.l3.confirmedChoiceIdx !== null) {
+                document.getElementById('l3ConfirmBtn').style.display = 'none';
+                document.getElementById('l3NextBtn').style.display = 'block';
+                
+                // Show educational feedback panel
+                const confirmedChoice = scenario.choices[state.l3.confirmedChoiceIdx];
+                const feedbackPanel = document.getElementById('l3FeedbackPanel');
+                feedbackPanel.style.display = 'block';
+                feedbackPanel.style.borderLeft = confirmedChoice.correct ? '4px solid var(--success)' : '4px solid var(--primary-red)';
+                feedbackPanel.innerHTML = `
+                    <strong style="color: ${confirmedChoice.correct ? 'var(--success)' : 'var(--primary-red)'};">Feedback:</strong> ${confirmedChoice.feedback}
+                `;
+            } else {
+                document.getElementById('l3ConfirmBtn').style.display = 'block';
+                document.getElementById('l3ConfirmBtn').disabled = state.l3.tempSelectedChoiceIdx === null;
+                document.getElementById('l3NextBtn').style.display = 'none';
+                document.getElementById('l3FeedbackPanel').style.display = 'none';
             }
 
-            state.l5.historyChoices.push(option.log);
-            updateL5KPIs();
-
-            // Close card
-            document.getElementById('l5-incident-overlay').style.display = 'none';
-
-            logToTerminal(`[CHOICE] Decided Day ${state.l5.day}: ${option.text.substring(0, 45)}...`, 'success');
-            logToTerminal(`[SYSTEM] ${option.log}`, 'alert');
-
-            // Auto resume
-            startL5Ticker();
+            document.getElementById('l3RoundTracker').innerText = `Situation ${idx + 1} of 5`;
         }
 
-        function endL5Simulation() {
-            clearInterval(state.l5.timerId);
-            state.l5.status = 'ended';
-
-            document.getElementById('console-status-dot').className = 'console-status-dot';
-            document.getElementById('console-status-dot').style.backgroundColor = '#666';
-            document.getElementById('console-status-text').innerText = 'OPERATIONAL // SIMULATION FINISHED';
-
-            logToTerminal(`[SYSTEM] 30-Day simulation run completed. Board results ready.`, 'success');
-
-            // Unlock results dialog
-            showL5Scorecard();
+        function selectL3Choice(choiceIdx) {
+            if (state.l3.confirmedChoiceIdx !== null) return;
+            state.l3.tempSelectedChoiceIdx = choiceIdx;
+            renderLevel3Scenario();
         }
 
+        function confirmL3Choice() {
+            const idx = state.l3.activeThreatIndex;
+            const scenario = state.l3.scenarios[idx];
+            const choice = scenario.choices[state.l3.tempSelectedChoiceIdx];
+
+            state.l3.confirmedChoiceIdx = state.l3.tempSelectedChoiceIdx;
+
+            // Apply choice impacts on KPIs
+            state.l3.customerTrust = Math.min(100, Math.max(0, state.l3.customerTrust + choice.impact.trust));
+            state.l3.paymentSecurity = Math.min(100, Math.max(0, state.l3.paymentSecurity + choice.impact.security));
+            state.l3.dataProtection = Math.min(100, Math.max(0, state.l3.dataProtection + choice.impact.protection));
+            state.l3.privacyCompliance = Math.min(100, Math.max(0, state.l3.privacyCompliance + choice.impact.privacy));
+            state.l3.legalCompliance = Math.min(100, Math.max(0, state.l3.legalCompliance + choice.impact.legal));
+
+            updateL3MetricsDisplay();
+            renderLevel3Scenario();
+            
+            showToast(choice.correct ? "Excellent strategic response!" : "Sub-optimal decision made.", choice.correct ? "success" : "warning");
+        }
+
+        function nextL3Scenario() {
+            state.l3.activeThreatIndex++;
+            state.l3.tempSelectedChoiceIdx = null;
+            state.l3.confirmedChoiceIdx = null;
+            renderLevel3Scenario();
+        }
+
+        function updateL3MetricsDisplay() {
+            document.getElementById('l3TrustVal').innerText = `${state.l3.customerTrust}%`;
+            document.getElementById('l3SecurityVal').innerText = `${state.l3.paymentSecurity}%`;
+            document.getElementById('l3ProtectionVal').innerText = `${state.l3.dataProtection}%`;
+            document.getElementById('l3PrivacyVal').innerText = `${state.l3.privacyCompliance}%`;
+            document.getElementById('l3LegalVal').innerText = `${state.l3.legalCompliance}%`;
+
+            // Adjust text colors for warnings
+            document.getElementById('l3TrustVal').style.color = state.l3.customerTrust >= 50 ? 'var(--success)' : 'var(--primary-red)';
+            document.getElementById('l3SecurityVal').style.color = state.l3.paymentSecurity >= 50 ? 'var(--success)' : 'var(--primary-red)';
+            document.getElementById('l3ProtectionVal').style.color = state.l3.dataProtection >= 50 ? 'var(--success)' : 'var(--primary-red)';
+            document.getElementById('l3PrivacyVal').style.color = state.l3.privacyCompliance >= 50 ? 'var(--success)' : 'var(--primary-red)';
+            document.getElementById('l3LegalVal').style.color = state.l3.legalCompliance >= 50 ? 'var(--success)' : 'var(--primary-red)';
+        }
+
+        function resetLevel3() {
+            state.l3.activeThreatIndex = 0;
+            state.l3.customerTrust = 50;
+            state.l3.paymentSecurity = 50;
+            state.l3.dataProtection = 50;
+            state.l3.privacyCompliance = 50;
+            state.l3.legalCompliance = 50;
+            state.l3.tempSelectedChoiceIdx = null;
+            state.l3.confirmedChoiceIdx = null;
+            renderLevel3Scenario();
+            updateL3MetricsDisplay();
+        }
+
+        // PERSISTENT REFERENCE BOARD TOGGLE
+        function toggleTheorySection() {
+            const content = document.getElementById('theory-content');
+            const btn = document.getElementById('btn-toggle-theory');
+            if (content.style.display === 'none') {
+                content.style.display = 'grid';
+                btn.innerText = 'Hide Reference';
+            } else {
+                content.style.display = 'none';
+                btn.innerText = 'Show Reference';
+            }
+        }
+
+        // HELP MANUAL DIALOGS
+        const helpDialog = document.getElementById('help-manual-dialog');
+        function showHelpManual() {
+            helpDialog.showModal();
+        }
+        function closeHelpManual() {
+            helpDialog.close();
+        }
+
+        // TOASTS
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // FINAL EVALUATION SYSTEM
         function showL5Scorecard() {
-            const kpis = state.l5.kpis;
             const dialog = document.getElementById('scorecard-dialog');
+            
+            const metTrust = state.l3.customerTrust >= 50;
+            const metSecurity = state.l3.paymentSecurity >= 50;
+            const metProtection = state.l3.dataProtection >= 50;
+            const metPrivacy = state.l3.privacyCompliance >= 50;
+            const metLegal = state.l3.legalCompliance >= 50;
 
-            const metSecurity = kpis.security >= 85;
-            const metTrust = kpis.trust >= 80;
-            const metCompliance = kpis.compliance >= 90;
-            const metSuccess = kpis.success >= 95;
-            const metRevenue = kpis.revenue >= 75;
-
-            const allMet = metSecurity && metTrust && metCompliance && metSuccess && metRevenue;
+            const allMet = metTrust && metSecurity && metProtection && metPrivacy && metLegal;
 
             const banner = document.getElementById('scorecard-banner');
             const title = document.getElementById('scorecard-status');
@@ -3976,12 +3318,24 @@
 
             if (allMet) {
                 banner.className = 'scorecard-banner success';
-                title.innerText = 'Digital Payment Ecosystem Successfully Managed';
-                desc.innerText = 'Your platform remained secure, trustworthy, and legally compliant.';
+                banner.style.backgroundColor = 'var(--success-light)';
+                banner.style.borderLeft = '6px solid var(--success)';
+                banner.style.padding = '20px';
+                banner.style.borderRadius = '8px';
+                banner.style.marginBottom = '20px';
+                title.innerText = 'Corporate Governance Evaluation Successful!';
+                title.style.color = 'var(--success)';
+                desc.innerText = 'SmartCorp has successfully balanced payment security, user privacy rights, and legal compliance.';
             } else {
                 banner.className = 'scorecard-banner fail';
-                title.innerText = 'Improvements Needed';
-                desc.innerText = 'Your platform failed to satisfy target thresholds for Board approval.';
+                banner.style.backgroundColor = 'var(--danger-light)';
+                banner.style.borderLeft = '6px solid var(--danger)';
+                banner.style.padding = '20px';
+                banner.style.borderRadius = '8px';
+                banner.style.marginBottom = '20px';
+                title.innerText = 'Strategic Adjustments Required';
+                title.style.color = 'var(--danger)';
+                desc.innerText = 'Your payment governance plan failed to satisfy regulatory thresholds or customer trust requirements.';
             }
 
             // Strengths and Weaknesses lists
@@ -3990,55 +3344,46 @@
             strengthsList.innerHTML = '';
             weaknessesList.innerHTML = '';
 
-            if (metSecurity) strengthsList.innerHTML += `<li><strong>Security Score (${kpis.security})</strong>: Successfully secured database nodes and API channels.</li>`;
-            else weaknessesList.innerHTML += `<li><strong>Security Score (${kpis.security})</strong>: Vulnerabilities remained. Requires patches and active encryption checks.</li>`;
+            if (metTrust) strengthsList.innerHTML += `<li><strong>Customer Trust (${state.l3.customerTrust}%)</strong>: Preserved customer confidence and brand integrity.</li>`;
+            else weaknessesList.innerHTML += `<li><strong>Customer Trust (${state.l3.customerTrust}%)</strong>: Opaque pricing or consent gaps damaged trust.</li>`;
 
-            if (metSuccess) strengthsList.innerHTML += `<li><strong>Success Rate (${kpis.success}%)</strong>: Low latency routing maintained stable authorization lanes.</li>`;
-            else weaknessesList.innerHTML += `<li><strong>Success Rate (${kpis.success}%)</strong>: Unresolved server outages caused user checkout transaction drops.</li>`;
+            if (metSecurity) strengthsList.innerHTML += `<li><strong>Payment Security (${state.l3.paymentSecurity}%)</strong>: Deployed strong encryption and multi-factor validation.</li>`;
+            else weaknessesList.innerHTML += `<li><strong>Payment Security (${state.l3.paymentSecurity}%)</strong>: Weak credentials or plaintext logs left gateways exposed.</li>`;
 
-            if (metTrust) strengthsList.innerHTML += `<li><strong>Customer Trust (${kpis.trust})</strong>: Mitigated data leaks and fraud vectors quickly.</li>`;
-            else weaknessesList.innerHTML += `<li><strong>Customer Trust (${kpis.trust})</strong>: Data leaks or security warnings damaged consumer marketplace confidence.</li>`;
+            if (metProtection) strengthsList.innerHTML += `<li><strong>Data Protection (${state.l3.dataProtection}%)</strong>: Clean data retention and secure storage systems.</li>`;
+            else weaknessesList.innerHTML += `<li><strong>Data Protection (${state.l3.dataProtection}%)</strong>: Negligent plaintext card records or backup directories.</li>`;
 
-            if (metCompliance) strengthsList.innerHTML += `<li><strong>Compliance (${kpis.compliance})</strong>: Satisfied GDPR right to erasure and IT Act transparency rules.</li>`;
-            else weaknessesList.innerHTML += `<li><strong>Compliance (${kpis.compliance})</strong>: Bypassed privacy guidelines and laws, resulting in regulatory warnings.</li>`;
+            if (metPrivacy) strengthsList.innerHTML += `<li><strong>Privacy Compliance (${state.l3.privacyCompliance}%)</strong>: Handled right to erasure and biometric consent requests transparently.</li>`;
+            else weaknessesList.innerHTML += `<li><strong>Privacy Compliance (${state.l3.privacyCompliance}%)</strong>: Bypassed cookies, opt-in prompts, or deletion requests.</li>`;
 
-            if (metRevenue) strengthsList.innerHTML += `<li><strong>Revenue (${kpis.revenue})</strong>: Balanced secure compliance with profitable wallet upgrades.</li>`;
-            else weaknessesList.innerHTML += `<li><strong>Revenue (${kpis.revenue})</strong>: Audit penalties or system upgrades severely reduced financial margins.</li>`;
+            if (metLegal) strengthsList.innerHTML += `<li><strong>Legal Compliance (${state.l3.legalCompliance}%)</strong>: Fully satisfied consumer protection acts and digital payment regulations.</li>`;
+            else weaknessesList.innerHTML += `<li><strong>Legal Compliance (${state.l3.legalCompliance}%)</strong>: High risk of administrative fines under electronic transaction laws.</li>`;
 
             dialog.showModal();
         }
 
         function resetFullSimulation() {
-            state.l5.day = 1;
-            state.l5.status = 'idle';
-            state.l5.kpis = { security: 70, success: 90, trust: 75, compliance: 80, revenue: 60 };
-            state.l5.historyChoices = [];
-
-            document.getElementById('console-day-ticker').innerText = 'DAY 1 OF 30';
-            document.getElementById('l5-terminal-ticker').innerHTML = `
-                <div class="terminal-row">[SYSTEM] PaySphere terminal systems connected.</div>
-                <div class="terminal-row">[SYSTEM] CDPO credentials validated. Security score baseline established.</div>
-                <div class="terminal-row">[SYSTEM] Select "Launch 30-Day Cycle" to start operations ticker.</div>
-            `;
-            document.getElementById('l5-start-btn').disabled = false;
-            document.getElementById('l5-start-btn').innerText = 'Launch 30-Day Cycle';
-            document.getElementById('l5-pause-btn').disabled = true;
+            state.completedLevels = [false, false, false];
+            state.unlockedLevels = [true, true, true];
+            
+            initLevel1();
+            resetLevel2();
+            resetLevel3();
+            
             document.getElementById('scorecard-dialog').close();
-
-            updateL5KPIs();
+            navigateToLevel(1);
         }
-
 
         // LEARNING SUMMARY SYSTEM
         const summaries = {
             1: {
-                title: "Level 1 Complete: Transaction Routing Systems",
+                title: "Level 1 Complete: Digital Payment Architect",
                 body: `
                     <p><strong>Secure Transaction Journeys</strong></p>
                     <p>In digital payment architectures, a transaction is not a single database lookup. It involves several distinct clearing stages:</p>
                     <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px; margin:8px 0;">
                         <li><strong>Initiation:</strong> Customer selects an instrument and presents authorization (UPI scanner, card networks).</li>
-                        <li><strong>Gateway Tokenization:</strong> The gateway intercepts, encrypts, and tokenizes sensitive card PAN data to keep it secure.</li>
+                        <li><strong>Gateway Encryption:</strong> The gateway intercepts, encrypts, and tokenizes sensitive card PAN data to keep it secure.</li>
                         <li><strong>Verification:</strong> Acquirer networks route authorization requests to the issuing bank node to verify available balances.</li>
                         <li><strong>Settlement:</strong> Once approved, transaction approvals trigger ledger transfers to merchant accounts.</li>
                     </ul>
@@ -4046,42 +3391,29 @@
                 `
             },
             2: {
-                title: "Level 2 Complete: Fraud Analytics & Threat Indicators",
+                title: "Level 2 Complete: Secure Transaction Validator",
                 body: `
-                    <p><strong>Identifying Anomalous Activity</strong></p>
-                    <p>Payment systems protect resources using risk profiling engines. Crucial data points include:</p>
+                    <p><strong>Creating Secure Environments</strong></p>
+                    <p>Payment systems protect resources using risk profiling engines and structural validations. Crucial elements include:</p>
                     <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px; margin:8px 0;">
-                        <li><strong>Impossible Travel Velocity:</strong> If card credentials are used in Delhi and Bangalore in under 2 minutes, physical travel limits indicate theft.</li>
-                        <li><strong>Brute Force Signs:</strong> Multiple consecutive authentication check failures indicate credential-stuffing attacks.</li>
-                        <li><strong>IP Risk Anomalies:</strong> Foreign access at late local hours represents abnormal transfer behavior, requiring block alerts.</li>
+                        <li><strong>Confidentiality (SSL/TLS):</strong> Encrypted HTTPS protocols protect credit card number and CVV inputs from network eavesdropping.</li>
+                        <li><strong>Authentication (OTP/2FA):</strong> Verifies identity on suspicious transactions or weak passwords, halting credential takeover.</li>
+                        <li><strong>Integrity (Digital Certificates):</strong> Confirms hostname identities, ensuring connections aren't routed to spoofed phishing domains.</li>
                     </ul>
-                    <p>Mitigating these vectors involves device profiling, geofencing, and automated card locks.</p>
+                    <p>Creating secure transaction environments combines validation and verification to create trusted online payments.</p>
                 `
             },
             3: {
-                title: "Level 3 Complete: Cybersecurity Defenses Matrix",
+                title: "Level 3 Complete: Privacy & Legal Decisions",
                 body: `
-                    <p><strong>System Resilience Protocols</strong></p>
-                    <p>Businesses map assets to specific defenses to protect transaction pathways:</p>
-                    <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px; margin:8px 0;">
-                        <li><strong>Firewalls (WAF):</strong> Mitigate DDoS attacks by filtering traffic and rate-limiting incoming traffic spikes.</li>
-                        <li><strong>Encryption (AES-256):</strong> Safeguards stored table databases columns from SQL injection attempts.</li>
-                        <li><strong>MFA:</strong> Prevents unauthorized portal takeovers by rendering compromised passwords useless without secondary checks.</li>
-                        <li><strong>Security Updates:</strong> Patches browser and gateway vulnerabilities against trojans and malware exploits.</li>
-                    </ul>
-                `
-            },
-            4: {
-                title: "Level 4 Complete: Privacy Laws & Data Protection Rules",
-                body: `
-                    <p><strong>Statutory Cyber Laws</strong></p>
-                    <p>Operations must comply with international privacy regulations. Key compliance targets are:</p>
+                    <p><strong>Statutory Cyber Laws and Data Ethics</strong></p>
+                    <p>Operations must comply with privacy regulations and cyber laws to secure customer trust. Key parameters include:</p>
                     <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px; margin:8px 0;">
                         <li><strong>Right to Erasure (GDPR Art. 17):</strong> Enforces the option for users to delete profiles and associated histories.</li>
-                        <li><strong>Storage Limitation:</strong> Restricts indefinite data logs. Unused data must be purged.</li>
-                        <li><strong>Consent Rules (IT Act 43A):</strong> Enforces clear user opt-ins before accessing personal metadata (e.g. coordinates tracking).</li>
+                        <li><strong>Storage Limitation (PCI-DSS):</strong> Restricts plain-text storage of credit card numbers. Tokenization must replace PAN logs.</li>
+                        <li><strong>Consent Rules (Privacy Notices):</strong> Enforces clear user opt-ins and transparency before collecting sensitive personal biometric identifiers.</li>
                     </ul>
-                    <p>Enforcing these limits protects platforms against compliance fines and class actions.</p>
+                    <p>Successful digital businesses build customer confidence by combining secure payment systems, responsible data handling, privacy protection, and legal compliance.</p>
                 `
             }
         };
@@ -4101,8 +3433,10 @@
             const nextLevel = parseInt(event.target.getAttribute('data-target-level'));
             summaryDialog.close();
 
-            if (nextLevel <= 5) {
+            if (nextLevel <= 3) {
                 navigateToLevel(nextLevel);
+            } else {
+                showL5Scorecard();
             }
         }
     </script>
